@@ -18,7 +18,7 @@
         </settingConfig>
     </setting>
 
-    <setting propertyKey="@Properties.UseMilitaryFormat" title="@Strings.MilitaryFormatTitle">
+    <setting propertyKey="@Properties.AddLeadingZero" title="@Strings.AddLeadingZeroTitle">
         <settingConfig type="boolean" />
     </setting>
 
