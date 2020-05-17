@@ -46,7 +46,7 @@ class prototypewatchfaceView extends WatchUi.WatchFace {
     function onExitSleep() {
     	$.isSleep = false;
 
-    	secondsText.setColor(Graphics.COLOR_LT_GRAY);
+    	clockArea.onExitSleep();
     }
 
     function onEnterSleep() {
@@ -199,6 +199,10 @@ module UiElements {
 	    
 	    function onEnterSleep() {
 	    	secondsText.setColor(Graphics.COLOR_TRANSPARENT);
+	    }
+	    
+	    function onExitSleep() {
+	    	secondsText.setColor(Graphics.COLOR_LT_GRAY);
 	    }
 	}
 }
