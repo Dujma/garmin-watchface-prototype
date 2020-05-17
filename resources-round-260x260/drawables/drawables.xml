@@ -1,5 +1,4 @@
 <drawables>
     <bitmap id="LauncherIcon" filename="launcher_icon.png" />
-    <bitmap id="clipTest" filename="clip-test.png" />
-    <bitmap id="backgroundTest" filename="background-test.png" />
+    <bitmap id="MockBackground" filename="mock-background.png" />
 </drawables>
