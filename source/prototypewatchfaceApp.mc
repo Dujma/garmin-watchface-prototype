@@ -24,5 +24,4 @@ class prototypewatchfaceApp extends Application.AppBase {
     function onSettingsChanged() {
         WatchUi.requestUpdate();
     }
-
 }

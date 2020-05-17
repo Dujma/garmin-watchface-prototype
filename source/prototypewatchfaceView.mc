@@ -7,32 +7,9 @@ using Toybox.Time;
 using Toybox.Time.Gregorian;
 
 class prototypewatchfaceView extends WatchUi.WatchFace {
-	// Hours
-	hidden var hoursText;
-	hidden var hoursFormat;
 	
-	// Minutes
-	hidden var minutesText;
-	hidden var minutesColon;
-	
-	// Seconds
-	hidden var secondsText;
-	
-	// Date
-	hidden var dateText;
-	
-	// Part of day
-	hidden var partOfDayText;
-
-	// Fonts
-	hidden var fontRobotoBlack81;
-	hidden var fontRobotoBold55;
-	hidden var fontRobotoCondenseBold20;
-	hidden var fontRobotoCondenseBold12;
-	
-	// Other
-	hidden var showSeconds;
-	hidden var mockBackground;
+	var mockBackground;
+	var clockArea;
 
     function initialize() {
         WatchFace.initialize();
@@ -41,9 +18,95 @@ class prototypewatchfaceView extends WatchUi.WatchFace {
     function onLayout(dc) {
         setLayout(Rez.Layouts.WatchFace(dc));
         
-        mockBackground = WatchUi.loadResource(Rez.Drawables.MockBackground);
+        mockBackground = new WatchUi.Bitmap({
+        	:rezId => Rez.Drawables.MockBackground,
+        	:locX  => 0,
+        	:locY  => 0
+    	});
+        clockArea = new ClockArea(dc);
         
-        fontRobotoBlack81 = WatchUi.loadResource(Rez.Fonts.RobotoBlack81);
+        drawBackground(dc);
+    }
+
+    function onShow() {
+		
+    }
+    var count = 0;
+    function onUpdate(dc) {
+    	
+    	
+		
+		if(count < 5) {
+		clearBuffer(dc);
+		clockArea.render(dc, true);
+		count++;
+		} else {
+			clockArea.render(dc, false);
+		}
+		
+    }
+
+    function onHide() {
+    
+    }
+
+    function onExitSleep() {
+    	showSeconds = true;
+
+    	secondsText.setColor(Graphics.COLOR_LT_GRAY);
+    }
+
+    function onEnterSleep() {
+    	showSeconds = false;
+    	
+    	secondsText.setColor(Graphics.COLOR_TRANSPARENT);
+    }
+    
+    function drawBackground(dc) {
+    	dc.setColor(Graphics.COLOR_TRANSPARENT, Graphics.COLOR_BLACK);
+        dc.clear();
+    }
+    
+    function clearBuffer(dc) {
+    	var clearBufferBitmap = new WatchUi.Bitmap({
+        	:rezId => Rez.Drawables.MockBackground,
+        	:locX  => 0,
+        	:locY  => 0
+    	});
+    	clearBufferBitmap.setSize(260, 260);
+    	clearBufferBitmap.draw(dc);
+    }
+}
+
+class ClockArea {
+	// Hours
+	var hoursText;
+	var hoursFormat;
+	
+	// Minutes
+	var minutesText;
+	var minutesColon;
+	
+	// Seconds
+	var secondsText;
+	
+	// Date
+	var dateText;
+	
+	// Part of day
+	var partOfDayText;
+
+	// Fonts
+	var fontRobotoBlack80;
+	var fontRobotoBold55;
+	var fontRobotoCondenseBold20;
+	var fontRobotoCondenseBold12;
+	
+	// Other
+	var showSeconds;
+	
+    function initialize(dc) {
+		fontRobotoBlack80 = WatchUi.loadResource(Rez.Fonts.RobotoBlack80);
         fontRobotoBold55 = WatchUi.loadResource(Rez.Fonts.RobotoBold55);
         fontRobotoCondenseBold20 = WatchUi.loadResource(Rez.Fonts.RobotoCondenseBold20);
         fontRobotoCondenseBold12 = WatchUi.loadResource(Rez.Fonts.RobotoCondenseBold12);
@@ -51,12 +114,12 @@ class prototypewatchfaceView extends WatchUi.WatchFace {
         var cx = dc.getWidth() / 2;
         var cy = dc.getWidth() / 2;
         var addLeadingZero = Application.getApp().getProperty("AddLeadingZero");
-
-        hoursText = new WatchUi.Text({
+        
+		hoursText = new WatchUi.Text({
             :color => Graphics.COLOR_WHITE,
-            :font  => fontRobotoBlack81,
-            :locX  => cx * 0.723 + (dc.getTextWidthInPixels(addLeadingZero ? "00" : "0", fontRobotoBlack81) / 2),
-            :locY  => cy * 0.992
+            :font  => fontRobotoBlack80,
+            :locX  => cx * 0.723 + (dc.getTextWidthInPixels(addLeadingZero ? "00" : "0", fontRobotoBlack80) / 2),
+            :locY  => cy
         });
         minutesText = new WatchUi.Text({
             :color => Graphics.COLOR_LT_GRAY,
@@ -99,12 +162,8 @@ class prototypewatchfaceView extends WatchUi.WatchFace {
         showSeconds = true;
     }
 
-    function onShow() {
-		
-    }
-
-    function onUpdate(dc) {
-	    var now = Gregorian.info(Time.now(), Time.FORMAT_MEDIUM);
+    function render(dc, all) {
+    	var now = Gregorian.info(Time.now(), Time.FORMAT_MEDIUM);
 	    
         var hours = now.hour;
         var minutes = now.min;
@@ -117,44 +176,26 @@ class prototypewatchfaceView extends WatchUi.WatchFace {
         if(hours > 12) {
         	partOfDay = "PM";
         }
-        View.onUpdate(dc);
-        
-        dc.drawBitmap(0, 0, mockBackground);
-		
 		hoursText.setText(hours.format(hoursFormat));
 		minutesText.setText(minutes.format("%02d"));
 		minutesColon.setText(":");
 		dateText.setText(day.format("%02d") + " " + month.toUpper());
 		partOfDayText.setText(partOfDay);
 		
-		hoursText.draw(dc);
-		minutesText.draw(dc);
-		minutesColon.draw(dc);
-		dateText.draw(dc);
-		partOfDayText.draw(dc);
+		if(all) {
+			hoursText.draw(dc);
+			minutesText.draw(dc);
+			minutesColon.draw(dc);
+			dateText.draw(dc);
+			partOfDayText.draw(dc);
+		} else {
+			minutesColon.draw(dc);
+		}
+		
 
 		if(showSeconds) {
 			secondsText.setText(seconds.format("%02d"));
 			secondsText.draw(dc);
 		}
-
-		// TODO:
-		// Put clock-related function in a separate drawable class
-		// implement onHoursUpdate onMinuteUpdate onSettingsChanged
-    }
-
-    function onHide() {
-    }
-
-    function onExitSleep() {
-    	showSeconds = true;
-
-    	secondsText.setColor(Graphics.COLOR_LT_GRAY);
-    }
-
-    function onEnterSleep() {
-    	showSeconds = false;
-    	
-    	secondsText.setColor(Graphics.COLOR_TRANSPARENT);
     }
 }
