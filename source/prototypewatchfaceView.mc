@@ -52,7 +52,7 @@ class prototypewatchfaceView extends WatchUi.WatchFace {
     function onEnterSleep() {
     	$.isSleep = true;
     	
-    	secondsText.setColor(Graphics.COLOR_TRANSPARENT);
+    	clockArea.onEnterSleep();
     }
     
     function drawBackground(dc) {
@@ -92,8 +92,7 @@ module UiElements {
 		
 	    function initialize(dc) {
 			self.dc = dc;
-			
-			
+
 	        var fontRobotoBold55 = WatchUi.loadResource(Rez.Fonts.RobotoBold55);
 	        var fontRobotoCondenseBold20 = WatchUi.loadResource(Rez.Fonts.RobotoCondenseBold20);
 	        var fontRobotoCondenseBold12 = WatchUi.loadResource(Rez.Fonts.RobotoCondenseBold12);
@@ -104,10 +103,10 @@ module UiElements {
 
 			hoursText = new WatchUi.Text({
 	            :color => Graphics.COLOR_WHITE,
-	            :font  => fontRobotoBlack80,
-	            :locX  => cx * 0.723 + (dc.getTextWidthInPixels(addLeadingZero ? "00" : "0", fontRobotoBlack80) / 2), // Because of alignment to right
-	            :locY  => cy
+	            :font  => fontRobotoBlack80
 	        });
+	        
+	        setHoursPosition();
 	        
 	        minutesText = new WatchUi.Text({
 	            :color => Graphics.COLOR_LT_GRAY,
@@ -179,18 +178,27 @@ module UiElements {
 			}
 	    }
 	    
-	    function onSettingUpdate() {
+	    function setHoursPosition() {
 	    	var addLeadingZero = Application.getApp().getProperty("AddLeadingZero");
-	    	var cx = dc.getWidth() / 2;
+	    	var cx = self.dc.getWidth() / 2;
+	    	var cy = self.dc.getHeight() / 2;
 	    	var hours = Gregorian.info(Time.now(), Time.FORMAT_MEDIUM).hour;
 	    	
 	    	hoursFormat = addLeadingZero ? "%02d" : "%d";
 	    	
 	    	if(hours < 10) {
-	    		hoursText.setLocation(cx * 0.723 + (dc.getTextWidthInPixels(addLeadingZero && hours < 10  ? "00" : "0", fontRobotoBlack80) / 2), hoursText.locY);
+	    		hoursText.setLocation(cx * 0.723 + (self.dc.getTextWidthInPixels(addLeadingZero  ? "00" : "0", fontRobotoBlack80) / 2), cy);
 	    	} else {
-	    		hoursText.setLocation(cx * 0.723 + (dc.getTextWidthInPixels("00", fontRobotoBlack80) / 2), hoursText.locY);
+	    		hoursText.setLocation(cx * 0.723 + (self.dc.getTextWidthInPixels("00", fontRobotoBlack80) / 2), cy);
 	    	}
+	    }
+	    
+	    function onSettingUpdate() {
+	    	setHoursPosition();
+	    }
+	    
+	    function onEnterSleep() {
+	    	secondsText.setColor(Graphics.COLOR_TRANSPARENT);
 	    }
 	}
 }
