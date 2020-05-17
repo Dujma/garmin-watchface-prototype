@@ -1,5 +1,0 @@
-<drawables>
-    <bitmap id="LauncherIcon" filename="launcher_icon.png" />
-    <bitmap id="clipTest" filename="clip-test.png" />
-    <bitmap id="backgroundTest" filename="background-test.png" />
-</drawables>
