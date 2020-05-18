@@ -110,39 +110,39 @@ module UiElements {
 			hoursText = new WatchUi.Text({
 	            :color => Graphics.COLOR_WHITE,
 	            :font  => fntAsapBold81,
-	            :locX  => cx * 0.723 + (self.dc.getTextWidthInPixels("00", fntAsapBold81) / 2),
-	            :locY  => cy * yOffsetFntAsapBold81
+	            :locX  => Math.round(cx * 0.723 + (self.dc.getTextWidthInPixels("00", fntAsapBold81) / 2)),
+	            :locY  => Math.round(cy * yOffsetFntAsapBold81)
 	        });
 
 	        minutesText = new WatchUi.Text({
 	            :color => Graphics.COLOR_LT_GRAY,
 	            :font  => fntAsapSemibold55,
-	            :locX  => cx * 1.423,
-	            :locY  => cy * 0.930 * yOffsetFntAsapSemibold55
+	            :locX  => Math.round(cx * 1.423),
+	            :locY  => Math.round(cy * 0.930 * yOffsetFntAsapSemibold55)
 	        });
 	        minutesColon = new WatchUi.Text({
 	            :color => Graphics.COLOR_LT_GRAY,
 	            :font  => fntAsapSemibold55,
-	            :locX  => cx * 1.123,
-	            :locY  => cy * 0.930 * yOffsetFntAsapSemibold55
+	            :locX  => Math.round(cx * 1.123),
+	            :locY  => Math.round(cy * 0.930 * yOffsetFntAsapSemibold55)
 	        });
 	        dateText = new WatchUi.Text({
 	            :color => Graphics.COLOR_WHITE,
 	            :font  => fntAsapCondensedBold20,
-	            :locX  => cx * 1.423,
-	            :locY  => cy * 1.161 * yOffsetFntAsapSmall
+	            :locX  => Math.round(cx * 1.423),
+	            :locY  => Math.round(cy * 1.161 * yOffsetFntAsapSmall)
 	        });
 	        partOfDayText = new WatchUi.Text({
 	            :color => Graphics.COLOR_WHITE,
 	            :font  => fntAsapBold14,
-	            :locX  => cx * 0.315,
-	            :locY  => cy * 1.176
+	            :locX  => Math.round(cx * 0.315),
+	            :locY  => Math.round( cy * 1.176)
 	        });
 	        secondsText = new WatchUi.Text({
 	            :color => Graphics.COLOR_LT_GRAY,
 	            :font  => fntAsapBold14,
-	            :locX  => cx * 1.707,
-	            :locY  => cy * 0.823 * yOffsetFntAsapSmall
+	            :locX  => Math.round(cx * 1.707),
+	            :locY  => Math.round(cy * 0.823 * yOffsetFntAsapSmall)
 	        });
 	        hoursText.setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_RIGHT);
 	        minutesText.setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
@@ -202,30 +202,70 @@ module UiElements {
 	class TopIcons {
 		var dc;
 		var batteryText;
-		
+		var currentBatteryIcon;
+		var batteryLvl;
+
 		function initialize(dc) {
 			self.dc = dc;
+			
+			var batteryLvl = Math.round(System.getSystemStats().battery);
+			var fntAsapBold13 = WatchUi.loadResource(Rez.Fonts.AsapBold13);
+			
+			var cx = dc.getWidth() / 2;
+	        var cy = dc.getWidth() / 2;
+			
+			currentBatteryIcon = new WatchUi.Bitmap({
+	        	:rezId => Rez.Drawables.BatteryLvl100
+    		});
+    		
+    		batteryText = new WatchUi.Text({
+	            :color => Graphics.COLOR_WHITE,
+	            :font  => fntAsapBold13,
+	            :locX  => cx,
+	            :locY  => Math.round(cy * 0.038)
+	        });
+	        batteryText.setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
+    		
+    		Utils.positionBitmap(currentBatteryIcon, cx, Math.round(cy * 0.13));
 		}
 		
 		function draw() {
-			var batteryLevel = Math.round(System.getSystemStats().battery);
-
-			updateIcon(batteryLevel);
+			var batteryLvl = Math.round(System.getSystemStats().battery);
+			
+			getBatteryIconByBatteryLvl(batteryLvl);
+			batteryText.setText(Lang.format("$1$%", [ (batteryLvl + 0.5).format( "%d" ) ]));
+			
+			batteryText.draw(dc);
+			currentBatteryIcon.draw(dc);
 		}
 		
-		function updateIcon(batteryLevel) {
-			switch(batteryLevel) {
-				case batteryLevel >= 75:
-					break;
-				case batteryLevel >= 50 && batteryLevel < 75:
-					break;
-				case batteryLevel >= 25 && batteryLevel < 50:
-					break;
-				case batteryLevel >= 0 && batteryLevel < 25:
-					break;
-				default:
-					break;
+		function getBatteryIconByBatteryLvl(lvl) {
+			var targetBitmap = null;
+			
+			if(lvl >= 75) {
+				targetBitmap = Rez.Drawables.BatteryLvl100;
+			} else if(lvl >= 51 && lvl < 75) {
+				targetBitmap = Rez.Drawables.BatteryLvl75;
+			} else if(lvl >= 26 && lvl < 51) {
+				targetBitmap = Rez.Drawables.BatteryLvl50;
+			} else if(lvl >= 5 && lvl < 26) {
+				targetBitmap = Rez.Drawables.BatteryLvl25;
+			} else {
+				targetBitmap = Rez.Drawables.BatteryLvl5;
 			}
+			currentBatteryIcon.setBitmap(targetBitmap);
+		}
+	}
+	
+	class Utils {
+		function positionBitmap(bitmap, x, y) {
+			x -= bitmap.width / 2;
+			y -= bitmap.height / 2;
+			
+			bitmap.locX = x;
+			bitmap.locY = y;
+			
+			return bitmap;
 		}
 	}
 }
