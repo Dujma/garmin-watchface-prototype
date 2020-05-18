@@ -10,7 +10,10 @@ var isSleep = false;
 
 class prototypewatchfaceView extends WatchUi.WatchFace {
 	var mockBackground;
+	
+	// Elements
 	var clockArea;
+	var topIcons;
 
     function initialize() {
         WatchFace.initialize();
@@ -25,6 +28,7 @@ class prototypewatchfaceView extends WatchUi.WatchFace {
         	:locY  => 0
     	});
         clockArea = new UiElements.ClockArea(dc);
+        topIcons = new UiElements.TopIcons(dc);
     }
 
     function onShow() {
@@ -37,6 +41,7 @@ class prototypewatchfaceView extends WatchUi.WatchFace {
     	mockBackground.draw(dc);
 
 		clockArea.draw();
+		topIcons.draw();
     }
 
     function onHide() {
@@ -192,5 +197,35 @@ module UiElements {
 	    function onExitSleep() {
 	    	secondsText.setColor(Graphics.COLOR_LT_GRAY);
 	    }
+	}
+	
+	class TopIcons {
+		var dc;
+		var batteryText;
+		
+		function initialize(dc) {
+			self.dc = dc;
+		}
+		
+		function draw() {
+			var batteryLevel = Math.round(System.getSystemStats().battery);
+
+			updateIcon(batteryLevel);
+		}
+		
+		function updateIcon(batteryLevel) {
+			switch(batteryLevel) {
+				case batteryLevel >= 75:
+					break;
+				case batteryLevel >= 50 && batteryLevel < 75:
+					break;
+				case batteryLevel >= 25 && batteryLevel < 50:
+					break;
+				case batteryLevel >= 0 && batteryLevel < 25:
+					break;
+				default:
+					break;
+			}
+		}
 	}
 }
