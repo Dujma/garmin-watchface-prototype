@@ -89,11 +89,14 @@ module UiElements {
 
 	    function initialize(dc) {
 			self.dc = dc;
+			var yOffsetFntAsapBold81 = 0.962;
+			var yOffsetFntAsapSemibold55 = 0.97;
+			var yOffsetFntAsapSmall = 0.99;
 			
-			var fontRobotoBlack80 = WatchUi.loadResource(Rez.Fonts.RobotoBlack80);
-	        var fontRobotoBold55 = WatchUi.loadResource(Rez.Fonts.RobotoBold55);
-	        var fontRobotoCondenseBold20 = WatchUi.loadResource(Rez.Fonts.RobotoCondenseBold20);
-	        var fontRobotoCondenseBold12 = WatchUi.loadResource(Rez.Fonts.RobotoCondenseBold12);
+			var fntAsapBold81 = WatchUi.loadResource(Rez.Fonts.AsapBold81);
+	        var fntAsapSemibold55 = WatchUi.loadResource(Rez.Fonts.AsapSemibold55);
+	        var fntAsapCondensedBold20 = WatchUi.loadResource(Rez.Fonts.AsapCondensedBold20);
+	        var fntAsapBold14 = WatchUi.loadResource(Rez.Fonts.AsapBold14);
 	        
 	        var cx = dc.getWidth() / 2;
 	        var cy = dc.getWidth() / 2;
@@ -101,40 +104,40 @@ module UiElements {
 
 			hoursText = new WatchUi.Text({
 	            :color => Graphics.COLOR_WHITE,
-	            :font  => fontRobotoBlack80,
-	            :locX  => cx * 0.723 + (self.dc.getTextWidthInPixels("00", fontRobotoBlack80) / 2),
-	            :locY  => cy
+	            :font  => fntAsapBold81,
+	            :locX  => cx * 0.723 + (self.dc.getTextWidthInPixels("00", fntAsapBold81) / 2),
+	            :locY  => cy * yOffsetFntAsapBold81
 	        });
 
 	        minutesText = new WatchUi.Text({
 	            :color => Graphics.COLOR_LT_GRAY,
-	            :font  => fontRobotoBold55,
+	            :font  => fntAsapSemibold55,
 	            :locX  => cx * 1.423,
-	            :locY  => cy * 0.930
+	            :locY  => cy * 0.930 * yOffsetFntAsapSemibold55
 	        });
 	        minutesColon = new WatchUi.Text({
 	            :color => Graphics.COLOR_LT_GRAY,
-	            :font  => fontRobotoBold55,
+	            :font  => fntAsapSemibold55,
 	            :locX  => cx * 1.123,
-	            :locY  => cy * 0.930
+	            :locY  => cy * 0.930 * yOffsetFntAsapSemibold55
 	        });
 	        dateText = new WatchUi.Text({
 	            :color => Graphics.COLOR_WHITE,
-	            :font  => fontRobotoCondenseBold20,
+	            :font  => fntAsapCondensedBold20,
 	            :locX  => cx * 1.423,
-	            :locY  => cy * 1.169
+	            :locY  => cy * 1.161 * yOffsetFntAsapSmall
 	        });
 	        partOfDayText = new WatchUi.Text({
 	            :color => Graphics.COLOR_WHITE,
-	            :font  => fontRobotoCondenseBold12,
-	            :locX  => cx * 0.307,
-	            :locY  => cy * 1.192
+	            :font  => fntAsapBold14,
+	            :locX  => cx * 0.315,
+	            :locY  => cy * 1.176
 	        });
 	        secondsText = new WatchUi.Text({
 	            :color => Graphics.COLOR_LT_GRAY,
-	            :font  => fontRobotoCondenseBold12,
+	            :font  => fntAsapBold14,
 	            :locX  => cx * 1.707,
-	            :locY  => cy * 0.815
+	            :locY  => cy * 0.823 * yOffsetFntAsapSmall
 	        });
 	        hoursText.setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_RIGHT);
 	        minutesText.setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);

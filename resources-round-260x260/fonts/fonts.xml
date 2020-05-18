@@ -1,6 +1,6 @@
 <fonts>
-	<font id="RobotoBlack80" antialias="true" filename="/roboto-black-80/roboto-black-80.fnt" filter="0123456789" />
-	<font id="RobotoBold55" antialias="true" filename="/roboto-bold-55/roboto-bold-55.fnt" filter="0123456789:" />
-	<font id="RobotoCondenseBold20" antialias="true" filename="/roboto-condense-bold-20/roboto-condense-bold-20.fnt" filter="0123456789AJNEUMRPOCFBYLGSTVD " />
-	<font id="RobotoCondenseBold12" antialias="true" filename="/roboto-condense-bold-12/roboto-condense-bold-12.fnt" filter="0123456789AMP°" />
+	<font id="AsapBold81" antialias="true" filename="/asap-bold-81/asap-bold-81.fnt" filter="0123456789" />
+	<font id="AsapSemibold55" antialias="true" filename="/asap-semibold-55/asap-semibold-55.fnt" filter="0123456789:" />
+	<font id="AsapCondensedBold20" antialias="true" filename="/asap-condensed-bold-20/asap-condensed-bold-20.fnt" filter="0123456789AJNEUMRPOCFBYLGSTVD " />
+	<font id="AsapBold14" antialias="true" filename="/asap-bold-14/asap-bold-14.fnt" filter="0123456789AMP°" />
 </fonts>
