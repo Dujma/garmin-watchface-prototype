@@ -86,13 +86,11 @@ module UiElements {
 		
 		// Part of day
 		var partOfDayText;
-		
-		// Fonts
-		var fontRobotoBlack80 = WatchUi.loadResource(Rez.Fonts.RobotoBlack80);
-		
+
 	    function initialize(dc) {
 			self.dc = dc;
-
+			
+			var fontRobotoBlack80 = WatchUi.loadResource(Rez.Fonts.RobotoBlack80);
 	        var fontRobotoBold55 = WatchUi.loadResource(Rez.Fonts.RobotoBold55);
 	        var fontRobotoCondenseBold20 = WatchUi.loadResource(Rez.Fonts.RobotoCondenseBold20);
 	        var fontRobotoCondenseBold12 = WatchUi.loadResource(Rez.Fonts.RobotoCondenseBold12);
@@ -103,11 +101,11 @@ module UiElements {
 
 			hoursText = new WatchUi.Text({
 	            :color => Graphics.COLOR_WHITE,
-	            :font  => fontRobotoBlack80
+	            :font  => fontRobotoBlack80,
+	            :locX  => cx * 0.723 + (self.dc.getTextWidthInPixels("00", fontRobotoBlack80) / 2),
+	            :locY  => cy
 	        });
-	        
-	        setHoursPosition();
-	        
+
 	        minutesText = new WatchUi.Text({
 	            :color => Graphics.COLOR_LT_GRAY,
 	            :font  => fontRobotoBold55,
@@ -177,24 +175,11 @@ module UiElements {
 				secondsText.draw(dc);
 			}
 	    }
-	    
-	    function setHoursPosition() {
+
+	    function onSettingUpdate() {
 	    	var addLeadingZero = Application.getApp().getProperty("AddLeadingZero");
-	    	var cx = self.dc.getWidth() / 2;
-	    	var cy = self.dc.getHeight() / 2;
-	    	var hours = Gregorian.info(Time.now(), Time.FORMAT_MEDIUM).hour;
 	    	
 	    	hoursFormat = addLeadingZero ? "%02d" : "%d";
-	    	
-	    	if(hours < 10) {
-	    		hoursText.setLocation(cx * 0.723 + (self.dc.getTextWidthInPixels(addLeadingZero  ? "00" : "0", fontRobotoBlack80) / 2), cy);
-	    	} else {
-	    		hoursText.setLocation(cx * 0.723 + (self.dc.getTextWidthInPixels("00", fontRobotoBlack80) / 2), cy);
-	    	}
-	    }
-	    
-	    function onSettingUpdate() {
-	    	setHoursPosition();
 	    }
 	    
 	    function onEnterSleep() {
