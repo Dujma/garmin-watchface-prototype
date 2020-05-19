@@ -215,14 +215,14 @@ module UiElements {
 	        var cy = dc.getWidth() / 2;
 			
 			currentBatteryIcon = new WatchUi.Bitmap({
-	        	:rezId => Rez.Drawables.BatteryLvl100
+	        	:rezId => Rez.Drawables.Lvl100
     		});
     		
     		batteryText = new WatchUi.Text({
 	            :color => Graphics.COLOR_WHITE,
 	            :font  => fntAsapBold13,
 	            :locX  => cx,
-	            :locY  => Math.round(cy * 0.038)
+	            :locY  => Math.round(cy * 0.030)
 	        });
 	        batteryText.setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
     		
@@ -242,16 +242,30 @@ module UiElements {
 		function getBatteryIconByBatteryLvl(lvl) {
 			var targetBitmap = null;
 			
-			if(lvl >= 75) {
-				targetBitmap = Rez.Drawables.BatteryLvl100;
-			} else if(lvl >= 51 && lvl < 75) {
-				targetBitmap = Rez.Drawables.BatteryLvl75;
-			} else if(lvl >= 26 && lvl < 51) {
-				targetBitmap = Rez.Drawables.BatteryLvl50;
-			} else if(lvl >= 5 && lvl < 26) {
-				targetBitmap = Rez.Drawables.BatteryLvl25;
+			if(lvl > 90) {
+				targetBitmap = Rez.Drawables.Lvl100;
+			} else if(lvl > 80 && lvl <= 90) {
+				targetBitmap = Rez.Drawables.Lvl90;
+			} else if(lvl > 70 && lvl <= 80) {
+				targetBitmap = Rez.Drawables.Lvl80;
+			} else if(lvl > 60 && lvl <= 70) {
+				targetBitmap = Rez.Drawables.Lvl70;
+			} else if(lvl > 50 && lvl <= 60) {
+				targetBitmap = Rez.Drawables.Lvl60;
+			} else if(lvl > 40 && lvl <= 50) {
+				targetBitmap = Rez.Drawables.Lvl50;
+			} else if(lvl > 30 && lvl <= 40) {
+				targetBitmap = Rez.Drawables.Lvl40;
+			} else if(lvl > 20 && lvl <= 30) {
+				targetBitmap = Rez.Drawables.Lvl30;
+			} else if(lvl > 10 && lvl <= 20) {
+				targetBitmap = Rez.Drawables.Lvl20;
+			} else if(lvl > 5 && lvl <= 10) {
+				targetBitmap = Rez.Drawables.Lvl10;
+			} else if(lvl > 1 && lvl <= 5) {
+				targetBitmap = Rez.Drawables.Lvl5;
 			} else {
-				targetBitmap = Rez.Drawables.BatteryLvl5;
+				targetBitmap = Rez.Drawables.Lvl0;
 			}
 			currentBatteryIcon.setBitmap(targetBitmap);
 		}
