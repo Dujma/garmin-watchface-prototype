@@ -10,8 +10,6 @@ var isSleep = false;
 
 class prototypewatchfaceView extends WatchUi.WatchFace {
 	var mockBackground;
-	
-	// Elements
 	var clockArea;
 	var topIcons;
 
@@ -74,25 +72,14 @@ class prototypewatchfaceView extends WatchUi.WatchFace {
 
 module UiElements {
 	class ClockArea {
-		// Device Context
-		var dc;
-		
-		// Hours
-		var hoursText;
-		var hoursFormat;
-		
-		// Minutes
-		var minutesText;
-		var minutesColon;
-		
-		// Seconds
-		var secondsText;
-		
-		// Date
-		var dateText;
-		
-		// Part of day
-		var partOfDayText;
+		private var dc;
+		private var hoursText;
+		private var hoursFormat;
+		private var minutesText;
+		private var minutesColon;
+		private var secondsText;
+		private var dateText;
+		private var partOfDayText;
 
 	    function initialize(dc) {
 			self.dc = dc;
@@ -202,10 +189,12 @@ module UiElements {
 	}
 	
 	class TopIcons {
-		var dc;
-		var batteryText;
-		var currentBatteryIcon;
-		var batteryLvl;
+		private var batteryText;
+		private var currentBatteryIcon;
+		private var batteryLvl;
+		private var notificationIcon;
+		
+		private var dc;
 
 		function initialize(dc) {
 			self.dc = dc;
@@ -216,60 +205,75 @@ module UiElements {
 			var cx = dc.getWidth() / 2;
 	        var cy = dc.getWidth() / 2;
 			
-			currentBatteryIcon = new WatchUi.Bitmap({
-	        	:rezId => Rez.Drawables.Lvl100
-    		});
-    		
-    		batteryText = new WatchUi.Text({
+			currentBatteryIcon = new Icons.Icon("Battery100", dc);
+			currentBatteryIcon.setPosition(cx, Math.round(cy * 0.125));
+			
+			notificationIcon = new Icons.Icon("Notification", dc);
+			notificationIcon.setPosition(Math.round(cx * 1.176), Math.round(cy * 0.105));
+			
+			batteryText = new WatchUi.Text({
 	            :color => Graphics.COLOR_WHITE,
 	            :font  => fntAsapBold13,
 	            :locX  => cx,
 	            :locY  => Math.round(cy * 0.030)
 	        });
 	        batteryText.setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
-    		
-    		Utils.Helpers.positionBitmap(currentBatteryIcon, cx, Math.round(cy * 0.13));
 		}
 		
 		function draw() {
 			var batteryLvl = Math.round(System.getSystemStats().battery);
 			
-			getBatteryIconByBatteryLvl(batteryLvl);
+			setBatteryIcon(batteryLvl);
 			batteryText.setText(Lang.format("$1$%", [ (batteryLvl + 0.5).format( "%d" ) ]));
 			
 			batteryText.draw(dc);
-			currentBatteryIcon.draw(dc);
+			
+			if(batteryLvl <= 20) {
+				currentBatteryIcon.setColor(Graphics.COLOR_RED);
+			} else {
+				currentBatteryIcon.setColor(Graphics.COLOR_WHITE);
+			}
+			if(System.getDeviceSettings().notificationCount > 0) {
+				notificationIcon.setColor(Graphics.COLOR_RED);
+			} else {
+				notificationIcon.setColor(Graphics.COLOR_WHITE);
+			}
+			System.println(System.getDeviceSettings().notificationCount);
+			currentBatteryIcon.draw();
+			notificationIcon.draw();
 		}
 		
-		function getBatteryIconByBatteryLvl(lvl) {
-			var targetBitmap = null;
+		function setBatteryIcon(lvl) {
+			var targetIcon = null;
 			
 			if(lvl > 90) {
-				targetBitmap = Rez.Drawables.Lvl100;
+				targetIcon = "Battery100";
 			} else if(lvl > 80 && lvl <= 90) {
-				targetBitmap = Rez.Drawables.Lvl90;
+				targetIcon = "Battery90";
 			} else if(lvl > 70 && lvl <= 80) {
-				targetBitmap = Rez.Drawables.Lvl80;
+				targetIcon = "Battery80";
 			} else if(lvl > 60 && lvl <= 70) {
-				targetBitmap = Rez.Drawables.Lvl70;
+				targetIcon = "Battery70";
 			} else if(lvl > 50 && lvl <= 60) {
-				targetBitmap = Rez.Drawables.Lvl60;
+				targetIcon = "Battery60";
 			} else if(lvl > 40 && lvl <= 50) {
-				targetBitmap = Rez.Drawables.Lvl50;
+				targetIcon = "Battery50";
 			} else if(lvl > 30 && lvl <= 40) {
-				targetBitmap = Rez.Drawables.Lvl40;
+				targetIcon = "Battery40";
 			} else if(lvl > 20 && lvl <= 30) {
-				targetBitmap = Rez.Drawables.Lvl30;
+				targetIcon = "Battery30";
 			} else if(lvl > 10 && lvl <= 20) {
-				targetBitmap = Rez.Drawables.Lvl20;
+				targetIcon = "Battery20";
 			} else if(lvl > 5 && lvl <= 10) {
-				targetBitmap = Rez.Drawables.Lvl10;
+				targetIcon = "Battery10";
 			} else if(lvl > 1 && lvl <= 5) {
-				targetBitmap = Rez.Drawables.Lvl5;
+				targetIcon = "Battery5";
 			} else {
-				targetBitmap = Rez.Drawables.Lvl0;
+				targetIcon = "Battery0";
 			}
-			currentBatteryIcon.setBitmap(targetBitmap);
+			if(currentBatteryIcon.name != targetIcon) {
+				currentBatteryIcon.setIcon(targetIcon);
+			}
 		}
 	}
 	
@@ -281,42 +285,111 @@ module Icons {
 	function init() {
 		iconsFont = WatchUi.loadResource(Rez.Fonts.Icons);
 	}
-	
-	function getIconByName(name) {
-		var result = new WatchUi.Text({
-            :color => Graphics.COLOR_WHITE,
-            :font  => iconsFont,
-            :locX  => 130,
-            :locY  => 130
-        });
-        
-        result.setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
-	
-		switch(name) {
-			case "Battery100":
-				result.setText("B");
-				break;
-			default:
-				break;
-		}
-		return result;
-	}
-	
-	class Icon {
-		
-	}
-}
 
-module Utils {
-	class Helpers {
-		function positionBitmap(bitmap, x, y) {
-			x -= bitmap.width / 2;
-			y -= bitmap.height / 2;
+	class Icon {
+		var text;
+		var name;
+		var dimensions;
+		
+		private var dc;
+		private var char;
+
+		function initialize(name, dc) {
+			text = new WatchUi.Text({
+	            :color => Graphics.COLOR_WHITE,
+	            :font  => iconsFont,
+	            :locX  => 0,
+	            :locY  => 0
+        	});
+        	self.dc = dc;
+        	
+        	setIcon(name);
+
+        	dimensions = self.dc.getTextDimensions(char, iconsFont);
+		}
+		
+		function setColor(color) {
+			self.text.setColor(color);
 			
-			bitmap.locX = x;
-			bitmap.locY = y;
+			return text;
+		}
+		
+		function setIcon(name) {
+			self.name = name;
 			
-			return bitmap;
+			switch(name) {
+				case "Battery100":
+					text.setText("B");
+					char = "B";
+					break;
+				case "Battery90":
+					text.setText("A");
+					char = "A";
+					break;
+				case "Battery80":
+					text.setText("9");
+					char = "9";
+					break;
+				case "Battery70":
+					text.setText("8");
+					char = "8";
+					break;
+				case "Battery60":
+					text.setText("7");
+					char = "7";
+					break;
+				case "Battery50":
+					text.setText("6");
+					char = "6";
+					break;
+				case "Battery40":
+					text.setText("5");
+					char = "5";
+					break;
+				case "Battery30":
+					text.setText("4");
+					char = "4";
+					break;
+				case "Battery20":
+					text.setText("3");
+					char = "3";
+					break;
+				case "Battery10":
+					text.setText("2");
+					char = "2";
+					break;
+				case "Battery5":
+					text.setText("1");
+					char = "1";
+					break;
+				case "Battery0":
+					text.setText("0");
+					char = "0";
+					break;
+				case "Notification":
+					text.setText("C");
+					char = "C";
+					break;
+				default:
+					break;
+			}
+			dimensions = self.dc.getTextDimensions(name, iconsFont);
+			
+			return text;
+		}
+
+		function setPosition(x, y) {
+			x -= dimensions[0] / 2;
+			y -= dimensions[1] / 2;
+			
+			text.locX = x;
+			text.locY = y;
+			
+			return text;
+		}
+		
+		function draw() {
+			text.draw(self.dc);
 		}
 	}
 }

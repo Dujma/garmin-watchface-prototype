@@ -1,15 +1,3 @@
 <drawables>
     <bitmap id="MockBackground" filename="../bitmaps/mock-background.png" />
-    <bitmap id="Lvl100"  filename="../bitmaps/battery/lvl-100.png" />
-    <bitmap id="Lvl90" filename="../bitmaps/battery/lvl-90.png" />
-    <bitmap id="Lvl80" filename="../bitmaps/battery/lvl-80.png" />
-    <bitmap id="Lvl70" filename="../bitmaps/battery/lvl-70.png" />
-    <bitmap id="Lvl60" filename="../bitmaps/battery/lvl-60.png" />
-    <bitmap id="Lvl50" filename="../bitmaps/battery/lvl-50.png" />
-    <bitmap id="Lvl40" filename="../bitmaps/battery/lvl-40.png" />
-    <bitmap id="Lvl30" filename="../bitmaps/battery/lvl-30.png" />
-    <bitmap id="Lvl20" filename="../bitmaps/battery/lvl-20.png" />
-    <bitmap id="Lvl10" filename="../bitmaps/battery/lvl-10.png" />
-    <bitmap id="Lvl5" filename="../bitmaps/battery/lvl-5.png" />
-    <bitmap id="Lvl0" filename="../bitmaps/battery/lvl-0.png" />
 </drawables>
