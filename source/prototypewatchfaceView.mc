@@ -22,6 +22,8 @@ class prototypewatchfaceView extends WatchUi.WatchFace {
     function onLayout(dc) {
         setLayout(Rez.Layouts.WatchFace(dc));
         
+        Icons.init();
+        
         mockBackground = new WatchUi.Bitmap({
         	:rezId => Rez.Drawables.MockBackground,
         	:locX  => 0,
@@ -226,7 +228,7 @@ module UiElements {
 	        });
 	        batteryText.setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
     		
-    		Utils.positionBitmap(currentBatteryIcon, cx, Math.round(cy * 0.13));
+    		Utils.Helpers.positionBitmap(currentBatteryIcon, cx, Math.round(cy * 0.13));
 		}
 		
 		function draw() {
@@ -271,7 +273,42 @@ module UiElements {
 		}
 	}
 	
-	class Utils {
+}
+
+module Icons {
+	var iconsFont;
+	
+	function init() {
+		iconsFont = WatchUi.loadResource(Rez.Fonts.Icons);
+	}
+	
+	function getIconByName(name) {
+		var result = new WatchUi.Text({
+            :color => Graphics.COLOR_WHITE,
+            :font  => iconsFont,
+            :locX  => 130,
+            :locY  => 130
+        });
+        
+        result.setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
+	
+		switch(name) {
+			case "Battery100":
+				result.setText("B");
+				break;
+			default:
+				break;
+		}
+		return result;
+	}
+	
+	class Icon {
+		
+	}
+}
+
+module Utils {
+	class Helpers {
 		function positionBitmap(bitmap, x, y) {
 			x -= bitmap.width / 2;
 			y -= bitmap.height / 2;

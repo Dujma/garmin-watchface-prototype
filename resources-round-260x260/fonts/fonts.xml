@@ -4,4 +4,5 @@
 	<font id="AsapCondensedBold20" antialias="true" filename="/asap-condensed-bold-20/asap-condensed-bold-20.fnt" filter="0123456789AJNEUMRPOCFBYLGSTVD " />
 	<font id="AsapBold14" antialias="true" filename="/asap-bold-14/asap-bold-14.fnt" filter="0123456789AMP°" />
 	<font id="AsapBold13" antialias="true" filename="/asap-bold-13/asap-bold-13.fnt" filter="0123456789%MOTUWEHFRSA" />
+	<font id="Icons" antialias="true" filename="/icons/icons.fnt" filter="0123456789ABCDEFGIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstu" />
 </fonts>
