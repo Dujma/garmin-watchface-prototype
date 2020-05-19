@@ -213,7 +213,7 @@ module UiElements {
 			notificationIcon.setPosition(Math.round(cx * 1.176), Math.round(cy * 0.105));
 			
 			alarmIcon = new Icons.Icon("Alarm", dc);
-			alarmIcon.setPosition(Math.round(cx * 0.8), Math.round(cy * 0.105));
+			alarmIcon.setPosition(Math.round(cx * 0.8), Math.round(cy * 0.1));
 			
 			batteryText = new WatchUi.Text({
 	            :color => Graphics.COLOR_WHITE,
