@@ -193,6 +193,7 @@ module UiElements {
 		private var currentBatteryIcon;
 		private var batteryLvl;
 		private var notificationIcon;
+		private var alarmIcon;
 		
 		private var dc;
 
@@ -211,6 +212,9 @@ module UiElements {
 			notificationIcon = new Icons.Icon("Notification", dc);
 			notificationIcon.setPosition(Math.round(cx * 1.176), Math.round(cy * 0.105));
 			
+			alarmIcon = new Icons.Icon("Alarm", dc);
+			alarmIcon.setPosition(Math.round(cx * 0.8), Math.round(cy * 0.105));
+			
 			batteryText = new WatchUi.Text({
 	            :color => Graphics.COLOR_WHITE,
 	            :font  => fntAsapBold13,
@@ -222,25 +226,19 @@ module UiElements {
 		
 		function draw() {
 			var batteryLvl = Math.round(System.getSystemStats().battery);
-			
-			setBatteryIcon(batteryLvl);
+
 			batteryText.setText(Lang.format("$1$%", [ (batteryLvl + 0.5).format( "%d" ) ]));
-			
 			batteryText.draw(dc);
 			
-			if(batteryLvl <= 20) {
-				currentBatteryIcon.setColor(Graphics.COLOR_RED);
-			} else {
-				currentBatteryIcon.setColor(Graphics.COLOR_WHITE);
-			}
-			if(System.getDeviceSettings().notificationCount > 0) {
-				notificationIcon.setColor(Graphics.COLOR_RED);
-			} else {
-				notificationIcon.setColor(Graphics.COLOR_WHITE);
-			}
-			System.println(System.getDeviceSettings().notificationCount);
+			setBatteryIcon(batteryLvl);
+			
+			currentBatteryIcon.setColor(batteryLvl <= 20 ? Graphics.COLOR_RED : Graphics.COLOR_WHITE);
+			notificationIcon.setColor(System.getDeviceSettings().notificationCount > 0 ? Graphics.COLOR_RED : Graphics.COLOR_WHITE);
+			alarmIcon.setColor(System.getDeviceSettings().alarmCount > 0 ? Graphics.COLOR_RED : Graphics.COLOR_WHITE);
+
 			currentBatteryIcon.draw();
 			notificationIcon.draw();
+			alarmIcon.draw();
 		}
 		
 		function setBatteryIcon(lvl) {
@@ -369,6 +367,10 @@ module Icons {
 				case "Notification":
 					text.setText("C");
 					char = "C";
+					break;
+				case "Alarm":
+					text.setText("D");
+					char = "D";
 					break;
 				default:
 					break;
