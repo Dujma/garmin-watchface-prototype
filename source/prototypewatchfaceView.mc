@@ -9,9 +9,9 @@ using Toybox.Time.Gregorian;
 var isSleep = false;
 
 class prototypewatchfaceView extends WatchUi.WatchFace {
-	var mockBackground;
-	var clockArea;
-	var topIcons;
+	private var mockBackground;
+	private var clockArea;
+	private var topIcons;
 
     function initialize() {
         WatchFace.initialize();
@@ -145,21 +145,13 @@ module UiElements {
 	
 	    function draw() {
 	    	var now = Gregorian.info(Time.now(), Time.FORMAT_MEDIUM);
+	    	var hours = now.hour;
 		    
-	        var hours = now.hour;
-	        var minutes = now.min;
-	        var seconds = now.sec;
-	        
-	        var day = now.day;
-	        var month = now.month;
-	        
-	        var partOfDay = hours > 12 ? "PM" : "AM";
-	        
 			hoursText.setText(hours.format(hoursFormat));
-			minutesText.setText(minutes.format("%02d"));
+			minutesText.setText(now.min.format("%02d"));
 			minutesColon.setText(":");
-			dateText.setText(day.format("%02d") + " " + month.toUpper());
-			partOfDayText.setText(partOfDay);
+			dateText.setText(now.day.format("%02d") + " " + now.month.toUpper());
+			partOfDayText.setText(hours > 12 ? "PM" : "AM");
 
 			hoursText.draw(dc);
 			minutesText.draw(dc);
@@ -168,7 +160,7 @@ module UiElements {
 			partOfDayText.draw(dc);
 
 			if(!$.isSleep) {
-				secondsText.setText(seconds.format("%02d"));
+				secondsText.setText(now.sec.format("%02d"));
 				secondsText.draw(dc);
 			}
 	    }
@@ -200,7 +192,6 @@ module UiElements {
 		function initialize(dc) {
 			self.dc = dc;
 			
-			var batteryLvl = Math.round(System.getSystemStats().battery);
 			var fntAsapBold13 = WatchUi.loadResource(Rez.Fonts.AsapBold13);
 			
 			var cx = dc.getWidth() / 2;
@@ -209,12 +200,6 @@ module UiElements {
 			currentBatteryIcon = new Icons.Icon("Battery100", dc);
 			currentBatteryIcon.setPosition(cx, Math.round(cy * 0.125));
 			
-			notificationIcon = new Icons.Icon("Notification", dc);
-			notificationIcon.setPosition(Math.round(cx * 1.176), Math.round(cy * 0.105));
-			
-			alarmIcon = new Icons.Icon("Alarm", dc);
-			alarmIcon.setPosition(Math.round(cx * 0.8), Math.round(cy * 0.1));
-			
 			batteryText = new WatchUi.Text({
 	            :color => Graphics.COLOR_WHITE,
 	            :font  => fntAsapBold13,
@@ -222,6 +207,12 @@ module UiElements {
 	            :locY  => Math.round(cy * 0.030)
 	        });
 	        batteryText.setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
+			
+			notificationIcon = new Icons.Icon("Notification", dc);
+			notificationIcon.setPosition(Math.round(cx * 1.176), Math.round(cy * 0.105));
+			
+			alarmIcon = new Icons.Icon("Alarm", dc);
+			alarmIcon.setPosition(Math.round(cx * 0.8), Math.round(cy * 0.1));
 		}
 		
 		function draw() {
@@ -232,9 +223,11 @@ module UiElements {
 			
 			setBatteryIcon(batteryLvl);
 			
+			var deviceSettings = System.getDeviceSettings();
+			
 			currentBatteryIcon.setColor(batteryLvl <= 20 ? Graphics.COLOR_RED : Graphics.COLOR_WHITE);
-			notificationIcon.setColor(System.getDeviceSettings().notificationCount > 0 ? Graphics.COLOR_RED : Graphics.COLOR_WHITE);
-			alarmIcon.setColor(System.getDeviceSettings().alarmCount > 0 ? Graphics.COLOR_RED : Graphics.COLOR_WHITE);
+			notificationIcon.setColor(deviceSettings.notificationCount > 0 ? Graphics.COLOR_RED : Graphics.COLOR_WHITE);
+			alarmIcon.setColor(deviceSettings.alarmCount > 0 ? Graphics.COLOR_RED : Graphics.COLOR_WHITE);
 
 			currentBatteryIcon.draw();
 			notificationIcon.draw();
@@ -304,6 +297,8 @@ module Icons {
         	setIcon(name);
 
         	dimensions = self.dc.getTextDimensions(char, iconsFont);
+        	
+        	text.setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
 		}
 		
 		function setColor(color) {
@@ -381,9 +376,6 @@ module Icons {
 		}
 
 		function setPosition(x, y) {
-			x -= dimensions[0] / 2;
-			y -= dimensions[1] / 2;
-			
 			text.locX = x;
 			text.locY = y;
 			
