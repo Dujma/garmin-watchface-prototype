@@ -312,6 +312,7 @@ module UiElements {
 		private var deviceSettings;
 		private var initialY = 87;
 		private var yOffset = 3;
+		private var dayNames;
 		
 		function initialize(dc) {
 			self.dc = dc;
@@ -323,7 +324,7 @@ module UiElements {
 			arrowIcon.setColor(Graphics.COLOR_RED);
 			arrowIcon.setPosition(109, 93);
 			
-			var dayNames = [ "MO", "TU", "WE", "TH", "FR", "SA", "SU" ];
+			dayNames = [ "MO", "TU", "WE", "TH", "FR", "SA", "SU" ];
 			var xLocations = [ 56, 83, 109, 135, 159, 182, 206 ];
 			deviceSettings = System.getDeviceSettings();
 			
@@ -363,8 +364,11 @@ module UiElements {
 					
 					arrowIcon.setPosition(days[i].locX, arrowIcon.text.locY);
 				} else {
-					days[i].setColor(Graphics.COLOR_WHITE);
-					
+					if(dayNames[i].equals("SA") || dayNames[i].equals("SU")) {
+						days[i].setColor(Graphics.COLOR_LT_GRAY);
+					} else {
+						days[i].setColor(Graphics.COLOR_WHITE);
+					}
 					days[i].locY = initialY;
 				}
 				days[i].draw(dc);
