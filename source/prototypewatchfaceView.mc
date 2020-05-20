@@ -184,6 +184,9 @@ module UiElements {
 		private var batteryLvl;
 		private var notificationIcon;
 		private var alarmIcon;
+		private var moveIcon;
+		private var dndIcon;
+		private var btIcon;
 		
 		private var dc;
 
@@ -209,6 +212,15 @@ module UiElements {
 			
 			alarmIcon = new Icons.Icon("Alarm", dc);
 			alarmIcon.setPosition(104, 15);
+			
+			moveIcon = new Icons.Icon("Move1", dc);
+			moveIcon.setPosition(104, 243);
+			
+			dndIcon = new Icons.Icon("Dnd", dc);
+			dndIcon.setPosition(130, 247);
+			
+			btIcon = new Icons.Icon("Bluetooth", dc);
+			btIcon.setPosition(155, 244);
 		}
 		
 		function draw() {
@@ -220,14 +232,38 @@ module UiElements {
 			setBatteryIcon(batteryLvl);
 			
 			var deviceSettings = System.getDeviceSettings();
+			var moveBarLevel = ActivityMonitor.getInfo().moveBarLevel;
 			
 			currentBatteryIcon.setColor(batteryLvl <= 20 ? Graphics.COLOR_RED : Graphics.COLOR_WHITE);
 			notificationIcon.setColor(deviceSettings.notificationCount > 0 ? Graphics.COLOR_RED : Graphics.COLOR_WHITE);
 			alarmIcon.setColor(deviceSettings.alarmCount > 0 ? Graphics.COLOR_RED : Graphics.COLOR_WHITE);
+			dndIcon.setColor(deviceSettings.doNotDisturb ? Graphics.COLOR_RED : Graphics.COLOR_WHITE);
+
+			setMoveIcon(moveBarLevel);
 
 			currentBatteryIcon.draw();
 			notificationIcon.draw();
 			alarmIcon.draw();
+			moveIcon.draw();
+			dndIcon.draw();
+			btIcon.draw();
+		}
+
+		function setMoveIcon(lvl) {
+			var targetIcon = null;
+			
+			if(lvl == 0) {
+				targetIcon = "Move1";
+			} else {
+				targetIcon = "Move5";
+			}
+			moveIcon.setIcon(targetIcon);
+			
+			if(lvl >= 3) {
+				moveIcon.setColor(Graphics.COLOR_RED);
+			} else {
+				moveIcon.setColor(Graphics.COLOR_WHITE);
+			}
 		}
 		
 		function setBatteryIcon(lvl) {
@@ -362,6 +398,22 @@ module Icons {
 				case "Alarm":
 					text.setText("D");
 					char = "D";
+					break;
+				case "Move1":
+					text.setText("E");
+					char = "E";
+					break;
+				case "Move5":
+					text.setText("F");
+					char = "F";
+					break;
+				case "Dnd":
+					text.setText("G");
+					char = "G";
+					break;
+				case "Bluetooth":
+					text.setText("H");
+					char = "H";
 					break;
 				default:
 					break;

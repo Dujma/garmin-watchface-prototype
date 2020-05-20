@@ -3,5 +3,5 @@
 	<font id="AsapSemibold55" antialias="true" filename="/asap-semibold-55/asap-semibold-55.fnt" filter="0123456789:" />
 	<font id="AsapCondensedSemiBold20" antialias="true" filename="/asap-condensed-semibold-20/asap-condensed-semibold-20.fnt" filter="0123456789AJNEUMRPOCFBYLGSTVD " />
 	<font id="AsapCondensedSemiBold14" antialias="true" filename="/asap-condensed-semibold-14/asap-condensed-semibold-14.fnt" filter="0123456789APk:.%" />
-	<font id="Icons" antialias="true" filename="/icons/icons.fnt" filter="0123456789ABCDEFGIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstu" />
+	<font id="Icons" antialias="true" filename="/icons/icons.fnt" filter="0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstu" />
 </fonts>
