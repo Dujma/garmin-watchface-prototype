@@ -308,16 +308,20 @@ module UiElements {
 		private var dc;
 		private var days;
 		private var fntAsapSemiBold12;
-		private var arrow;
+		private var arrowIcon;
 		private var deviceSettings;
+		private var initialY = 87;
+		private var yOffset = 3;
 		
 		function initialize(dc) {
 			self.dc = dc;
 			
 			fntAsapSemiBold12 = WatchUi.loadResource(Rez.Fonts.AsapSemiBold12);
 			days = new [7];
-			arrow = new Icons.Icon("Arrow-Up", dc);
-			arrow.setColor(Graphics.COLOR_RED);
+			
+			arrowIcon = new Icons.Icon("Arrow-Up", dc);
+			arrowIcon.setColor(Graphics.COLOR_RED);
+			arrowIcon.setPosition(109, 93);
 			
 			var dayNames = [ "MO", "TU", "WE", "TH", "FR", "SA", "SU" ];
 			var xLocations = [ 56, 83, 109, 135, 159, 182, 206 ];
@@ -339,7 +343,7 @@ module UiElements {
 		            :color => Graphics.COLOR_WHITE,
 		            :font  => fntAsapSemiBold12,
 		            :locX  => xLocations[i],
-		            :locY  => 87
+		            :locY  => initialY
 	        	});
 	        	days[i].setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
 			}
@@ -350,11 +354,21 @@ module UiElements {
 			var currentDayOfWeek = now.day_of_week;
 
 			currentDayOfWeek -= deviceSettings.firstDayOfWeek != Gregorian.DAY_SUNDAY ? 2 : 1;
-			
-			System.println(currentDayOfWeek);
 
 			for(var i = 0; i < days.size(); ++i) {
+				if(i == currentDayOfWeek) {
+					days[i].setColor(Graphics.COLOR_RED);
+					
+					days[i].locY = initialY - yOffset;
+					
+					arrowIcon.setPosition(days[i].locX, arrowIcon.text.locY);
+				} else {
+					days[i].setColor(Graphics.COLOR_WHITE);
+					
+					days[i].locY = initialY;
+				}
 				days[i].draw(dc);
+				arrowIcon.draw();
 			}
 		}
 	}
