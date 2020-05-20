@@ -308,12 +308,15 @@ module UiElements {
 		private var dc;
 		private var days;
 		private var fntAsapSemiBold12;
+		private var arrow;
 		
 		function initialize(dc) {
 			self.dc = dc;
 			
 			fntAsapSemiBold12 = WatchUi.loadResource(Rez.Fonts.AsapSemiBold12);
 			days = new [7];
+			arrow = new Icons.Icon("Arrow-Up", dc);
+			arrow.setColor(Graphics.COLOR_RED);
 			
 			var dayNames = [ "MO", "TU", "WE", "TH", "FR", "SA", "SU" ];
 			var xLocations = [ 56, 83, 109, 135, 159, 182, 206 ];
@@ -462,6 +465,9 @@ module Icons {
 				case "Bluetooth":
 					text.setText("H");
 					char = "H";
+				case "Arrow-Up":
+					text.setText("I");
+					char = "I";
 					break;
 				default:
 					break;
