@@ -12,6 +12,7 @@ class prototypewatchfaceView extends WatchUi.WatchFace {
 	private var mockBackground;
 	private var clockArea;
 	private var topIcons;
+	private var dayOfWeek;
 
     function initialize() {
         WatchFace.initialize();
@@ -31,6 +32,7 @@ class prototypewatchfaceView extends WatchUi.WatchFace {
     	
         clockArea = new UiElements.ClockArea(dc, fntAsapCondensedSemiBold14);
         topIcons = new UiElements.TopIcons(dc, fntAsapCondensedSemiBold14);
+        dayOfWeek = new UiElements.DayOfWeek(dc);
     }
 
     function onShow() {
@@ -44,6 +46,7 @@ class prototypewatchfaceView extends WatchUi.WatchFace {
 
 		clockArea.draw();
 		topIcons.draw();
+		dayOfWeek.draw();
     }
 
     function onHide() {
@@ -301,6 +304,50 @@ module UiElements {
 		}
 	}
 	
+	class DayOfWeek {
+		private var dc;
+		private var days;
+		private var fntAsapSemiBold12;
+		
+		function initialize(dc) {
+			self.dc = dc;
+			
+			fntAsapSemiBold12 = WatchUi.loadResource(Rez.Fonts.AsapSemiBold12);
+			days = new [7];
+			
+			var dayNames = [ "MO", "TU", "WE", "TH", "FR", "SA", "SU" ];
+			var xLocations = [ 56, 83, 109, 135, 159, 182, 206 ];
+			var deviceSettings = System.getDeviceSettings();
+			
+			if(deviceSettings.firstDayOfWeek == Gregorian.DAY_SUNDAY) {
+        		var temp = dayNames;
+        		
+        		temp[0] = "SU";
+        		
+        		for(var i = 0; i < dayNames.size() - 1; ++i) {
+        			temp[i] = dayNames[i];
+        		}
+        		dayNames = temp;
+        	}
+
+			for(var i = 0; i < days.size(); ++i) {
+				days[i] = new WatchUi.Text({
+					:text  => dayNames[i],
+		            :color => Graphics.COLOR_WHITE,
+		            :font  => fntAsapSemiBold12,
+		            :locX  => xLocations[i],
+		            :locY  => 87
+	        	});
+	        	days[i].setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
+			}
+		}
+		
+		function draw() {
+			for(var i = 0; i < days.size(); ++i) {
+				days[i].draw(dc);
+			}
+		}
+	}
 }
 
 module Icons {
