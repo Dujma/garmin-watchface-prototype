@@ -309,6 +309,7 @@ module UiElements {
 		private var days;
 		private var fntAsapSemiBold12;
 		private var arrow;
+		private var deviceSettings;
 		
 		function initialize(dc) {
 			self.dc = dc;
@@ -320,15 +321,14 @@ module UiElements {
 			
 			var dayNames = [ "MO", "TU", "WE", "TH", "FR", "SA", "SU" ];
 			var xLocations = [ 56, 83, 109, 135, 159, 182, 206 ];
-			var deviceSettings = System.getDeviceSettings();
+			deviceSettings = System.getDeviceSettings();
 			
 			if(deviceSettings.firstDayOfWeek == Gregorian.DAY_SUNDAY) {
-        		var temp = dayNames;
-        		
-        		temp[0] = "SU";
-        		
-        		for(var i = 0; i < dayNames.size() - 1; ++i) {
-        			temp[i] = dayNames[i];
+				var temp = new [7];
+				temp[0] = dayNames[dayNames.size() - 1];
+				
+        		for(var i = 1; i < dayNames.size(); ++i) {
+        			temp[i] = dayNames[i - 1];
         		}
         		dayNames = temp;
         	}
@@ -346,6 +346,13 @@ module UiElements {
 		}
 		
 		function draw() {
+			var now = Gregorian.info(Time.now(), Time.FORMAT_SHORT);
+			var currentDayOfWeek = now.day_of_week;
+
+			currentDayOfWeek -= deviceSettings.firstDayOfWeek != Gregorian.DAY_SUNDAY ? 2 : 1;
+			
+			System.println(currentDayOfWeek);
+
 			for(var i = 0; i < days.size(); ++i) {
 				days[i].draw(dc);
 			}
