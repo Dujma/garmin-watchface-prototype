@@ -490,6 +490,7 @@ module Icons {
 				case "Bluetooth":
 					text.setText("H");
 					char = "H";
+					break;
 				case "Arrow-Up":
 					text.setText("I");
 					char = "I";
