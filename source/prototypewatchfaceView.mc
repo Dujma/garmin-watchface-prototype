@@ -12,6 +12,7 @@ class prototypewatchfaceView extends WatchUi.WatchFace {
 	private var mockBackground;
 	private var clockArea;
 	private var topIcons;
+	private var bottomIcons;
 	private var dayOfWeek;
 	private var moveBar;
 
@@ -33,6 +34,7 @@ class prototypewatchfaceView extends WatchUi.WatchFace {
     	
         clockArea = new UiElements.ClockArea(dc, fntAsapCondensedBold14);
         topIcons = new UiElements.TopIcons(dc, fntAsapCondensedBold14);
+        bottomIcons = new UiElements.BottomIcons(dc);
         dayOfWeek = new UiElements.DayOfWeek(dc);
         moveBar = new UiElements.MoveBar(dc);
     }
@@ -42,12 +44,15 @@ class prototypewatchfaceView extends WatchUi.WatchFace {
     }
     
     function onUpdate(dc) {
+    	// Background
     	drawBackground(dc);
     	
     	mockBackground.draw(dc);
-
+		
+		// UiElements
 		clockArea.draw();
 		topIcons.draw();
+		bottomIcons.draw();
 		dayOfWeek.draw();
 		moveBar.draw();
     }
@@ -204,22 +209,15 @@ module UiElements {
 	
 	class TopIcons extends UiElementBase {
 		private var batteryText;
-		private var currentBatteryIcon;
-		private var batteryLvl;
+		private var batteryIcon;
 		private var notificationIcon;
 		private var alarmIcon;
-		private var moveIcon;
-		private var dndIcon;
-		private var btIcon;
 
 		function initialize(dc, fntAsapCondensedBold14) {
 			UiElementBase.initialize(dc);
 		
-			var cx = dc.getWidth() / 2;
-	        var cy = dc.getWidth() / 2;
-			
-			currentBatteryIcon = new Icons.Icon("Battery100", dc);
-			currentBatteryIcon.setPosition(130, 19);
+			batteryIcon = new Icons.Icon("Battery-100", dc);
+			batteryIcon.setPosition(130, 19);
 			
 			batteryText = new WatchUi.Text({
 	            :color => Graphics.COLOR_WHITE,
@@ -234,15 +232,6 @@ module UiElements {
 			
 			alarmIcon = new Icons.Icon("Alarm", dc);
 			alarmIcon.setPosition(104, 15);
-			
-			moveIcon = new Icons.Icon("Move1", dc);
-			moveIcon.setPosition(104, 243);
-			
-			dndIcon = new Icons.Icon("Dnd", dc);
-			dndIcon.setPosition(130, 247);
-			
-			btIcon = new Icons.Icon("Bluetooth", dc);
-			btIcon.setPosition(155, 244);
 		}
 		
 		function draw() {
@@ -254,31 +243,90 @@ module UiElements {
 			setBatteryIcon(batteryLvl);
 			
 			var deviceSettings = System.getDeviceSettings();
-			var moveBarLevel = ActivityMonitor.getInfo().moveBarLevel;
-			
-			currentBatteryIcon.setColor(batteryLvl <= 20 ? Graphics.COLOR_RED : Graphics.COLOR_WHITE);
+
+			batteryIcon.setColor(batteryLvl <= 20 ? Graphics.COLOR_RED : Graphics.COLOR_WHITE);
 			notificationIcon.setColor(deviceSettings.notificationCount > 0 ? Graphics.COLOR_RED : Graphics.COLOR_WHITE);
 			alarmIcon.setColor(deviceSettings.alarmCount > 0 ? Graphics.COLOR_RED : Graphics.COLOR_WHITE);
+
+			batteryIcon.draw();
+			notificationIcon.draw();
+			alarmIcon.draw();
+		}
+		
+		function setBatteryIcon(lvl) {
+			var targetIcon = null;
+			
+			// TODO: Move this to dictionary
+			if(lvl > 90) {
+				targetIcon = "Battery-100";
+			} else if(lvl > 80 && lvl <= 90) {
+				targetIcon = "Battery-90";
+			} else if(lvl > 70 && lvl <= 80) {
+				targetIcon = "Battery-80";
+			} else if(lvl > 60 && lvl <= 70) {
+				targetIcon = "Battery-70";
+			} else if(lvl > 50 && lvl <= 60) {
+				targetIcon = "Battery-60";
+			} else if(lvl > 40 && lvl <= 50) {
+				targetIcon = "Battery-50";
+			} else if(lvl > 30 && lvl <= 40) {
+				targetIcon = "Battery-40";
+			} else if(lvl > 20 && lvl <= 30) {
+				targetIcon = "Battery-30";
+			} else if(lvl > 10 && lvl <= 20) {
+				targetIcon = "Battery-20";
+			} else if(lvl > 5 && lvl <= 10) {
+				targetIcon = "Battery-10";
+			} else if(lvl > 1 && lvl <= 5) {
+				targetIcon = "Battery-5";
+			} else {
+				targetIcon = "Battery-0";
+			}
+			if(batteryIcon.name != targetIcon) {
+				batteryIcon.setIcon(targetIcon);
+			}
+		}
+	}
+	
+	class BottomIcons extends UiElementBase {
+		private var moveIcon;
+		private var dndIcon;
+		private var btIcon;
+		
+		function initialize(dc) {
+			UiElementBase.initialize(dc);
+			
+			moveIcon = new Icons.Icon("Move-1", dc);
+			moveIcon.setPosition(104, 243);
+			
+			dndIcon = new Icons.Icon("Dnd", dc);
+			dndIcon.setPosition(130, 247);
+			
+			btIcon = new Icons.Icon("Bluetooth", dc);
+			btIcon.setPosition(155, 244);
+		}
+		
+		function draw() {
+			var deviceSettings = System.getDeviceSettings();
+			var moveBarLevel = ActivityMonitor.getInfo().moveBarLevel;
+			
 			dndIcon.setColor(deviceSettings.doNotDisturb ? Graphics.COLOR_RED : Graphics.COLOR_WHITE);
 			btIcon.setColor(deviceSettings.phoneConnected ? Graphics.COLOR_RED : Graphics.COLOR_WHITE);
 
 			setMoveIcon(moveBarLevel);
-
-			currentBatteryIcon.draw();
-			notificationIcon.draw();
-			alarmIcon.draw();
+			
 			moveIcon.draw();
 			dndIcon.draw();
 			btIcon.draw();
 		}
-
+		
 		function setMoveIcon(lvl) {
 			var targetIcon = null;
 			
 			if(lvl == 0) {
-				targetIcon = "Move1";
+				targetIcon = "Move-1";
 			} else {
-				targetIcon = "Move5";
+				targetIcon = "Move-5";
 			}
 			moveIcon.setIcon(targetIcon);
 			
@@ -286,39 +334,6 @@ module UiElements {
 				moveIcon.setColor(Graphics.COLOR_RED);
 			} else {
 				moveIcon.setColor(Graphics.COLOR_WHITE);
-			}
-		}
-		
-		function setBatteryIcon(lvl) {
-			var targetIcon = null;
-			
-			if(lvl > 90) {
-				targetIcon = "Battery100";
-			} else if(lvl > 80 && lvl <= 90) {
-				targetIcon = "Battery90";
-			} else if(lvl > 70 && lvl <= 80) {
-				targetIcon = "Battery80";
-			} else if(lvl > 60 && lvl <= 70) {
-				targetIcon = "Battery70";
-			} else if(lvl > 50 && lvl <= 60) {
-				targetIcon = "Battery60";
-			} else if(lvl > 40 && lvl <= 50) {
-				targetIcon = "Battery50";
-			} else if(lvl > 30 && lvl <= 40) {
-				targetIcon = "Battery40";
-			} else if(lvl > 20 && lvl <= 30) {
-				targetIcon = "Battery30";
-			} else if(lvl > 10 && lvl <= 20) {
-				targetIcon = "Battery20";
-			} else if(lvl > 5 && lvl <= 10) {
-				targetIcon = "Battery10";
-			} else if(lvl > 1 && lvl <= 5) {
-				targetIcon = "Battery5";
-			} else {
-				targetIcon = "Battery0";
-			}
-			if(currentBatteryIcon.name != targetIcon) {
-				currentBatteryIcon.setIcon(targetIcon);
 			}
 		}
 	}
@@ -346,6 +361,7 @@ module UiElements {
 			var xLocations = [ 56, 83, 109, 135, 159, 182, 206 ];
 			deviceSettings = System.getDeviceSettings();
 			
+			// TODO: First day of week can be Saturday, Sunday and Monday
 			if(deviceSettings.firstDayOfWeek == Gregorian.DAY_SUNDAY) {
 				var temp = new [7];
 				temp[0] = dayNames[dayNames.size() - 1];
@@ -443,6 +459,29 @@ module UiElements {
 
 module Icons {
 	var iconsFont;
+	var icons = {
+		"Battery-100"  => "B",
+		"Battery-90"   => "A",
+		"Battery-80"   => "9",
+		"Battery-70"   => "8",
+		"Battery-60"   => "7",
+		"Battery-50"   => "6",
+		"Battery-40"   => "5",
+		"Battery-30"   => "4",
+		"Battery-20"   => "3",
+		"Battery-10"   => "2",
+		"Battery-5"    => "1",
+		"Battery-0"    => "0",
+		"Notification" => "C",
+		"Alarm"        => "D",
+		"Move-1"       => "E",
+		"Move-5"       => "F",
+		"Dnd"          => "G",
+		"Bluetooth"    => "H",
+		"Arrow-Up"     => "I",
+		"MoveBar-1"    => "J",
+		"MoveBar-2"    => "K"
+	};
 	
 	function init() {
 		iconsFont = WatchUi.loadResource(Rez.Fonts.Icons);
@@ -466,110 +505,21 @@ module Icons {
         	self.dc = dc;
         	
         	setIcon(name);
-
-        	dimensions = self.dc.getTextDimensions(char, iconsFont);
-        	
         	text.setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
 		}
 		
 		function setColor(color) {
-			self.text.setColor(color);
+			text.setColor(color);
 			
 			return text;
 		}
 		
 		function setIcon(name) {
 			self.name = name;
+			char = Icons.icons[name];
 			
-			switch(name) {
-				case "Battery100":
-					text.setText("B");
-					char = "B";
-					break;
-				case "Battery90":
-					text.setText("A");
-					char = "A";
-					break;
-				case "Battery80":
-					text.setText("9");
-					char = "9";
-					break;
-				case "Battery70":
-					text.setText("8");
-					char = "8";
-					break;
-				case "Battery60":
-					text.setText("7");
-					char = "7";
-					break;
-				case "Battery50":
-					text.setText("6");
-					char = "6";
-					break;
-				case "Battery40":
-					text.setText("5");
-					char = "5";
-					break;
-				case "Battery30":
-					text.setText("4");
-					char = "4";
-					break;
-				case "Battery20":
-					text.setText("3");
-					char = "3";
-					break;
-				case "Battery10":
-					text.setText("2");
-					char = "2";
-					break;
-				case "Battery5":
-					text.setText("1");
-					char = "1";
-					break;
-				case "Battery0":
-					text.setText("0");
-					char = "0";
-					break;
-				case "Notification":
-					text.setText("C");
-					char = "C";
-					break;
-				case "Alarm":
-					text.setText("D");
-					char = "D";
-					break;
-				case "Move1":
-					text.setText("E");
-					char = "E";
-					break;
-				case "Move5":
-					text.setText("F");
-					char = "F";
-					break;
-				case "Dnd":
-					text.setText("G");
-					char = "G";
-					break;
-				case "Bluetooth":
-					text.setText("H");
-					char = "H";
-					break;
-				case "Arrow-Up":
-					text.setText("I");
-					char = "I";
-					break;
-				case "MoveBar-1":
-					text.setText("J");
-					char = "J";
-					break;
-				case "MoveBar-2":
-					text.setText("K");
-					char = "K";
-					break;
-				default:
-					break;
-			}
-			dimensions = self.dc.getTextDimensions(name, iconsFont);
+			text.setText(char);
+			dimensions = dc.getTextDimensions(char, iconsFont);
 			
 			return text;
 		}
@@ -582,7 +532,7 @@ module Icons {
 		}
 		
 		function draw() {
-			text.draw(self.dc);
+			text.draw(dc);
 		}
 	}
 }
