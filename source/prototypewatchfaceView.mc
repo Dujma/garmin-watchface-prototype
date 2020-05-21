@@ -76,8 +76,23 @@ class prototypewatchfaceView extends WatchUi.WatchFace {
 }
 
 module UiElements {
-	class ClockArea {
-		private var dc;
+	class UiElementBase {
+		protected var dc;
+		
+		function initialize(dc) {
+			self.dc = dc;
+		}
+		
+		function draw() {
+		
+		}
+		
+		function onSettingUpdate() {
+			
+	    }
+	}
+	
+	class ClockArea extends UiElementBase {
 		private var hoursText;
 		private var hoursFormat;
 		private var minutesText;
@@ -87,7 +102,8 @@ module UiElements {
 		private var partOfDayText;
 
 	    function initialize(dc, fntAsapCondensedBold14) {
-			self.dc = dc;
+			UiElementBase.initialize(dc);
+			
 			var yOffsetFntAsapBold81 = 0.962;
 			var yOffsetFntAsapSemibold55 = 0.97;
 			var yOffsetFntAsapSmall = 0.99;
@@ -167,6 +183,8 @@ module UiElements {
 	    }
 
 	    function onSettingUpdate() {
+	    	UiElementBase.onSettingUpdate();
+	    	
 	    	var addLeadingZero = Application.getApp().getProperty("AddLeadingZero");
 	    	
 	    	hoursFormat = addLeadingZero ? "%02d" : "%d";
@@ -181,7 +199,7 @@ module UiElements {
 	    }
 	}
 	
-	class TopIcons {
+	class TopIcons extends UiElementBase {
 		private var batteryText;
 		private var currentBatteryIcon;
 		private var batteryLvl;
@@ -190,12 +208,10 @@ module UiElements {
 		private var moveIcon;
 		private var dndIcon;
 		private var btIcon;
-		
-		private var dc;
 
 		function initialize(dc, fntAsapCondensedBold14) {
-			self.dc = dc;
-			
+			UiElementBase.initialize(dc);
+		
 			var cx = dc.getWidth() / 2;
 	        var cy = dc.getWidth() / 2;
 			
@@ -304,8 +320,7 @@ module UiElements {
 		}
 	}
 	
-	class DayOfWeek {
-		private var dc;
+	class DayOfWeek extends UiElementBase {
 		private var days;
 		private var fntAsapBold12;
 		private var arrowIcon;
@@ -315,7 +330,7 @@ module UiElements {
 		private var dayNames;
 		
 		function initialize(dc) {
-			self.dc = dc;
+			UiElementBase.initialize(dc);
 			
 			fntAsapBold12 = WatchUi.loadResource(Rez.Fonts.AsapBold12);
 			days = new [7];
