@@ -13,6 +13,7 @@ class prototypewatchfaceView extends WatchUi.WatchFace {
 	private var clockArea;
 	private var topIcons;
 	private var dayOfWeek;
+	private var moveBar;
 
     function initialize() {
         WatchFace.initialize();
@@ -33,6 +34,7 @@ class prototypewatchfaceView extends WatchUi.WatchFace {
         clockArea = new UiElements.ClockArea(dc, fntAsapCondensedBold14);
         topIcons = new UiElements.TopIcons(dc, fntAsapCondensedBold14);
         dayOfWeek = new UiElements.DayOfWeek(dc);
+        moveBar = new UiElements.MoveBar(dc);
     }
 
     function onShow() {
@@ -47,6 +49,7 @@ class prototypewatchfaceView extends WatchUi.WatchFace {
 		clockArea.draw();
 		topIcons.draw();
 		dayOfWeek.draw();
+		moveBar.draw();
     }
 
     function onHide() {
@@ -391,6 +394,51 @@ module UiElements {
 			}
 		}
 	}
+	
+	class MoveBar extends UiElementBase {
+		var lvl1;
+		var lvls;
+		
+		function initialize(dc) {
+			UiElementBase.initialize(dc);
+			
+    		lvl1 = new Icons.Icon("MoveBar-1", dc);
+    		lvl1.setPosition(101, 219);
+    		
+    		lvls = new [4];
+    		
+    		for(var i = 0; i < lvls.size(); ++i) {
+    			lvls[i] = new Icons.Icon("MoveBar-2", dc);
+    			lvls[i].setPosition(120 + (i * 14), 219);
+    		}
+		}
+		
+		function draw() {
+			var moveBarLevel = ActivityMonitor.getInfo().moveBarLevel;
+
+			if(moveBarLevel > 0) {
+				lvl1.setColor(Graphics.COLOR_RED);
+				lvl1.draw();
+				
+				for(var i = 0; i < moveBarLevel - 1; ++i) {
+					lvls[i].setColor(Graphics.COLOR_RED);
+					lvls[i].draw();
+				}
+				for(var i = moveBarLevel - 1; i < lvls.size(); ++i) {
+					lvls[i].setColor(Graphics.COLOR_DK_GRAY);
+					lvls[i].draw();
+				}
+			} else {
+				lvl1.setColor(Graphics.COLOR_DK_GRAY);
+				lvl1.draw();
+				
+				for(var i = 0; i < lvls.size(); ++i) {
+					lvls[i].setColor(Graphics.COLOR_DK_GRAY);
+					lvls[i].draw();
+				}
+			}
+		}
+	}
 }
 
 module Icons {
@@ -509,6 +557,14 @@ module Icons {
 				case "Arrow-Up":
 					text.setText("I");
 					char = "I";
+					break;
+				case "MoveBar-1":
+					text.setText("J");
+					char = "J";
+					break;
+				case "MoveBar-2":
+					text.setText("K");
+					char = "K";
 					break;
 				default:
 					break;
