@@ -1,9 +1,9 @@
 <fonts>
-	<font id="AsapSemiBold81" antialias="true" filename="/asap-semibold-81/asap-semibold-81.fnt" filter="0123456789" />
+	<font id="AsapBold81" antialias="true" filename="/asap-bold-81/asap-bold-81.fnt" filter="0123456789" />
 	<font id="AsapSemibold55" antialias="true" filename="/asap-semibold-55/asap-semibold-55.fnt" filter="0123456789:" />
 	<font id="AsapCondensedSemiBold20" antialias="true" filename="/asap-condensed-semibold-20/asap-condensed-semibold-20.fnt" filter="0123456789AJNEUMRPOCFBYLGSTVD " />
-	<font id="AsapCondensedSemiBold14" antialias="true" filename="/asap-condensed-semibold-14/asap-condensed-semibold-14.fnt" filter="0123456789APk:.%" />
-	<font id="AsapSemiBold12" antialias="true" filename="/asap-semibold-12/asap-semibold-12.fnt" filter="ABCDEFGHIJKLMNOPQRSTUVWYZabcdefghijklmnopqrstuvwyz' " />
+	<font id="AsapCondensedBold14" antialias="true" filename="/asap-condensed-bold-14/asap-condensed-bold-14.fnt" filter="0123456789APk:.%" />
+	<font id="AsapBold12" antialias="true" filename="/asap-bold-12/asap-bold-12.fnt" filter="ABCDEFGHIJKLMNOPQRSTUVWYZabcdefghijklmnopqrstuvwyz' " />
 	
 	<font id="Icons" antialias="true" filename="/icons/icons.fnt" filter="0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstu" />
 </fonts>

@@ -28,10 +28,10 @@ class prototypewatchfaceView extends WatchUi.WatchFace {
         	:locX  => 0,
         	:locY  => 0
     	});
-    	var fntAsapCondensedSemiBold14 = WatchUi.loadResource(Rez.Fonts.AsapCondensedSemiBold14);
+    	var fntAsapCondensedBold14 = WatchUi.loadResource(Rez.Fonts.AsapCondensedBold14);
     	
-        clockArea = new UiElements.ClockArea(dc, fntAsapCondensedSemiBold14);
-        topIcons = new UiElements.TopIcons(dc, fntAsapCondensedSemiBold14);
+        clockArea = new UiElements.ClockArea(dc, fntAsapCondensedBold14);
+        topIcons = new UiElements.TopIcons(dc, fntAsapCondensedBold14);
         dayOfWeek = new UiElements.DayOfWeek(dc);
     }
 
@@ -86,13 +86,13 @@ module UiElements {
 		private var dateText;
 		private var partOfDayText;
 
-	    function initialize(dc, fntAsapCondensedSemiBold14) {
+	    function initialize(dc, fntAsapCondensedBold14) {
 			self.dc = dc;
 			var yOffsetFntAsapBold81 = 0.962;
 			var yOffsetFntAsapSemibold55 = 0.97;
 			var yOffsetFntAsapSmall = 0.99;
 			
-			var fntAsapSemiBold81 = WatchUi.loadResource(Rez.Fonts.AsapSemiBold81);
+			var fntAsapBold81 = WatchUi.loadResource(Rez.Fonts.AsapBold81);
 	        var fntAsapSemibold55 = WatchUi.loadResource(Rez.Fonts.AsapSemibold55);
 	        var fntAsapCondensedSemiBold20 = WatchUi.loadResource(Rez.Fonts.AsapCondensedSemiBold20);
 
@@ -100,37 +100,37 @@ module UiElements {
 
 			hoursText = new WatchUi.Text({
 	            :color => Graphics.COLOR_WHITE,
-	            :font  => fntAsapSemiBold81,
-	            :locX  => 91 +(self.dc.getTextWidthInPixels("00", fntAsapSemiBold81) / 2),
+	            :font  => fntAsapBold81,
+	            :locX  => 89 +(self.dc.getTextWidthInPixels("00", fntAsapBold81) / 2),
 	            :locY  => 129
 	        });
 	        minutesText = new WatchUi.Text({
 	            :color => Graphics.COLOR_LT_GRAY,
 	            :font  => fntAsapSemibold55,
-	            :locX  => 180,
+	            :locX  => 178,
 	            :locY  => 119
 	        });
 	        minutesColon = new WatchUi.Text({
 	            :color => Graphics.COLOR_LT_GRAY,
 	            :font  => fntAsapSemibold55,
-	            :locX  => 142,
+	            :locX  => 139,
 	            :locY  => 119
 	        });
 	        dateText = new WatchUi.Text({
 	            :color => Graphics.COLOR_WHITE,
 	            :font  => fntAsapCondensedSemiBold20,
-	            :locX  => 180,
+	            :locX  => 178,
 	            :locY  => 150
 	        });
 	        partOfDayText = new WatchUi.Text({
 	            :color => Graphics.COLOR_WHITE,
-	            :font  => fntAsapCondensedSemiBold14,
+	            :font  => fntAsapCondensedBold14,
 	            :locX  => 43,
 	            :locY  => 152
 	        });
 	        secondsText = new WatchUi.Text({
 	            :color => Graphics.COLOR_LT_GRAY,
-	            :font  => fntAsapCondensedSemiBold14,
+	            :font  => fntAsapCondensedBold14,
 	            :locX  => 215,
 	            :locY  => 106
 	        });
@@ -193,7 +193,7 @@ module UiElements {
 		
 		private var dc;
 
-		function initialize(dc, fntAsapCondensedSemiBold14) {
+		function initialize(dc, fntAsapCondensedBold14) {
 			self.dc = dc;
 			
 			var cx = dc.getWidth() / 2;
@@ -204,7 +204,7 @@ module UiElements {
 			
 			batteryText = new WatchUi.Text({
 	            :color => Graphics.COLOR_WHITE,
-	            :font  => fntAsapCondensedSemiBold14,
+	            :font  => fntAsapCondensedBold14,
 	            :locX  => 130,
 	            :locY  => 8
 	        });
@@ -307,7 +307,7 @@ module UiElements {
 	class DayOfWeek {
 		private var dc;
 		private var days;
-		private var fntAsapSemiBold12;
+		private var fntAsapBold12;
 		private var arrowIcon;
 		private var deviceSettings;
 		private var initialY = 87;
@@ -317,7 +317,7 @@ module UiElements {
 		function initialize(dc) {
 			self.dc = dc;
 			
-			fntAsapSemiBold12 = WatchUi.loadResource(Rez.Fonts.AsapSemiBold12);
+			fntAsapBold12 = WatchUi.loadResource(Rez.Fonts.AsapBold12);
 			days = new [7];
 			
 			arrowIcon = new Icons.Icon("Arrow-Up", dc);
@@ -342,7 +342,7 @@ module UiElements {
 				days[i] = new WatchUi.Text({
 					:text  => dayNames[i],
 		            :color => Graphics.COLOR_WHITE,
-		            :font  => fntAsapSemiBold12,
+		            :font  => fntAsapBold12,
 		            :locX  => xLocations[i],
 		            :locY  => initialY
 	        	});
