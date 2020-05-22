@@ -48,11 +48,14 @@ class prototypewatchfaceView extends WatchUi.WatchFace {
     	drawBackground(dc);
     	
     	mockBackground.draw(dc);
+    	
+    	var deviceSettings = System.getDeviceSettings();
+    	var systemStats = System.getSystemStats();
 		
 		// UiElements
-		clockArea.draw();
-		topIcons.draw();
-		bottomIcons.draw();
+		clockArea.draw(deviceSettings);
+		topIcons.draw(deviceSettings, systemStats);
+		bottomIcons.draw(deviceSettings);
 		dayOfWeek.draw();
 		moveBar.draw();
     }
@@ -91,11 +94,7 @@ module UiElements {
 		function initialize(dc) {
 			self.dc = dc;
 		}
-		
-		function draw() {
-		
-		}
-		
+
 		function onSettingUpdate() {
 			
 	    }
@@ -167,13 +166,13 @@ module UiElements {
 	        hoursFormat = Application.getApp().getProperty("AddLeadingZero") ? "%02d" : "%d";
 	    }
 	
-	    function draw() {
+	    function draw(deviceSettings) {
 	    	var now = Gregorian.info(Time.now(), Time.FORMAT_MEDIUM);
 	    	var hours = now.hour;
 
 		    partOfDayText.setText(hours > 12 ? "P" : "A");
 		    
-		    if(!System.getDeviceSettings().is24Hour) {
+		    if(!deviceSettings.is24Hour) {
 				hours -= hours > 12 ? 12 : 0;
 			}
 			hoursText.setText(hours.format(hoursFormat));
@@ -235,15 +234,13 @@ module UiElements {
 			alarmIcon.setPosition(104, 15);
 		}
 		
-		function draw() {
-			var batteryLvl = Math.round(System.getSystemStats().battery);
+		function draw(deviceSettings, systemStats) {
+			var batteryLvl = Math.round(systemStats.battery + 0.5);
 
-			batteryText.setText(Lang.format("$1$%", [ (batteryLvl + 0.5).format( "%d" ) ]));
+			batteryText.setText(Lang.format("$1$%", [ batteryLvl.format( "%d" ) ]));
 			batteryText.draw(dc);
 			
 			setBatteryIcon(batteryLvl);
-			
-			var deviceSettings = System.getDeviceSettings();
 
 			batteryIcon.setColor(batteryLvl <= 20 ? Graphics.COLOR_RED : Graphics.COLOR_WHITE);
 			notificationIcon.setColor(deviceSettings.notificationCount > 0 ? Graphics.COLOR_RED : Graphics.COLOR_WHITE);
@@ -307,10 +304,9 @@ module UiElements {
 			btIcon.setPosition(155, 244);
 		}
 		
-		function draw() {
+		function draw(deviceSettings) {
 			var moveBarLevel = ActivityMonitor.getInfo().moveBarLevel;
-			var deviceSettings = System.getDeviceSettings();
-			
+
 			dndIcon.setColor(deviceSettings.doNotDisturb ? Graphics.COLOR_RED : Graphics.COLOR_WHITE);
 			btIcon.setColor(deviceSettings.phoneConnected ? Graphics.COLOR_RED : Graphics.COLOR_WHITE);
 			setMoveIcon(moveBarLevel);
