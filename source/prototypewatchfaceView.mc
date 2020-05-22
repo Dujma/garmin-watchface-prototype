@@ -325,21 +325,22 @@ module UiElements {
 			var targetIcon = null;
 			
 			if(lvl == 0) {
+				targetIcon = "Move-0";
+			} else if(lvl > 0 && lvl < 3) {
 				targetIcon = "Move-1";
 			} else {
 				targetIcon = "Move-5";
 			}
 			moveIcon.setIcon(targetIcon);
 			
-			if(lvl >= 3) {
+			if(lvl >= 1) {
 				moveIcon.setColor(Graphics.COLOR_RED);
 			} else {
 				moveIcon.setColor(Graphics.COLOR_WHITE);
 			}
 		}
 	}
-	
-	// TODO: Missing implementation onSettingChange
+
 	class DayOfWeek extends UiElementBase {
 		private var days;
 		private var fntAsapBold12;
@@ -490,7 +491,8 @@ module Icons {
 		"Bluetooth"    => "H",
 		"Arrow-Up"     => "I",
 		"MoveBar-1"    => "J",
-		"MoveBar-2"    => "K"
+		"MoveBar-2"    => "K",
+		"Move-0"       => "L"
 	};
 	
 	function init() {
