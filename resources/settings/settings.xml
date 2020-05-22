@@ -21,5 +21,13 @@
     <setting propertyKey="@Properties.AddLeadingZero" title="@Strings.AddLeadingZeroTitle">
         <settingConfig type="boolean" />
     </setting>
+    
+    <setting propertyKey="@Properties.FirstDayOfWeek" title="@Strings.FirstDayOfWeekTitle">
+        <settingConfig type="list">
+            <listEntry value="2">@Strings.Monday</listEntry>
+            <listEntry value="1">@Strings.Sunday</listEntry>
+            <listEntry value="7">@Strings.Saturday</listEntry>
+        </settingConfig>
+    </setting>
 
 </settings>

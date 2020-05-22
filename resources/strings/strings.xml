@@ -5,6 +5,7 @@
     <string id="BackgroundColorTitle">Background Color</string>
     <string id="ForegroundColorTitle">Foreground Color</string>
     <string id="AddLeadingZeroTitle">Add Leading Zero</string>
+    <string id="FirstDayOfWeekTitle">First Day of Week</string>
 
     <string id="ColorBlack">Black</string>
     <string id="ColorDarkGray">Dark Gray</string>
@@ -12,5 +13,9 @@
     <string id="ColorWhite">White</string>
     <string id="ColorBlue">Blue</string>
     <string id="ColorRed">Red</string>
+    
+    <string id="Monday">Monday</string>
+    <string id="Sunday">Sunday</string>
+    <string id="Saturday">Saturday</string>
 
 </strings>

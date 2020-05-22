@@ -13,6 +13,7 @@ class prototypewatchfaceView extends WatchUi.WatchFace {
 	private var bottomIcons;
 	private var dayOfWeek;
 	private var moveBar;
+	private var application;
 
     function initialize() {
         WatchFace.initialize();
@@ -20,6 +21,7 @@ class prototypewatchfaceView extends WatchUi.WatchFace {
 
     function onLayout(dc) {
         setLayout(Rez.Layouts.WatchFace(dc));
+        application = Application.getApp();
         
         Icons.init();
         
@@ -30,10 +32,10 @@ class prototypewatchfaceView extends WatchUi.WatchFace {
     	});
     	var fntAsapCondensedBold14 = WatchUi.loadResource(Rez.Fonts.AsapCondensedBold14);
     	
-        clockArea = new UiElements.ClockArea(dc, fntAsapCondensedBold14);
+        clockArea = new UiElements.ClockArea(dc, fntAsapCondensedBold14, application);
         topIcons = new UiElements.TopIcons(dc, fntAsapCondensedBold14);
         bottomIcons = new UiElements.BottomIcons(dc);
-        dayOfWeek = new UiElements.DayOfWeek(dc);
+        dayOfWeek = new UiElements.DayOfWeek(dc, application);
         moveBar = new UiElements.MoveBar(dc);
     }
 
@@ -88,10 +90,6 @@ module UiElements {
 		function initialize(dc) {
 			self.dc = dc;
 		}
-
-		function onSettingUpdate() {
-			
-	    }
 	}
 	
 	class ClockArea extends UiElementBase {
@@ -104,9 +102,11 @@ module UiElements {
 		private var secondsText;
 		private var dateText;
 		private var partOfDayText;
+		private var application;
 
-	    function initialize(dc, fntAsapCondensedBold14) {
+	    function initialize(dc, fntAsapCondensedBold14, application) {
 			UiElementBase.initialize(dc);
+			self.application = application;
 			
 			isSleep = false;
 
@@ -161,7 +161,7 @@ module UiElements {
 	        partOfDayText.setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
 	        secondsText.setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
 	        
-	        hoursFormat = Application.getApp().getProperty("AddLeadingZero") ? "%02d" : "%d";
+	        hoursFormat = application.getProperty("AddLeadingZero") ? "%02d" : "%d";
 	    }
 	
 	    function draw(deviceSettings) {
@@ -191,9 +191,7 @@ module UiElements {
 	    }
 
 	    function onSettingUpdate() {
-	    	UiElementBase.onSettingUpdate();
-	    	
-	    	hoursFormat = Application.getApp().getProperty("AddLeadingZero") ? "%02d" : "%d";
+	    	hoursFormat = application.getProperty("AddLeadingZero") ? "%02d" : "%d";
 	    }
 	    
 	    function onEnterSleep() {
@@ -210,11 +208,6 @@ module UiElements {
 	}
 	
 	class TopIcons extends UiElementBase {
-		private var batteryText;
-		private var batteryIcon;
-		private var notificationIcon;
-		private var alarmIcon;
-
 		private var batteryIcons = { 
 			"Battery-100" => { "max" => 100, "min" => 90 },
 			"Battery-90"  => { "max" => 90,  "min" => 80 },
@@ -229,6 +222,10 @@ module UiElements {
 			"Battery-5"   => { "max" => 5,   "min" => 1  },
 			"Battery-0"   => { "max" => 1,   "min" => -1 }
 		};
+		private var batteryText;
+		private var batteryIcon;
+		private var notificationIcon;
+		private var alarmIcon;
 
 		function initialize(dc, fntAsapCondensedBold14) {
 			UiElementBase.initialize(dc);
@@ -350,9 +347,11 @@ module UiElements {
 		private var initialY = 87;
 		private var yOffset = 3;
 		private var dayNames = [ "SU", "MO", "TU", "WE", "TH", "FR", "SA" ];
+		private var application;
 
-		function initialize(dc) {
+		function initialize(dc, application) {
 			UiElementBase.initialize(dc);
+			self.application = application;
 
 			fntAsapBold12 = WatchUi.loadResource(Rez.Fonts.AsapBold12);
 
@@ -371,7 +370,7 @@ module UiElements {
 	        	});
 	        	days[i].setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
 			}
-			orderDaysOfWeek(System.getDeviceSettings().firstDayOfWeek);
+			orderDaysOfWeek(application.getProperty("FirstDayOfWeek"));
 		}
 		
 		function draw() {
@@ -418,9 +417,7 @@ module UiElements {
 		}
 		
 		function onSettingUpdate() {
-	    	UiElementBase.onSettingUpdate();
-	    	
-	    	orderDaysOfWeek(System.getDeviceSettings().firstDayOfWeek);
+	    	orderDaysOfWeek(application.getProperty("FirstDayOfWeek"));
 	    }
 	}
 	

@@ -3,5 +3,6 @@
     <property id="BackgroundColor" type="number">0x000000</property>
     <property id="ForegroundColor" type="number">0xFF0000</property>
     <property id="AddLeadingZero" type="boolean">true</property>
-
+	<property id="FirstDayOfWeek" type="number">2</property>
+	
 </properties>
