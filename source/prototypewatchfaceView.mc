@@ -112,7 +112,7 @@ module UiElements {
 
 	    function initialize(dc, fntAsapCondensedBold14) {
 			UiElementBase.initialize(dc);
-			
+
 			var yOffsetFntAsapBold81 = 0.962;
 			var yOffsetFntAsapSemibold55 = 0.97;
 			var yOffsetFntAsapSmall = 0.99;
@@ -120,8 +120,6 @@ module UiElements {
 			var fntAsapBold81 = WatchUi.loadResource(Rez.Fonts.AsapBold81);
 	        var fntAsapSemibold55 = WatchUi.loadResource(Rez.Fonts.AsapSemibold55);
 	        var fntAsapCondensedSemiBold20 = WatchUi.loadResource(Rez.Fonts.AsapCondensedSemiBold20);
-
-	        var addLeadingZero = Application.getApp().getProperty("AddLeadingZero");
 
 			hoursText = new WatchUi.Text({
 	            :color => Graphics.COLOR_WHITE,
@@ -166,19 +164,23 @@ module UiElements {
 	        partOfDayText.setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
 	        secondsText.setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
 	        
-	        hoursFormat = addLeadingZero ? "%02d" : "%d";
+	        hoursFormat = Application.getApp().getProperty("AddLeadingZero") ? "%02d" : "%d";
 	    }
 	
 	    function draw() {
 	    	var now = Gregorian.info(Time.now(), Time.FORMAT_MEDIUM);
 	    	var hours = now.hour;
+
+		    partOfDayText.setText(hours > 12 ? "P" : "A");
 		    
+		    if(!System.getDeviceSettings().is24Hour) {
+				hours -= hours > 12 ? 12 : 0;
+			}
 			hoursText.setText(hours.format(hoursFormat));
 			minutesText.setText(now.min.format("%02d"));
 			minutesColon.setText(":");
 			dateText.setText(now.day.format("%02d") + " " + now.month.toUpper());
-			partOfDayText.setText(hours > 12 ? "P" : "A");
-
+			
 			hoursText.draw(dc);
 			minutesText.draw(dc);
 			minutesColon.draw(dc);
@@ -194,9 +196,7 @@ module UiElements {
 	    function onSettingUpdate() {
 	    	UiElementBase.onSettingUpdate();
 	    	
-	    	var addLeadingZero = Application.getApp().getProperty("AddLeadingZero");
-	    	
-	    	hoursFormat = addLeadingZero ? "%02d" : "%d";
+	    	hoursFormat = Application.getApp().getProperty("AddLeadingZero") ? "%02d" : "%d";
 	    }
 	    
 	    function onEnterSleep() {
@@ -293,7 +293,7 @@ module UiElements {
 		private var moveIcon;
 		private var dndIcon;
 		private var btIcon;
-		
+
 		function initialize(dc) {
 			UiElementBase.initialize(dc);
 			
@@ -308,12 +308,11 @@ module UiElements {
 		}
 		
 		function draw() {
-			var deviceSettings = System.getDeviceSettings();
 			var moveBarLevel = ActivityMonitor.getInfo().moveBarLevel;
+			var deviceSettings = System.getDeviceSettings();
 			
 			dndIcon.setColor(deviceSettings.doNotDisturb ? Graphics.COLOR_RED : Graphics.COLOR_WHITE);
 			btIcon.setColor(deviceSettings.phoneConnected ? Graphics.COLOR_RED : Graphics.COLOR_WHITE);
-
 			setMoveIcon(moveBarLevel);
 			
 			moveIcon.draw();
@@ -344,14 +343,13 @@ module UiElements {
 		private var days;
 		private var fntAsapBold12;
 		private var arrowIcon;
-		private var deviceSettings;
 		private var initialY = 87;
 		private var yOffset = 3;
 		private var dayNames = [ "SU", "MO", "TU", "WE", "TH", "FR", "SA" ];
-		
+
 		function initialize(dc) {
 			UiElementBase.initialize(dc);
-			
+
 			fntAsapBold12 = WatchUi.loadResource(Rez.Fonts.AsapBold12);
 
 			arrowIcon = new Icons.Icon("Arrow-Up", dc);
@@ -369,9 +367,7 @@ module UiElements {
 	        	});
 	        	days[i].setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
 			}
-			deviceSettings = System.getDeviceSettings();
-			
-			orderDaysOfWeek(deviceSettings);
+			orderDaysOfWeek(System.getDeviceSettings().firstDayOfWeek);
 		}
 		
 		function draw() {
@@ -409,8 +405,8 @@ module UiElements {
 			return xLocations;
 		}
 		
-		function orderDaysOfWeek(deviceSettings) {
-			var xLocations = getXLocationsBasedOnFirstDayOfWeek(deviceSettings.firstDayOfWeek);
+		function orderDaysOfWeek(firstDayOfWeek) {
+			var xLocations = getXLocationsBasedOnFirstDayOfWeek(firstDayOfWeek);
 			
 			for(var i = 0; i < days.size(); ++i) {
 				days[i].locX = xLocations[i];
@@ -420,7 +416,7 @@ module UiElements {
 		function onSettingUpdate() {
 	    	UiElementBase.onSettingUpdate();
 	    	
-	    	orderDaysOfWeek(deviceSettings);
+	    	orderDaysOfWeek(System.getDeviceSettings().firstDayOfWeek);
 	    }
 	}
 	
