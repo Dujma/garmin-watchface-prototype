@@ -6,8 +6,6 @@ using Toybox.Application;
 using Toybox.Time;
 using Toybox.Time.Gregorian;
 
-var isSleep = false;
-
 class prototypewatchfaceView extends WatchUi.WatchFace {
 	private var mockBackground;
 	private var clockArea;
@@ -65,14 +63,10 @@ class prototypewatchfaceView extends WatchUi.WatchFace {
     }
 
     function onExitSleep() {
-    	$.isSleep = false;
-
     	clockArea.onExitSleep();
     }
 
     function onEnterSleep() {
-    	$.isSleep = true;
-    	
     	clockArea.onEnterSleep();
     }
     
@@ -101,6 +95,8 @@ module UiElements {
 	}
 	
 	class ClockArea extends UiElementBase {
+		var isSleep;
+	
 		private var hoursText;
 		private var hoursFormat;
 		private var minutesText;
@@ -111,6 +107,8 @@ module UiElements {
 
 	    function initialize(dc, fntAsapCondensedBold14) {
 			UiElementBase.initialize(dc);
+			
+			isSleep = false;
 
 			var yOffsetFntAsapBold81 = 0.962;
 			var yOffsetFntAsapSemibold55 = 0.97;
@@ -186,7 +184,7 @@ module UiElements {
 			dateText.draw(dc);
 			partOfDayText.draw(dc);
 
-			if(!$.isSleep) {
+			if(!isSleep) {
 				secondsText.setText(now.sec.format("%02d"));
 				secondsText.draw(dc);
 			}
@@ -199,10 +197,14 @@ module UiElements {
 	    }
 	    
 	    function onEnterSleep() {
+	        isSleep = true;
+	        
 	    	secondsText.setColor(Graphics.COLOR_TRANSPARENT);
 	    }
 	    
 	    function onExitSleep() {
+	    	isSleep = false;
+	    	
 	    	secondsText.setColor(Graphics.COLOR_LT_GRAY);
 	    }
 	}
@@ -212,6 +214,21 @@ module UiElements {
 		private var batteryIcon;
 		private var notificationIcon;
 		private var alarmIcon;
+
+		private var batteryIcons = { 
+			"Battery-100" => { "max" => 100, "min" => 90 },
+			"Battery-90"  => { "max" => 90,  "min" => 80 },
+			"Battery-80"  => { "max" => 80,  "min" => 70 },
+			"Battery-70"  => { "max" => 70,  "min" => 60 },
+			"Battery-60"  => { "max" => 60,  "min" => 50 },
+			"Battery-50"  => { "max" => 50,  "min" => 40 },
+			"Battery-40"  => { "max" => 40,  "min" => 30 },
+			"Battery-30"  => { "max" => 30,  "min" => 20 },
+			"Battery-20"  => { "max" => 20,  "min" => 10 },
+			"Battery-10"  => { "max" => 10,  "min" => 5  },
+			"Battery-5"   => { "max" => 5,   "min" => 1  },
+			"Battery-0"   => { "max" => 1,   "min" => -1 }
+		};
 
 		function initialize(dc, fntAsapCondensedBold14) {
 			UiElementBase.initialize(dc);
@@ -235,9 +252,9 @@ module UiElements {
 		}
 		
 		function draw(deviceSettings, systemStats) {
-			var batteryLvl = Math.round(systemStats.battery + 0.5);
+			var batteryLvl = Math.round(systemStats.battery);
 
-			batteryText.setText(Lang.format("$1$%", [ batteryLvl.format( "%d" ) ]));
+			batteryText.setText(Lang.format("$1$%", [ (batteryLvl + 0.5).format( "%d" ) ]));
 			batteryText.draw(dc);
 			
 			setBatteryIcon(batteryLvl);
@@ -253,35 +270,18 @@ module UiElements {
 		
 		function setBatteryIcon(lvl) {
 			var targetIcon = null;
+			var batteryIconsValues = batteryIcons.values();
 			
-			// TODO: Think about how this can be prettier
-			if(lvl > 90) {
-				targetIcon = "Battery-100";
-			} else if(lvl > 80 && lvl <= 90) {
-				targetIcon = "Battery-90";
-			} else if(lvl > 70 && lvl <= 80) {
-				targetIcon = "Battery-80";
-			} else if(lvl > 60 && lvl <= 70) {
-				targetIcon = "Battery-70";
-			} else if(lvl > 50 && lvl <= 60) {
-				targetIcon = "Battery-60";
-			} else if(lvl > 40 && lvl <= 50) {
-				targetIcon = "Battery-50";
-			} else if(lvl > 30 && lvl <= 40) {
-				targetIcon = "Battery-40";
-			} else if(lvl > 20 && lvl <= 30) {
-				targetIcon = "Battery-30";
-			} else if(lvl > 10 && lvl <= 20) {
-				targetIcon = "Battery-20";
-			} else if(lvl > 5 && lvl <= 10) {
-				targetIcon = "Battery-10";
-			} else if(lvl > 1 && lvl <= 5) {
-				targetIcon = "Battery-5";
-			} else {
-				targetIcon = "Battery-0";
+			for(var i = 0; i < batteryIcons.size(); ++i) {
+				if(lvl > batteryIconsValues[i]["min"] && lvl <= batteryIconsValues[i]["max"]) {
+					targetIcon = batteryIcons.keys()[i];
+					break;
+				}
 			}
-			if(batteryIcon.name != targetIcon) {
-				batteryIcon.setIcon(targetIcon);
+			if(targetIcon != null) {
+				if(batteryIcon.name != targetIcon) {
+					batteryIcon.setIcon(targetIcon);
+				}
 			}
 		}
 	}
@@ -334,7 +334,7 @@ module UiElements {
 		}
 	}
 	
-	// TODO: Missing implementation onSettingChange and also when the first day of week is changed from device settings
+	// TODO: Missing implementation onSettingChange
 	class DayOfWeek extends UiElementBase {
 		private var days;
 		private var fntAsapBold12;
