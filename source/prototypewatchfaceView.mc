@@ -80,6 +80,7 @@ class prototypewatchfaceView extends WatchUi.WatchFace {
     
     function handleSettingUpdate() {
     	clockArea.onSettingUpdate();
+    	dayOfWeek.onSettingUpdate();
     }
 }
 
@@ -256,7 +257,7 @@ module UiElements {
 		function setBatteryIcon(lvl) {
 			var targetIcon = null;
 			
-			// TODO: Move this to dictionary
+			// TODO: Think about how this can be prettier
 			if(lvl > 90) {
 				targetIcon = "Battery-100";
 			} else if(lvl > 80 && lvl <= 90) {
@@ -338,6 +339,7 @@ module UiElements {
 		}
 	}
 	
+	// TODO: Missing implementation onSettingChange and also when the first day of week is changed from device settings
 	class DayOfWeek extends UiElementBase {
 		private var days;
 		private var fntAsapBold12;
@@ -345,53 +347,39 @@ module UiElements {
 		private var deviceSettings;
 		private var initialY = 87;
 		private var yOffset = 3;
-		private var dayNames;
+		private var dayNames = [ "SU", "MO", "TU", "WE", "TH", "FR", "SA" ];
 		
 		function initialize(dc) {
 			UiElementBase.initialize(dc);
 			
 			fntAsapBold12 = WatchUi.loadResource(Rez.Fonts.AsapBold12);
-			days = new [7];
-			
+
 			arrowIcon = new Icons.Icon("Arrow-Up", dc);
 			arrowIcon.setColor(Graphics.COLOR_RED);
-			arrowIcon.setPosition(109, 93);
-			
-			dayNames = [ "MO", "TU", "WE", "TH", "FR", "SA", "SU" ];
-			var xLocations = [ 56, 83, 109, 135, 159, 182, 206 ];
-			deviceSettings = System.getDeviceSettings();
-			
-			// TODO: First day of week can be Saturday, Sunday and Monday
-			if(deviceSettings.firstDayOfWeek == Gregorian.DAY_SUNDAY) {
-				var temp = new [7];
-				temp[0] = dayNames[dayNames.size() - 1];
-				
-        		for(var i = 1; i < dayNames.size(); ++i) {
-        			temp[i] = dayNames[i - 1];
-        		}
-        		dayNames = temp;
-        	}
+			arrowIcon.setPosition(56, 93);
+
+			days = new [7];
 
 			for(var i = 0; i < days.size(); ++i) {
 				days[i] = new WatchUi.Text({
 					:text  => dayNames[i],
 		            :color => Graphics.COLOR_WHITE,
 		            :font  => fntAsapBold12,
-		            :locX  => xLocations[i],
 		            :locY  => initialY
 	        	});
 	        	days[i].setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
 			}
+			deviceSettings = System.getDeviceSettings();
+			
+			orderDaysOfWeek(deviceSettings);
 		}
 		
 		function draw() {
 			var now = Gregorian.info(Time.now(), Time.FORMAT_SHORT);
-			var currentDayOfWeek = now.day_of_week;
-
-			currentDayOfWeek -= deviceSettings.firstDayOfWeek != Gregorian.DAY_SUNDAY ? 2 : 1;
+			var dayOfWeek = now.day_of_week;
 
 			for(var i = 0; i < days.size(); ++i) {
-				if(i == currentDayOfWeek) {
+				if(i == dayOfWeek - 1) {
 					days[i].setColor(Graphics.COLOR_RED);
 					
 					days[i].locY = initialY - yOffset;
@@ -409,6 +397,31 @@ module UiElements {
 				arrowIcon.draw();
 			}
 		}
+		
+		function getXLocationsBasedOnFirstDayOfWeek(firstDayOfWeek) {
+			var xLocations = [ 56, 83, 109, 135, 159, 182, 206 ];
+
+			if(firstDayOfWeek == Gregorian.DAY_MONDAY) {
+				xLocations = [ 206, 56, 83, 109, 135, 159, 182 ];
+			} else if(firstDayOfWeek == Gregorian.DAY_SATURDAY) {
+				xLocations = [ 83, 109, 135, 159, 182, 206, 56 ];
+			}
+			return xLocations;
+		}
+		
+		function orderDaysOfWeek(deviceSettings) {
+			var xLocations = getXLocationsBasedOnFirstDayOfWeek(deviceSettings.firstDayOfWeek);
+			
+			for(var i = 0; i < days.size(); ++i) {
+				days[i].locX = xLocations[i];
+			}
+		}
+		
+		function onSettingUpdate() {
+	    	UiElementBase.onSettingUpdate();
+	    	
+	    	orderDaysOfWeek(deviceSettings);
+	    }
 	}
 	
 	class MoveBar extends UiElementBase {
