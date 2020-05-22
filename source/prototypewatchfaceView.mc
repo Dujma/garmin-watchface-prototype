@@ -258,8 +258,16 @@ module UiElements {
 			batteryText.draw(dc);
 			
 			setBatteryIcon(batteryLvl);
-
-			batteryIcon.setColor(batteryLvl <= 20 ? Graphics.COLOR_RED : Graphics.COLOR_WHITE);
+			
+			if(!systemStats.charging) {
+				batteryIcon.setColor(batteryLvl <= 20 ? Graphics.COLOR_RED : Graphics.COLOR_WHITE);
+			} else {
+				if(batteryLvl < 99.5) {
+					batteryIcon.setColor(Graphics.COLOR_BLUE);
+				} else {
+					batteryIcon.setColor(Graphics.COLOR_GREEN);
+				}
+			}
 			notificationIcon.setColor(deviceSettings.notificationCount > 0 ? Graphics.COLOR_RED : Graphics.COLOR_WHITE);
 			alarmIcon.setColor(deviceSettings.alarmCount > 0 ? Graphics.COLOR_RED : Graphics.COLOR_WHITE);
 
