@@ -5,6 +5,7 @@ using Toybox.Lang;
 using Toybox.Application;
 using Toybox.Time;
 using Toybox.Time.Gregorian;
+using Toybox.Math;
 
 class prototypewatchfaceView extends WatchUi.WatchFace {
 	private var mockBackground;
@@ -572,4 +573,31 @@ module Icons {
 			text.draw(dc);
 		}
 	}
+}
+
+module Utils {
+	function getDayWithMondayStarting(daySundayStarting) {
+    	if(daySundayStarting != 1) {
+    		return daySundayStarting - 1;
+    	}
+    	return 7; // Sunday
+    }
+    
+    function getCurrentWeekNumber() {
+		var today = new Time.Moment(Time.today().value() + System.getClockTime().timeZoneOffset);
+		var todayGregorian = Gregorian.info(today, Time.FORMAT_SHORT);
+		
+		var options = {
+		    :year   => todayGregorian.year,
+		    :month  => 1,
+		    :day    => 1,
+		    :hour   => 0,
+		    :min    => 0,
+		    :sec    => 0
+		};
+		var firstDayOfYear = Gregorian.moment(options);
+		var firstDayOfYearGregorian = Gregorian.info(firstDayOfYear, Time.FORMAT_SHORT);
+
+		return Math.ceil((today.subtract(firstDayOfYear).add(new Time.Duration(Gregorian.SECONDS_PER_DAY * getDayWithMondayStarting(firstDayOfYearGregorian.day_of_week))).value() / 86400).toFloat() / 7).toNumber();
+    }
 }
