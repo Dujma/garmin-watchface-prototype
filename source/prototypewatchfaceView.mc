@@ -321,8 +321,6 @@ module UiElements {
 		function setMoveIcon(lvl) {
 			var targetIcon = null;
 			
-			lvl = 0;
-			
 			if(!isInSleepTime()) {
 				if(lvl == 0) {
 					targetIcon = "Move-0";
