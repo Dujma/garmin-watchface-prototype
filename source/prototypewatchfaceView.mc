@@ -326,8 +326,9 @@ module UiElements {
 		
 		function setMoveIcon(lvl) {
 			var targetIcon = null;
+			var isInSleeptTime = isInSleepTime();
 			
-			if(!isInSleepTime()) {
+			if(!isInSleeptTime) {
 				if(lvl == 0) {
 					targetIcon = "Move-0";
 				} else if(lvl > 0 && lvl < 3) {
@@ -340,10 +341,14 @@ module UiElements {
 			}
 			moveIcon.setIcon(targetIcon);
 			
-			if(lvl >= 1) {
-				moveIcon.setColor(Graphics.COLOR_RED);
+			if(!isInSleeptTime) {
+				if(lvl >= 1) {
+					moveIcon.setColor(Graphics.COLOR_RED);
+				} else {
+					moveIcon.setColor(Graphics.COLOR_WHITE);
+				}
 			} else {
-				moveIcon.setColor(Graphics.COLOR_WHITE);
+				moveIcon.setColor(Graphics.COLOR_RED);
 			}
 		}
 		
