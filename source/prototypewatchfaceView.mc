@@ -8,13 +8,16 @@ using Toybox.Time.Gregorian;
 using Toybox.Math;
 
 class prototypewatchfaceView extends WatchUi.WatchFace {
+	private var application;
 	private var mockBackground;
+	
+	// UiElements
 	private var clockArea;
 	private var topIcons;
 	private var bottomIcons;
 	private var top;
 	private var bottom;
-	private var application;
+	private var right;
 
     function initialize() {
         WatchFace.initialize();
@@ -38,19 +41,11 @@ class prototypewatchfaceView extends WatchUi.WatchFace {
         bottomIcons = new UiElements.BottomIcons(dc);
         top = new UiElements.Top(dc, application);
         bottom = new UiElements.Bottom(dc);
+        right = new UiElements.Right(dc, fntAsapCondensedBold14);
     }
 
     function onShow() {
-		System.println("1" + " " + Utils.kFormatter(1));
-		System.println("100" + " " + Utils.kFormatter(100));
-		System.println("1000" + " " + Utils.kFormatter(1000));
-		System.println("1536" + " " + Utils.kFormatter(1536));
-		System.println("1550" + " " + Utils.kFormatter(1551));
-		System.println("2190" + " " + Utils.kFormatter(2190));
-		System.println("100000" + " " + Utils.kFormatter(100000));
-		System.println("35678" + " " + Utils.kFormatter(35678));
-		System.println("10500" + " " + Utils.kFormatter(10500));
-		System.println("15000" + " " + Utils.kFormatter(15000));
+
     }
     
     function onUpdate(dc) {
@@ -68,6 +63,7 @@ class prototypewatchfaceView extends WatchUi.WatchFace {
 		bottomIcons.draw(deviceSettings);
 		top.draw();
 		bottom.draw();
+		right.draw();
     }
 
     function onHide() {
@@ -506,6 +502,42 @@ module UiElements {
 			}
 		}
 	}
+	
+	class Right extends UiElementBase {
+		var topValue;
+		var bottomValue;
+		
+		function initialize(dc, fntAsapCondensedBold14) {
+			UiElementBase.initialize(dc);
+			
+			topValue = new WatchUi.Text({
+	            :color => Graphics.COLOR_WHITE,
+	            :font  => fntAsapCondensedBold14,
+	            :locX  => 237,
+	            :locY  => 87
+        	});
+        	bottomValue = new WatchUi.Text({
+	            :color => Graphics.COLOR_WHITE,
+	            :font  => fntAsapCondensedBold14,
+	            :locX  => 237,
+	            :locY  => 171
+        	});
+        	topValue.setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
+        	bottomValue.setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
+		}
+		
+		function draw() {
+			var info = ActivityMonitor.getInfo();
+			var steps = info.steps != null ? info.steps : 0;
+			var stepGoal = info.stepGoal != null ? info.stepGoal : 0;
+
+			topValue.setText(Utils.kFormatter(stepGoal, 1));
+			bottomValue.setText(Utils.kFormatter(steps, 1));
+			
+			topValue.draw(dc);
+			bottomValue.draw(dc);
+		}
+	}
 }
 
 module Icons {
@@ -616,7 +648,9 @@ module Utils {
 		return Math.ceil((today.subtract(firstDayOfYear).add(new Time.Duration(Gregorian.SECONDS_PER_DAY * getDayWithMondayStarting(firstDayOfYearGregorian.day_of_week))).value() / 86400).toFloat() / 7).toNumber();
     }
     
-    function kFormatter(num) {
-    	return num > 999 ?  (num % 1000 != 0 ? (num / 1000.0).format("%.1f") : (num / 1000.0).format("%d")) + "k" : num;
+    function kFormatter(num, precision) {
+    	var sign = num >= 0 ? "" : "-";
+    	
+    	return num.abs() > 999 ? sign + ((num.abs() % 1000 != 0 ? (num.abs() / 1000.0).format("%." + precision + "f") : (num.abs() / 1000.0).format("%d"))) + "k" : num + "";
 	}
 }
