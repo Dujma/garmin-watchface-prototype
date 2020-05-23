@@ -41,7 +41,16 @@ class prototypewatchfaceView extends WatchUi.WatchFace {
     }
 
     function onShow() {
-
+		System.println("1" + " " + Utils.kFormatter(1));
+		System.println("100" + " " + Utils.kFormatter(100));
+		System.println("1000" + " " + Utils.kFormatter(1000));
+		System.println("1536" + " " + Utils.kFormatter(1536));
+		System.println("1550" + " " + Utils.kFormatter(1551));
+		System.println("2190" + " " + Utils.kFormatter(2190));
+		System.println("100000" + " " + Utils.kFormatter(100000));
+		System.println("35678" + " " + Utils.kFormatter(35678));
+		System.println("10500" + " " + Utils.kFormatter(10500));
+		System.println("15000" + " " + Utils.kFormatter(15000));
     }
     
     function onUpdate(dc) {
@@ -606,4 +615,8 @@ module Utils {
 
 		return Math.ceil((today.subtract(firstDayOfYear).add(new Time.Duration(Gregorian.SECONDS_PER_DAY * getDayWithMondayStarting(firstDayOfYearGregorian.day_of_week))).value() / 86400).toFloat() / 7).toNumber();
     }
+    
+    function kFormatter(num) {
+    	return num > 999 ?  (num % 1000 != 0 ? (num / 1000.0).format("%.1f") : (num / 1000.0).format("%d")) + "k" : num;
+	}
 }
