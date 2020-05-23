@@ -40,31 +40,7 @@ class prototypewatchfaceView extends WatchUi.WatchFace {
     }
 
     function onShow() {
-    	
-        
-		/*var userProfile = UserProfile.getProfile();
-        var sleepTimeDuration = userProfile.sleepTime;
-        var wakeTimeDuration = userProfile.wakeTime;
-        
-        var sleepTime = new Time.Moment(Time.today().value());
-       
-        var now = new Time.Moment(Time.now().value());
-        
-        sleepTime = sleepTime.add(sleepTimeDuration);
-        
-        
-        if(now.value() >= sleepTime.value()) {
-       		System.println("Is in sleep");
-        } else {
-         	var wakeTime = new Time.Moment(Time.today().value());
-         	wakeTime = wakeTime.add(wakeTimeDuration);
-         	
-         	if(now.value() <= wakeTime.value()) {
-         		System.println("Is in sleep");
-         	} else {
-         		System.println("Is not in sleep");
-         	}
-        }*/
+
     }
     
     function onUpdate(dc) {
