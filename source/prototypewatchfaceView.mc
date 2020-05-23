@@ -12,8 +12,8 @@ class prototypewatchfaceView extends WatchUi.WatchFace {
 	private var clockArea;
 	private var topIcons;
 	private var bottomIcons;
-	private var dayOfWeek;
-	private var moveBar;
+	private var top;
+	private var bottom;
 	private var application;
 
     function initialize() {
@@ -36,8 +36,8 @@ class prototypewatchfaceView extends WatchUi.WatchFace {
         clockArea = new UiElements.ClockArea(dc, fntAsapCondensedBold14, application);
         topIcons = new UiElements.TopIcons(dc, fntAsapCondensedBold14);
         bottomIcons = new UiElements.BottomIcons(dc);
-        dayOfWeek = new UiElements.DayOfWeek(dc, application);
-        moveBar = new UiElements.MoveBar(dc);
+        top = new UiElements.Top(dc, application);
+        bottom = new UiElements.Bottom(dc);
     }
 
     function onShow() {
@@ -57,8 +57,8 @@ class prototypewatchfaceView extends WatchUi.WatchFace {
 		clockArea.draw(deviceSettings);
 		topIcons.draw(deviceSettings, systemStats);
 		bottomIcons.draw(deviceSettings);
-		dayOfWeek.draw();
-		moveBar.draw();
+		top.draw();
+		bottom.draw();
     }
 
     function onHide() {
@@ -80,7 +80,7 @@ class prototypewatchfaceView extends WatchUi.WatchFace {
     
     function handleSettingUpdate() {
     	clockArea.onSettingUpdate();
-    	dayOfWeek.onSettingUpdate();
+    	top.onSettingUpdate();
     }
 }
 
@@ -111,10 +111,6 @@ module UiElements {
 			
 			isSleep = false;
 
-			var yOffsetFntAsapBold81 = 0.962;
-			var yOffsetFntAsapSemibold55 = 0.97;
-			var yOffsetFntAsapSmall = 0.99;
-			
 			var fntAsapBold81 = WatchUi.loadResource(Rez.Fonts.AsapBold81);
 	        var fntAsapSemibold55 = WatchUi.loadResource(Rez.Fonts.AsapSemibold55);
 	        var fntAsapCondensedSemiBold20 = WatchUi.loadResource(Rez.Fonts.AsapCondensedSemiBold20);
@@ -366,61 +362,71 @@ module UiElements {
     	}
 	}
 
-	class DayOfWeek extends UiElementBase {
-		private var days;
-		private var fntAsapBold12;
+	class Top extends UiElementBase {
+		private var daysText;
 		private var arrowIcon;
-		private var initialY = 87;
-		private var yOffset = 3;
+		private var daysInitialY = 87;
+		private var daysYOffset = 3;
 		private var dayNames = [ "SU", "MO", "TU", "WE", "TH", "FR", "SA" ];
 		private var application;
+		private var infoText;
 
 		function initialize(dc, application) {
 			UiElementBase.initialize(dc);
 			self.application = application;
-
-			fntAsapBold12 = WatchUi.loadResource(Rez.Fonts.AsapBold12);
+			
+			var fntAsapBold12 = WatchUi.loadResource(Rez.Fonts.AsapBold12);
 
 			arrowIcon = new Icons.Icon("Arrow-Up", dc);
 			arrowIcon.setColor(Graphics.COLOR_RED);
 			arrowIcon.setPosition(56, 93);
 
-			days = new [7];
+			daysText = new [7];
 
-			for(var i = 0; i < days.size(); ++i) {
-				days[i] = new WatchUi.Text({
+			for(var i = 0; i < daysText.size(); ++i) {
+				daysText[i] = new WatchUi.Text({
 					:text  => dayNames[i],
 		            :color => Graphics.COLOR_WHITE,
 		            :font  => fntAsapBold12,
-		            :locY  => initialY
+		            :locY  => daysInitialY
 	        	});
-	        	days[i].setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
+	        	daysText[i].setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
 			}
 			orderDaysOfWeek(application.getProperty("FirstDayOfWeek"));
+			
+			infoText = new WatchUi.Text({
+	            :color => Graphics.COLOR_WHITE,
+	            :font  => fntAsapBold12,
+	            :locX  => 130,
+	            :locY  => 40
+        	});
+        	infoText.setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
 		}
 		
 		function draw() {
 			var now = Gregorian.info(Time.now(), Time.FORMAT_SHORT);
 			var dayOfWeek = now.day_of_week;
 
-			for(var i = 0; i < days.size(); ++i) {
+			for(var i = 0; i < daysText.size(); ++i) {
 				if(i == dayOfWeek - 1) {
-					days[i].setColor(Graphics.COLOR_RED);
+					daysText[i].setColor(Graphics.COLOR_RED);
 					
-					days[i].locY = initialY - yOffset;
+					daysText[i].locY = daysInitialY - daysYOffset;
 					
-					arrowIcon.setPosition(days[i].locX, arrowIcon.text.locY);
+					arrowIcon.setPosition(daysText[i].locX, arrowIcon.text.locY);
 				} else {
 					if(dayNames[i].equals("SA") || dayNames[i].equals("SU")) {
-						days[i].setColor(Graphics.COLOR_LT_GRAY);
+						daysText[i].setColor(Graphics.COLOR_LT_GRAY);
 					} else {
-						days[i].setColor(Graphics.COLOR_WHITE);
+						daysText[i].setColor(Graphics.COLOR_WHITE);
 					}
-					days[i].locY = initialY;
+					daysText[i].locY = daysInitialY;
 				}
-				days[i].draw(dc);
+				daysText[i].draw(dc);
 				arrowIcon.draw();
 			}
+			infoText.setText("Week " + Utils.getCurrentWeekNumber());
+			infoText.draw(dc);
 		}
 		
 		function getXLocationsBasedOnFirstDayOfWeek(firstDayOfWeek) {
@@ -437,8 +443,8 @@ module UiElements {
 		function orderDaysOfWeek(firstDayOfWeek) {
 			var xLocations = getXLocationsBasedOnFirstDayOfWeek(firstDayOfWeek);
 			
-			for(var i = 0; i < days.size(); ++i) {
-				days[i].locX = xLocations[i];
+			for(var i = 0; i < daysText.size(); ++i) {
+				daysText[i].locX = xLocations[i];
 			}
 		}
 		
@@ -447,7 +453,7 @@ module UiElements {
 	    }
 	}
 	
-	class MoveBar extends UiElementBase {
+	class Bottom extends UiElementBase {
 		var lvl1;
 		var lvls;
 		
