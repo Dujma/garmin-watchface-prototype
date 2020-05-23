@@ -6,6 +6,7 @@ using Toybox.Application;
 using Toybox.Time;
 using Toybox.Time.Gregorian;
 using Toybox.Math;
+using Toybox.SensorHistory;
 
 class prototypewatchfaceView extends WatchUi.WatchFace {
 	private var application;
@@ -513,13 +514,13 @@ module UiElements {
 			topValue = new WatchUi.Text({
 	            :color => Graphics.COLOR_WHITE,
 	            :font  => fntAsapCondensedBold14,
-	            :locX  => 237,
+	            :locX  => 233,
 	            :locY  => 87
         	});
         	bottomValue = new WatchUi.Text({
 	            :color => Graphics.COLOR_WHITE,
 	            :font  => fntAsapCondensedBold14,
-	            :locX  => 237,
+	            :locX  => 233,
 	            :locY  => 171
         	});
         	topValue.setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
@@ -652,5 +653,20 @@ module Utils {
     	var sign = num >= 0 ? "" : "-";
     	
     	return num.abs() > 999 ? sign + ((num.abs() % 1000 != 0 ? (num.abs() / 1000.0).format("%." + precision + "f") : (num.abs() / 1000.0).format("%d"))) + "k" : num + "";
+	}
+	
+	function getHeartRateHistory() {
+	    if((Toybox has :SensorHistory) && (Toybox.SensorHistory has :getHeartRateHistory)) {
+	        return Toybox.SensorHistory.getHeartRateHistory({});
+	    }
+	    return null;
+	}
+	
+	function getMaxHeartRate() {
+		return getHeartRateHistory().getMax();
+	}
+	
+	function getMinHeartRate() {
+		return getHeartRateHistory().getMin();
 	}
 }
