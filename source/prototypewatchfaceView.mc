@@ -40,7 +40,31 @@ class prototypewatchfaceView extends WatchUi.WatchFace {
     }
 
     function onShow() {
-		
+    	
+        
+		/*var userProfile = UserProfile.getProfile();
+        var sleepTimeDuration = userProfile.sleepTime;
+        var wakeTimeDuration = userProfile.wakeTime;
+        
+        var sleepTime = new Time.Moment(Time.today().value());
+       
+        var now = new Time.Moment(Time.now().value());
+        
+        sleepTime = sleepTime.add(sleepTimeDuration);
+        
+        
+        if(now.value() >= sleepTime.value()) {
+       		System.println("Is in sleep");
+        } else {
+         	var wakeTime = new Time.Moment(Time.today().value());
+         	wakeTime = wakeTime.add(wakeTimeDuration);
+         	
+         	if(now.value() <= wakeTime.value()) {
+         		System.println("Is in sleep");
+         	} else {
+         		System.println("Is not in sleep");
+         	}
+        }*/
     }
     
     function onUpdate(dc) {
@@ -324,12 +348,16 @@ module UiElements {
 		function setMoveIcon(lvl) {
 			var targetIcon = null;
 			
-			if(lvl == 0) {
-				targetIcon = "Move-0";
-			} else if(lvl > 0 && lvl < 3) {
-				targetIcon = "Move-1";
+			if(!isInSleepTime()) {
+				if(lvl == 0) {
+					targetIcon = "Move-1";
+				} else if(lvl > 0 && lvl < 3) {
+					targetIcon = "Move-1";
+				} else {
+					targetIcon = "Move-5";
+				}
 			} else {
-				targetIcon = "Move-5";
+				targetIcon = "Sleep";
 			}
 			moveIcon.setIcon(targetIcon);
 			
@@ -339,6 +367,26 @@ module UiElements {
 				moveIcon.setColor(Graphics.COLOR_WHITE);
 			}
 		}
+		
+		function isInSleepTime() {
+	   	 	var userProfile = UserProfile.getProfile();
+	        var today = Time.today().value();
+	        
+	        var sleepTime = new Time.Moment(today + userProfile.sleepTime.value());
+	        var now = new Time.Moment(Time.now().value());
+	        
+	        if(now.value() >= sleepTime.value()) {
+	       		return true;
+	        } else {
+	         	var wakeTime = new Time.Moment(today + userProfile.wakeTime.value());
+	         	
+	        	if(now.value() <= wakeTime.value()) {
+	        		return true;
+	        	} else {
+	        		return false;
+	        	}
+	        }
+    	}
 	}
 
 	class DayOfWeek extends UiElementBase {
@@ -492,7 +540,8 @@ module Icons {
 		"Arrow-Up"     => "I",
 		"MoveBar-1"    => "J",
 		"MoveBar-2"    => "K",
-		"Move-0"       => "L"
+		"Move-0"       => "L",
+		"Sleep"        => "M"
 	};
 	
 	function init() {
