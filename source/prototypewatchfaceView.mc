@@ -253,7 +253,7 @@ module UiElements {
 			
 			setBatteryIcon(batteryLvl);
 			
-			if(!systemStats.charging) {
+			if(!systemStats.charging) { // 3.0.0
 				batteryIcon.setColor(batteryLvl <= 20 ? Graphics.COLOR_RED : Graphics.COLOR_WHITE);
 			} else {
 				if(batteryLvl < 99.5) {
@@ -309,7 +309,7 @@ module UiElements {
 		function draw(deviceSettings) {
 			var moveBarLevel = ActivityMonitor.getInfo().moveBarLevel;
 
-			dndIcon.setColor(deviceSettings.doNotDisturb ? Graphics.COLOR_RED : Graphics.COLOR_WHITE);
+			dndIcon.setColor(deviceSettings.doNotDisturb ? Graphics.COLOR_RED : Graphics.COLOR_WHITE); // 2.1.0
 			btIcon.setColor(deviceSettings.phoneConnected ? Graphics.COLOR_RED : Graphics.COLOR_WHITE);
 			setMoveIcon(moveBarLevel);
 			
