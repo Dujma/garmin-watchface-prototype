@@ -668,10 +668,34 @@ module Utils {
 	}
 	
 	function getMaxHeartRate() {
-		return getHeartRateHistory().getMax();
+		var heartRateHistory = getHeartRateHistory();
+		
+		return getHeartRateHistory != null ? getHeartRateHistory.getMax() : null;
 	}
 	
 	function getMinHeartRate() {
-		return getHeartRateHistory().getMin();
+		var heartRateHistory = getHeartRateHistory();
+		
+		return getHeartRateHistory != null ? getHeartRateHistory.getMin() : null;
+	}
+	
+	function getAvgHeartRate() {
+		var heartRateHistory = getHeartRateHistory();
+		var sum = 0;
+		var count = 0;
+		
+		if(heartRateHistory != null) {
+			var sample = heartRateHistory.next();
+			
+			while(sample != null) {
+				if(sample.data != null) {
+					sum += sample.data;
+					++count;
+				}
+				sample = heartRateHistory.next();
+			}
+			return count > 0 ? sum / count : null;
+		}
+		return null;
 	}
 }
