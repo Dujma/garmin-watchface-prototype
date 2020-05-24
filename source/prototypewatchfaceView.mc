@@ -741,7 +741,8 @@ module Icons {
 		"Distance"     => "Q",
 		"Calories"     => "R",
 		"Stopwatch"    => "S",
-		"Stairs-Up"    => "T"
+		"Stairs-Up"    => "T",
+		"Trophy"       => "U"
 	};
 	
 	function init() {
