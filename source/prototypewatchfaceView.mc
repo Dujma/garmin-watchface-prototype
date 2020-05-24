@@ -39,12 +39,13 @@ class prototypewatchfaceView extends WatchUi.WatchFace {
     	});
     	var fntAsapCondensedBold14 = WatchUi.loadResource(Rez.Fonts.AsapCondensedBold14);
     	var fntAsapBold12 = WatchUi.loadResource(Rez.Fonts.AsapBold12);
+    	var fntAsapCondensedBold16 = WatchUi.loadResource(Rez.Fonts.AsapCondensedBold16);
     	
         clockArea = new UiElements.ClockArea(dc, fntAsapCondensedBold14, application);
         topIcons = new UiElements.TopIcons(dc, fntAsapCondensedBold14);
         bottomIcons = new UiElements.BottomIcons(dc);
         top = new UiElements.Top(dc, application, fntAsapBold12);
-        bottom = new UiElements.Bottom(dc);
+        bottom = new UiElements.Bottom(dc, fntAsapCondensedBold16);
         right = new UiElements.Right(dc, fntAsapCondensedBold14);
         left = new UiElements.Left(dc, fntAsapCondensedBold14, fntAsapBold12);
     }
@@ -62,14 +63,15 @@ class prototypewatchfaceView extends WatchUi.WatchFace {
     	var deviceSettings = System.getDeviceSettings();
     	var systemStats = System.getSystemStats();
    	 	var userProfile = UserProfile.getProfile();
+   	 	var activityMonitorInfo = ActivityMonitor.getInfo();
 		
 		// UiElements
 		clockArea.draw(deviceSettings);
 		topIcons.draw(deviceSettings, systemStats);
-		bottomIcons.draw(deviceSettings, userProfile);
+		bottomIcons.draw(deviceSettings, userProfile, activityMonitorInfo);
 		top.draw();
-		bottom.draw();
-		right.draw();
+		bottom.draw(activityMonitorInfo);
+		right.draw(activityMonitorInfo);
 		left.draw(userProfile);
     }
 
@@ -320,8 +322,8 @@ module UiElements {
 			btIcon.setPosition(155, 244);
 		}
 		
-		function draw(deviceSettings, userProfile) {
-			var moveBarLevel = ActivityMonitor.getInfo().moveBarLevel;
+		function draw(deviceSettings, userProfile, activityMonitorInfo) {
+			var moveBarLevel = activityMonitorInfo.moveBarLevel;
 
 			dndIcon.setColor(deviceSettings.doNotDisturb ? Graphics.COLOR_RED : Graphics.COLOR_WHITE); // 2.1.0
 			btIcon.setColor(deviceSettings.phoneConnected ? Graphics.COLOR_RED : Graphics.COLOR_WHITE);
@@ -472,8 +474,16 @@ module UiElements {
 	class Bottom extends UiElementBase {
 		var lvl1;
 		var lvls;
+		var distanceIcon;
+		var caloriesIcon;
+		var stopwatchIcon;
+		var stairsUpIcon;
+		var distanceText;
+		var caloriesText;
+		var stopwatchText;
+		var stairsUpText;
 		
-		function initialize(dc) {
+		function initialize(dc, fntAsapCondensedBold16) {
 			UiElementBase.initialize(dc);
 			
     		lvl1 = new Icons.Icon("MoveBar-1", dc);
@@ -485,10 +495,53 @@ module UiElements {
     			lvls[i] = new Icons.Icon("MoveBar-2", dc);
     			lvls[i].setPosition(120 + (i * 14), 219);
     		}
+    		distanceIcon = new Icons.Icon("Distance", dc);
+    		caloriesIcon = new Icons.Icon("Calories", dc);
+    		stopwatchIcon = new Icons.Icon("Stopwatch", dc);
+    		stairsUpIcon = new Icons.Icon("Stairs-Up", dc);
+    		
+    		distanceIcon.setColor(Graphics.COLOR_RED);
+    		caloriesIcon.setColor(Graphics.COLOR_RED);
+    		stopwatchIcon.setColor(Graphics.COLOR_RED);
+    		stairsUpIcon.setColor(Graphics.COLOR_RED);
+    		
+    		distanceIcon.setPosition(72, 174);
+    		caloriesIcon.setPosition(110, 185);
+    		stopwatchIcon.setPosition(150, 185);
+    		stairsUpIcon.setPosition(188, 175);
+    		
+    		distanceText = new WatchUi.Text({
+	            :color => Graphics.COLOR_WHITE,
+	            :font  => fntAsapCondensedBold16,
+	            :locX  => 72,
+	            :locY  => 190
+        	});
+        	caloriesText = new WatchUi.Text({
+	            :color => Graphics.COLOR_WHITE,
+	            :font  => fntAsapCondensedBold16,
+	            :locX  => 110,
+	            :locY  => 201
+        	});
+        	stopwatchText = new WatchUi.Text({
+	            :color => Graphics.COLOR_WHITE,
+	            :font  => fntAsapCondensedBold16,
+	            :locX  => 150,
+	            :locY  => 201
+        	});
+        	stairsUpText = new WatchUi.Text({
+	            :color => Graphics.COLOR_WHITE,
+	            :font  => fntAsapCondensedBold16,
+	            :locX  => 188,
+	            :locY  => 190
+        	});
+        	distanceText.setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
+        	caloriesText.setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
+        	stopwatchText.setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
+        	stairsUpText.setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
 		}
 		
-		function draw() {
-			var moveBarLevel = ActivityMonitor.getInfo().moveBarLevel;
+		function draw(activityMonitorInfo) {
+			var moveBarLevel = activityMonitorInfo.moveBarLevel;
 
 			if(moveBarLevel > 0) {
 				lvl1.setColor(Graphics.COLOR_RED);
@@ -511,6 +564,25 @@ module UiElements {
 					lvls[i].draw();
 				}
 			}
+			var calories = activityMonitorInfo.calories != null ? activityMonitorInfo.calories : 0;
+			var distance = activityMonitorInfo.distance != null ? activityMonitorInfo.distance : 0;
+			var activeMinutesWeek = activityMonitorInfo.activeMinutesWeek != null ? activityMonitorInfo.activeMinutesWeek.total : 0;
+			var floorsClimbed = activityMonitorInfo.floorsClimbed != null ? activityMonitorInfo.floorsClimbed : 0;
+			
+			distanceIcon.draw();
+			caloriesIcon.draw();
+			stopwatchIcon.draw();
+			stairsUpIcon.draw();
+			
+			distanceText.setText(Utils.kFormatter(calories, 2));
+			caloriesText.setText(Utils.kFormatter(distance, 2));
+			stopwatchText.setText(Utils.kFormatter(activeMinutesWeek, 2));
+			stairsUpText.setText(Utils.kFormatter(floorsClimbed, 2));
+			
+			distanceText.draw(dc);
+			caloriesText.draw(dc);
+			stopwatchText.draw(dc);
+			stairsUpText.draw(dc);
 		}
 	}
 	
@@ -543,10 +615,9 @@ module UiElements {
 			icon.setPosition(251, 130);
 		}
 		
-		function draw() {
-			var info = ActivityMonitor.getInfo();
-			var steps = info.steps != null ? info.steps : 0;
-			var stepGoal = info.stepGoal != null ? info.stepGoal : 0;
+		function draw(activityMonitorInfo) {
+			var steps = activityMonitorInfo.steps != null ? activityMonitorInfo.steps : 0;
+			var stepGoal = activityMonitorInfo.stepGoal != null ? activityMonitorInfo.stepGoal : 0;
 
 			topValue.setText(Utils.kFormatter(stepGoal, 1));
 			bottomValue.setText(Utils.kFormatter(steps, 1));
@@ -557,6 +628,7 @@ module UiElements {
 		}
 	}
 	
+	// TODO: Add "-" sign to fntAsapBold12 and add "--" as the first value instead of zero
 	class Left extends UiElementBase {
 		var topValue;
 		var bottomValue;
@@ -665,7 +737,11 @@ module Icons {
 		"Sleep"        => "M",
 		"Heart-1"      => "N",
 		"Heart-2"      => "O",
-		"Steps-Side"   => "P"
+		"Steps-Side"   => "P",
+		"Distance"     => "Q",
+		"Calories"     => "R",
+		"Stopwatch"    => "S",
+		"Stairs-Up"    => "T"
 	};
 	
 	function init() {
