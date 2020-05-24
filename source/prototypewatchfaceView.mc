@@ -581,6 +581,7 @@ module UiElements {
 		var bottomValueText;
 		var icon;
 		var trophyIcon;
+		var initialX = 242;
 		
 		function initialize(dc, fntAsapCondensedBold14) {
 			UiElementBase.initialize(dc);
@@ -588,13 +589,13 @@ module UiElements {
 			topValueText = new Extensions.Text({
 	            :color => Graphics.COLOR_WHITE,
 	            :font  => fntAsapCondensedBold14,
-	            :locX  => 240,
+	            :locX  => initialX,
 	            :locY  => 87
         	}, true);
         	bottomValueText = new Extensions.Text({
 	            :color => Graphics.COLOR_WHITE,
 	            :font  => fntAsapCondensedBold14,
-	            :locX  => 240,
+	            :locX  => initialX,
 	            :locY  => 171
         	}, true);
 
@@ -630,6 +631,7 @@ module UiElements {
 		var topValueText;
 		var bottomValueText;
 		var icon;
+		var initialX = 18;
 		
 		// Feature only when heart rate is shown
 		var heartRateText;
@@ -645,13 +647,13 @@ module UiElements {
 			topValueText = new Extensions.Text({
 	            :color => Graphics.COLOR_WHITE,
 	            :font  => fntAsapCondensedBold14,
-	            :locX  => 20,
+	            :locX  => initialX,
 	            :locY  => 87
         	}, true);
         	bottomValueText = new Extensions.Text({
 	            :color => Graphics.COLOR_WHITE,
 	            :font  => fntAsapCondensedBold14,
-	            :locX  => 20,
+	            :locX  => initialX,
 	            :locY  => 171
         	}, true);
         	heartRateText = new Extensions.Text({
@@ -857,7 +859,7 @@ module Extensions {
 		}
 		
 		function getTextLength() {
-			return text.length;
+			return text.length();
 		}
 	}
 }
