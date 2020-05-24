@@ -580,6 +580,7 @@ module UiElements {
 		var topValueText;
 		var bottomValueText;
 		var icon;
+		var trophyIcon;
 		
 		function initialize(dc, fntAsapCondensedBold14) {
 			UiElementBase.initialize(dc);
@@ -600,6 +601,11 @@ module UiElements {
         	icon = new Icons.Icon("Steps-Side", dc);
         	icon.setColor(Graphics.COLOR_WHITE);
 			icon.setPosition(251, 130);
+			
+			trophyIcon = new Icons.Icon("Trophy", dc);
+			
+			trophyIcon.setColor(Graphics.COLOR_YELLOW);
+			trophyIcon.setPosition(251, 115);
 		}
 		
 		function draw(activityMonitorInfo) {
@@ -612,6 +618,9 @@ module UiElements {
 			topValueText.draw(dc);
 			bottomValueText.draw(dc);
 			
+			if(bottomValue >= topValue) {
+				trophyIcon.draw();
+			}
 			icon.draw();
 		}
 	}
