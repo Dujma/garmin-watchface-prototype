@@ -131,48 +131,43 @@ module UiElements {
 	        var fntAsapSemibold55 = WatchUi.loadResource(Rez.Fonts.AsapSemibold55);
 	        var fntAsapCondensedSemiBold20 = WatchUi.loadResource(Rez.Fonts.AsapCondensedSemiBold20);
 
-			hoursText = new WatchUi.Text({
-	            :color => Graphics.COLOR_WHITE,
-	            :font  => fntAsapBold81,
-	            :locX  => 89 +(self.dc.getTextWidthInPixels("00", fntAsapBold81) / 2),
-	            :locY  => 129
-	        });
-	        minutesText = new WatchUi.Text({
+			hoursText = new Extensions.Text({
+	            :color         => Graphics.COLOR_WHITE,
+	            :font          => fntAsapBold81,
+	            :locX          => 89 +(self.dc.getTextWidthInPixels("00", fntAsapBold81) / 2),
+	            :locY          => 129,
+	            :justification => Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_RIGHT
+	        }, false);
+	        minutesText = new Extensions.Text({
 	            :color => Graphics.COLOR_LT_GRAY,
 	            :font  => fntAsapSemibold55,
 	            :locX  => 178,
 	            :locY  => 119
-	        });
-	        minutesColon = new WatchUi.Text({
+	        }, true);
+	        minutesColon = new Extensions.Text({
 	            :color => Graphics.COLOR_LT_GRAY,
 	            :font  => fntAsapSemibold55,
 	            :locX  => 139,
 	            :locY  => 119
-	        });
-	        dateText = new WatchUi.Text({
+	        }, true);
+	        dateText = new Extensions.Text({
 	            :color => Graphics.COLOR_WHITE,
 	            :font  => fntAsapCondensedSemiBold20,
 	            :locX  => 178,
 	            :locY  => 150
-	        });
-	        partOfDayText = new WatchUi.Text({
+	        }, true);
+	        partOfDayText = new Extensions.Text({
 	            :color => Graphics.COLOR_WHITE,
 	            :font  => fntAsapCondensedBold14,
 	            :locX  => 43,
 	            :locY  => 152
-	        });
-	        secondsText = new WatchUi.Text({
+	        }, true);
+	        secondsText = new Extensions.Text({
 	            :color => Graphics.COLOR_LT_GRAY,
 	            :font  => fntAsapCondensedBold14,
 	            :locX  => 215,
 	            :locY  => 106
-	        });
-	        hoursText.setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_RIGHT);
-	        minutesText.setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
-	        minutesColon.setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
-	        dateText.setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
-	        partOfDayText.setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
-	        secondsText.setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
+	        }, true);
 	        
 	        hoursFormat = application.getProperty("AddLeadingZero") ? "%02d" : "%d";
 	    }
@@ -246,14 +241,13 @@ module UiElements {
 			batteryIcon = new Icons.Icon("Battery-100", dc);
 			batteryIcon.setPosition(130, 19);
 			
-			batteryText = new WatchUi.Text({
+			batteryText = new Extensions.Text({
 	            :color => Graphics.COLOR_WHITE,
 	            :font  => fntAsapCondensedBold14,
 	            :locX  => 130,
 	            :locY  => 8
-	        });
-	        batteryText.setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
-			
+	        }, true);
+	        
 			notificationIcon = new Icons.Icon("Notification", dc);
 			notificationIcon.setPosition(154, 16);
 			
@@ -402,23 +396,21 @@ module UiElements {
 			daysText = new [7];
 
 			for(var i = 0; i < daysText.size(); ++i) {
-				daysText[i] = new WatchUi.Text({
+				daysText[i] = new Extensions.Text({
 					:text  => dayNames[i],
 		            :color => Graphics.COLOR_WHITE,
 		            :font  => fntAsapBold12,
 		            :locY  => daysInitialY
-	        	});
-	        	daysText[i].setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
+	        	}, true);
 			}
 			orderDaysOfWeek(application.getProperty("FirstDayOfWeek"));
 			
-			infoText = new WatchUi.Text({
+			infoText = new Extensions.Text({
 	            :color => Graphics.COLOR_WHITE,
 	            :font  => fntAsapBold12,
 	            :locX  => 130,
 	            :locY  => 40
-        	});
-        	infoText.setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
+        	}, true);
 		}
 		
 		function draw() {
@@ -512,34 +504,30 @@ module UiElements {
     		icon3.setPosition(150, 185);
     		icon4.setPosition(188, 175);
     		
-    		textIcon1 = new WatchUi.Text({
+    		textIcon1 = new Extensions.Text({
 	            :color => Graphics.COLOR_WHITE,
 	            :font  => fntAsapCondensedBold16,
 	            :locX  => 72,
 	            :locY  => 190
-        	});
-        	textIcon2 = new WatchUi.Text({
+        	}, true);
+        	textIcon2 = new Extensions.Text({
 	            :color => Graphics.COLOR_WHITE,
 	            :font  => fntAsapCondensedBold16,
 	            :locX  => 110,
 	            :locY  => 201
-        	});
-        	textIcon3 = new WatchUi.Text({
+        	}, true);
+        	textIcon3 = new Extensions.Text({
 	            :color => Graphics.COLOR_WHITE,
 	            :font  => fntAsapCondensedBold16,
 	            :locX  => 150,
 	            :locY  => 201
-        	});
-        	textIcon4 = new WatchUi.Text({
+        	}, true);
+        	textIcon4 = new Extensions.Text({
 	            :color => Graphics.COLOR_WHITE,
 	            :font  => fntAsapCondensedBold16,
 	            :locX  => 188,
 	            :locY  => 190
-        	});
-        	textIcon1.setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
-        	textIcon2.setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
-        	textIcon3.setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
-        	textIcon4.setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
+        	}, true);
 		}
 		
 		function draw(activityMonitorInfo) {
@@ -596,21 +584,19 @@ module UiElements {
 		function initialize(dc, fntAsapCondensedBold14) {
 			UiElementBase.initialize(dc);
 			
-			topValueText = new WatchUi.Text({
+			topValueText = new Extensions.Text({
 	            :color => Graphics.COLOR_WHITE,
 	            :font  => fntAsapCondensedBold14,
 	            :locX  => 240,
 	            :locY  => 87
-        	});
-        	bottomValueText = new WatchUi.Text({
+        	}, true);
+        	bottomValueText = new Extensions.Text({
 	            :color => Graphics.COLOR_WHITE,
 	            :font  => fntAsapCondensedBold14,
 	            :locX  => 240,
 	            :locY  => 171
-        	});
-        	topValueText.setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
-        	bottomValueText.setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
-        	
+        	}, true);
+
         	icon = new Icons.Icon("Steps-Side", dc);
         	icon.setColor(Graphics.COLOR_WHITE);
 			icon.setPosition(251, 130);
@@ -638,38 +624,35 @@ module UiElements {
 		
 		// Feature only when heart rate is shown
 		var heartRateText;
-		var isInSleep;
+		var isSleep;
 		var heartShown;
 		
 		function initialize(dc, fntAsapCondensedBold14, fntAsapBold12) {
 			UiElementBase.initialize(dc);
 			
-			isInSleep = false;
+			isSleep = false;
 			heartShown = true;
 			
-			topValueText = new WatchUi.Text({
+			topValueText = new Extensions.Text({
 	            :color => Graphics.COLOR_WHITE,
 	            :font  => fntAsapCondensedBold14,
 	            :locX  => 20,
 	            :locY  => 87
-        	});
-        	bottomValueText = new WatchUi.Text({
+        	}, true);
+        	bottomValueText = new Extensions.Text({
 	            :color => Graphics.COLOR_WHITE,
 	            :font  => fntAsapCondensedBold14,
 	            :locX  => 20,
 	            :locY  => 171
-        	});
-        	heartRateText = new WatchUi.Text({
+        	}, true);
+        	heartRateText = new Extensions.Text({
         		:text  => "0",
 	            :color => Graphics.COLOR_WHITE,
 	            :font  => fntAsapBold12,
 	            :locX  => 9,
 	            :locY  => 118
-        	});
-        	topValueText.setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
-        	bottomValueText.setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
-        	heartRateText.setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
-        	
+        	}, true);
+
         	icon = new Icons.Icon("Heart-1", dc);
         	icon.setColor(Graphics.COLOR_RED);
 			icon.setPosition(9, 130);
@@ -691,7 +674,7 @@ module UiElements {
 		}
 		
 		function drawHeartRate() {
-			if(!isInSleep) {
+			if(!isSleep) {
 				var currentHeartRate = Utils.getCurrentHeartRate();
 				
 				heartRateText.setText(currentHeartRate.toString());
@@ -709,11 +692,11 @@ module UiElements {
 		}
 		
 		function onEnterSleep() {
-			isInSleep = true;
+			isSleep = true;
 	    }
 	    
 	    function onExitSleep() {
-			isInSleep = false;
+			isSleep = false;
 	    }
 	}
 }
@@ -776,6 +759,8 @@ module Icons {
         	
         	setIcon(name);
         	text.setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
+        	
+        	return self;
 		}
 		
 		function setColor(color) {
@@ -803,6 +788,50 @@ module Icons {
 		
 		function draw() {
 			text.draw(dc);
+		}
+	}
+}
+
+module Extensions {
+	class Text extends WatchUi.Text {
+		private var text;
+		private var color;
+		
+		function initialize(settings, centerJustification) {
+			WatchUi.Text.initialize(settings);
+			
+			if(centerJustification) {
+				WatchUi.Text.setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
+			}
+			return self;
+		}
+		
+		function setText(text) {
+			WatchUi.Text.setText(text);
+			
+			self.text = text;
+			
+			return self;
+		}
+		
+		function setColor(color) {
+			WatchUi.Text.setColor(color);
+			
+			self.color = color;
+			
+			return self;
+		}
+		
+		function getColor() {
+			return color;
+		}
+		
+		function getText() {
+			return text;
+		}
+		
+		function getTextLength() {
+			return text.length;
 		}
 	}
 }
