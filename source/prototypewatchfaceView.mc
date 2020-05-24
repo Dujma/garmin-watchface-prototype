@@ -693,10 +693,18 @@ module UiElements {
 		
 		function onEnterSleep() {
 			isSleep = true;
+			heartFilled = true;
+			
+			icon.setIcon("Heart-1");
+			heartRateText.setColor(Graphics.COLOR_TRANSPARENT);
 	    }
 	    
 	    function onExitSleep() {
 			isSleep = false;
+			heartFilled = false;
+			
+			icon.setIcon("Heart-2");
+			heartRateText.setColor(Graphics.COLOR_WHITE);
 	    }
 	}
 }
