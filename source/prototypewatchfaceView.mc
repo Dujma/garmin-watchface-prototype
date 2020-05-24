@@ -517,6 +517,7 @@ module UiElements {
 	class Right extends UiElementBase {
 		var topValue;
 		var bottomValue;
+		var icon;
 		
 		function initialize(dc, fntAsapCondensedBold14) {
 			UiElementBase.initialize(dc);
@@ -535,6 +536,11 @@ module UiElements {
         	});
         	topValue.setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
         	bottomValue.setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
+        	
+        	icon = new Icons.Icon("Steps-Side", dc);
+        	
+        	icon.setColor(Graphics.COLOR_WHITE);
+			icon.setPosition(251, 130);
 		}
 		
 		function draw() {
@@ -547,6 +553,7 @@ module UiElements {
 			
 			topValue.draw(dc);
 			bottomValue.draw(dc);
+			icon.draw();
 		}
 	}
 	
@@ -657,7 +664,8 @@ module Icons {
 		"Move-0"       => "L",
 		"Sleep"        => "M",
 		"Heart-1"      => "N",
-		"Heart-2"      => "O"
+		"Heart-2"      => "O",
+		"Steps-Side"   => "P"
 	};
 	
 	function init() {
