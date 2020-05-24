@@ -863,10 +863,9 @@ module Utils {
     
     function getCurrentWeekNumber() {
 		var today = new Time.Moment(Time.today().value() + System.getClockTime().timeZoneOffset);
-		var todayGregorian = Gregorian.info(today, Time.FORMAT_SHORT);
-		
+
 		var options = {
-		    :year   => todayGregorian.year,
+		    :year   => Gregorian.info(today, Time.FORMAT_SHORT).year,
 		    :month  => 1,
 		    :day    => 1,
 		    :hour   => 0,
@@ -874,9 +873,8 @@ module Utils {
 		    :sec    => 0
 		};
 		var firstDayOfYear = Gregorian.moment(options);
-		var firstDayOfYearGregorian = Gregorian.info(firstDayOfYear, Time.FORMAT_SHORT);
 
-		return Math.ceil((today.subtract(firstDayOfYear).add(new Time.Duration(Gregorian.SECONDS_PER_DAY * getDayWithMondayStarting(firstDayOfYearGregorian.day_of_week))).value() / 86400).toFloat() / 7).toNumber();
+		return Math.ceil((today.subtract(firstDayOfYear).add(new Time.Duration(Gregorian.SECONDS_PER_DAY * getDayWithMondayStarting(Gregorian.info(firstDayOfYear, Time.FORMAT_SHORT).day_of_week))).value() / 86400).toFloat() / 7).toNumber();
     }
     
     function kFormatter(num, precision) {
