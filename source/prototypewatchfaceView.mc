@@ -291,7 +291,7 @@ module UiElements {
 				}
 			}
 			if(targetIcon != null) {
-				if(batteryIcon.name != targetIcon) {
+				if(batteryIcon.getIconName() != targetIcon) {
 					batteryIcon.setIcon(targetIcon);
 				}
 			}
@@ -625,13 +625,13 @@ module UiElements {
 		// Feature only when heart rate is shown
 		var heartRateText;
 		var isSleep;
-		var heartShown;
+		var heartFilled;
 		
 		function initialize(dc, fntAsapCondensedBold14, fntAsapBold12) {
 			UiElementBase.initialize(dc);
 			
 			isSleep = false;
-			heartShown = true;
+			heartFilled = true;
 			
 			topValueText = new Extensions.Text({
 	            :color => Graphics.COLOR_WHITE,
@@ -679,9 +679,9 @@ module UiElements {
 				
 				heartRateText.setText(currentHeartRate.toString());
 
-				icon.setIcon(heartShown ? "Heart-1" : "Heart-2");
+				icon.setIcon(heartFilled ? "Heart-1" : "Heart-2");
 				
-				heartShown = !heartShown;
+				heartFilled = !heartFilled;
 				
 				heartRateText.setColor(Graphics.COLOR_WHITE);
 			} else {
@@ -742,9 +742,9 @@ module Icons {
 
 	class Icon {
 		var text;
-		var name;
-		var dimensions;
 		
+		private var name;
+		private var dimensions;
 		private var dc;
 		private var char;
 
@@ -784,6 +784,14 @@ module Icons {
 			text.locY = y;
 			
 			return text;
+		}
+		
+		function getIconName() {
+			return name;
+		}
+		
+		function getDimensions() {
+			return dimensions;
 		}
 		
 		function draw() {
