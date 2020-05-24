@@ -6,7 +6,8 @@ using Toybox.Application;
 using Toybox.Time;
 using Toybox.Time.Gregorian;
 using Toybox.Math;
-using Toybox.SensorHistory;
+using Toybox.ActivityMonitor;
+using Toybox.Activity;
 
 class prototypewatchfaceView extends WatchUi.WatchFace {
 	private var application;
@@ -19,6 +20,7 @@ class prototypewatchfaceView extends WatchUi.WatchFace {
 	private var top;
 	private var bottom;
 	private var right;
+	private var left;
 
     function initialize() {
         WatchFace.initialize();
@@ -36,13 +38,15 @@ class prototypewatchfaceView extends WatchUi.WatchFace {
         	:locY  => 0
     	});
     	var fntAsapCondensedBold14 = WatchUi.loadResource(Rez.Fonts.AsapCondensedBold14);
+    	var fntAsapBold12 = WatchUi.loadResource(Rez.Fonts.AsapBold12);
     	
         clockArea = new UiElements.ClockArea(dc, fntAsapCondensedBold14, application);
         topIcons = new UiElements.TopIcons(dc, fntAsapCondensedBold14);
         bottomIcons = new UiElements.BottomIcons(dc);
-        top = new UiElements.Top(dc, application);
+        top = new UiElements.Top(dc, application, fntAsapBold12);
         bottom = new UiElements.Bottom(dc);
         right = new UiElements.Right(dc, fntAsapCondensedBold14);
+        left = new UiElements.Left(dc, fntAsapCondensedBold14, fntAsapBold12);
     }
 
     function onShow() {
@@ -57,14 +61,16 @@ class prototypewatchfaceView extends WatchUi.WatchFace {
     	
     	var deviceSettings = System.getDeviceSettings();
     	var systemStats = System.getSystemStats();
+   	 	var userProfile = UserProfile.getProfile();
 		
 		// UiElements
 		clockArea.draw(deviceSettings);
 		topIcons.draw(deviceSettings, systemStats);
-		bottomIcons.draw(deviceSettings);
+		bottomIcons.draw(deviceSettings, userProfile);
 		top.draw();
 		bottom.draw();
 		right.draw();
+		left.draw(userProfile);
     }
 
     function onHide() {
@@ -73,14 +79,16 @@ class prototypewatchfaceView extends WatchUi.WatchFace {
 
     function onExitSleep() {
     	clockArea.onExitSleep();
+    	left.onExitSleep();
     }
 
     function onEnterSleep() {
     	clockArea.onEnterSleep();
+    	left.onEnterSleep();
     }
     
     function drawBackground(dc) {
-    	dc.setColor(Graphics.COLOR_TRANSPARENT, Graphics.COLOR_BLACK);
+    	dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_BLACK);
         dc.clear();
     }
     
@@ -312,21 +320,21 @@ module UiElements {
 			btIcon.setPosition(155, 244);
 		}
 		
-		function draw(deviceSettings) {
+		function draw(deviceSettings, userProfile) {
 			var moveBarLevel = ActivityMonitor.getInfo().moveBarLevel;
 
 			dndIcon.setColor(deviceSettings.doNotDisturb ? Graphics.COLOR_RED : Graphics.COLOR_WHITE); // 2.1.0
 			btIcon.setColor(deviceSettings.phoneConnected ? Graphics.COLOR_RED : Graphics.COLOR_WHITE);
-			setMoveIcon(moveBarLevel);
+			setMoveIcon(moveBarLevel, userProfile);
 			
 			moveIcon.draw();
 			dndIcon.draw();
 			btIcon.draw();
 		}
 		
-		function setMoveIcon(lvl) {
+		function setMoveIcon(lvl, userProfile) {
 			var targetIcon = null;
-			var isInSleeptTime = isInSleepTime();
+			var isInSleeptTime = isInSleepTime(userProfile);
 			
 			if(!isInSleeptTime) {
 				if(lvl == 0) {
@@ -352,8 +360,7 @@ module UiElements {
 			}
 		}
 		
-		function isInSleepTime() {
-	   	 	var userProfile = UserProfile.getProfile();
+		function isInSleepTime(userProfile) {
 	        var today = Time.today().value();
 	        
 	        var sleepTime = new Time.Moment(today + userProfile.sleepTime.value());
@@ -382,11 +389,9 @@ module UiElements {
 		private var application;
 		private var infoText;
 
-		function initialize(dc, application) {
+		function initialize(dc, application, fntAsapBold12) {
 			UiElementBase.initialize(dc);
 			self.application = application;
-			
-			var fntAsapBold12 = WatchUi.loadResource(Rez.Fonts.AsapBold12);
 
 			arrowIcon = new Icons.Icon("Arrow-Up", dc);
 			arrowIcon.setColor(Graphics.COLOR_RED);
@@ -519,13 +524,13 @@ module UiElements {
 			topValue = new WatchUi.Text({
 	            :color => Graphics.COLOR_WHITE,
 	            :font  => fntAsapCondensedBold14,
-	            :locX  => 233,
+	            :locX  => 241,
 	            :locY  => 87
         	});
         	bottomValue = new WatchUi.Text({
 	            :color => Graphics.COLOR_WHITE,
 	            :font  => fntAsapCondensedBold14,
-	            :locX  => 233,
+	            :locX  => 241,
 	            :locY  => 171
         	});
         	topValue.setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
@@ -543,6 +548,85 @@ module UiElements {
 			topValue.draw(dc);
 			bottomValue.draw(dc);
 		}
+	}
+	
+	class Left extends UiElementBase {
+		var topValue;
+		var bottomValue;
+		var icon;
+		var heartRate;
+		var sleep;
+		var heartShown;
+		
+		function initialize(dc, fntAsapCondensedBold14, fntAsapBold12) {
+			UiElementBase.initialize(dc);
+			
+			sleep = false;
+			heartShown = true;
+			
+			topValue = new WatchUi.Text({
+	            :color => Graphics.COLOR_WHITE,
+	            :font  => fntAsapCondensedBold14,
+	            :locX  => 19,
+	            :locY  => 87
+        	});
+        	bottomValue = new WatchUi.Text({
+	            :color => Graphics.COLOR_WHITE,
+	            :font  => fntAsapCondensedBold14,
+	            :locX  => 19,
+	            :locY  => 171
+        	});
+        	heartRate = new WatchUi.Text({
+        		:text  => "0",
+	            :color => Graphics.COLOR_WHITE,
+	            :font  => fntAsapBold12,
+	            :locX  => 9,
+	            :locY  => 118
+        	});
+        	topValue.setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
+        	bottomValue.setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
+        	heartRate.setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
+        	
+        	icon = new Icons.Icon("Heart-1", dc);
+        	
+        	icon.setColor(Graphics.COLOR_RED);
+			icon.setPosition(9, 130);
+		}
+		
+		function draw(userProfile) {
+			var restingHeartRate = userProfile.restingHeartRate;
+			var maxHeartRate = Utils.getMaxHeartRate();
+
+			topValue.setText(Utils.kFormatter(maxHeartRate, 1));
+			bottomValue.setText(Utils.kFormatter(restingHeartRate, 1));
+			
+			if(!sleep) {
+				var currentHeartRate = Utils.getCurrentHeartRate();
+				
+				heartRate.setText(currentHeartRate.toString());
+
+				icon.setIcon(heartShown ? "Heart-1" : "Heart-2");
+				
+				heartShown = !heartShown;
+				
+				heartRate.setColor(Graphics.COLOR_WHITE);
+			} else {
+				icon.setIcon("Heart-1");
+				heartRate.setColor(Graphics.COLOR_TRANSPARENT);
+			}
+			topValue.draw(dc);
+			bottomValue.draw(dc);
+			heartRate.draw(dc);
+			icon.draw();
+		}
+		
+		function onEnterSleep() {
+			sleep = true;
+	    }
+	    
+	    function onExitSleep() {
+			sleep = false;
+	    }
 	}
 }
 
@@ -571,7 +655,9 @@ module Icons {
 		"MoveBar-1"    => "J",
 		"MoveBar-2"    => "K",
 		"Move-0"       => "L",
-		"Sleep"        => "M"
+		"Sleep"        => "M",
+		"Heart-1"      => "N",
+		"Heart-2"      => "O"
 	};
 	
 	function init() {
@@ -628,6 +714,7 @@ module Icons {
 	}
 }
 
+// TODO: All heart rate related functions need to be checked if they have heart rate monitor
 module Utils {
 	function getDayWithMondayStarting(daySundayStarting) {
     	if(daySundayStarting != 1) {
@@ -659,43 +746,47 @@ module Utils {
     	
     	return num.abs() > 999 ? sign + ((num.abs() % 1000 != 0 ? (num.abs() / 1000.0).format("%." + precision + "f") : (num.abs() / 1000.0).format("%d"))) + "k" : num + "";
 	}
-	
-	function getHeartRateHistory() {
-	    if((Toybox has :SensorHistory) && (Toybox.SensorHistory has :getHeartRateHistory)) {
-	        return Toybox.SensorHistory.getHeartRateHistory({});
-	    }
-	    return null;
-	}
-	
+
 	function getMaxHeartRate() {
-		var heartRateHistory = getHeartRateHistory();
-		
-		return getHeartRateHistory != null ? getHeartRateHistory.getMax() : null;
+		return ActivityMonitor.getHeartRateHistory(null, false).getMax();
 	}
 	
 	function getMinHeartRate() {
-		var heartRateHistory = getHeartRateHistory();
-		
-		return getHeartRateHistory != null ? getHeartRateHistory.getMin() : null;
+		return ActivityMonitor.getHeartRateHistory(null, false).getMin();
 	}
 	
 	function getAvgHeartRate() {
-		var heartRateHistory = getHeartRateHistory();
+		var heartRateHistory = ActivityMonitor.getHeartRateHistory(null, false);
 		var sum = 0;
 		var count = 0;
+
+		var sample = heartRateHistory.next();
 		
-		if(heartRateHistory != null) {
+		while(sample != null) {
+			if(sample.heartRate != ActivityMonitor.INVALID_HR_SAMPLE) {
+				System.println(sample.heartRate);
+				sum += sample.heartRate;
+				++count;
+			}
+			sample = heartRateHistory.next();
+		}
+		return count > 0 ? sum / count : null;
+	}
+	
+	function getCurrentHeartRate() {
+		var heartRate = Activity.getActivityInfo().currentHeartRate;
+		
+		if(heartRate == null) {
+			var heartRateHistory = ActivityMonitor.getHeartRateHistory(null, true);
 			var sample = heartRateHistory.next();
-			
-			while(sample != null) {
-				if(sample.data != null) {
-					sum += sample.data;
-					++count;
+
+			while(sample != null && heartRate == null) {
+				if(sample.heartRate != ActivityMonitor.INVALID_HR_SAMPLE) {
+					heartRate = sample.heartRate;
 				}
 				sample = heartRateHistory.next();
 			}
-			return count > 0 ? sum / count : null;
 		}
-		return null;
+		return heartRate;
 	}
 }
