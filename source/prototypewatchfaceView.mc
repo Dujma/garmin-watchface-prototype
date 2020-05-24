@@ -890,11 +890,11 @@ module Utils {
     }
     
     function kFormatter(num, precision) {
-    	var sign = num >= 0 ? "" : "-";
-    	
-    	num = Math.round(num).toNumber();
-    	
-    	return num.abs() > 999 ? sign + ((num.abs() % 1000 != 0 ? (num.abs() / 1000.0).format("%." + precision + "f") : (num.abs() / 1000.0).format("%d"))) + "k" : num + "";
+    	var formatted = (num / 1000.0).format("%." + precision + "f");
+    	var rounded = Math.round(num / 1000.0);
+		var isWholeNumber = formatted.toFloat() - rounded == 0;
+
+    	return num > 999 ? (!isWholeNumber ? formatted : rounded.format("%d")) + "k" : num + "";
 	}
 
 	function getMaxHeartRate() {
