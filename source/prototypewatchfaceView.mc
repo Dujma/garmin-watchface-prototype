@@ -472,239 +472,248 @@ module UiElements {
 	}
 	
 	class Bottom extends UiElementBase {
-		var lvl1;
-		var lvls;
-		var distanceIcon;
-		var caloriesIcon;
-		var stopwatchIcon;
-		var stairsUpIcon;
-		var distanceText;
-		var caloriesText;
-		var stopwatchText;
-		var stairsUpText;
+		var moveBarLvl1;
+		var moveBarOtherLvls;
+		
+		var icon1;
+		var icon2;
+		var icon3;
+		var icon4;
+		
+		var textIcon1;
+		var textIcon2; 
+		var textIcon3;
+		var textIcon4;
 		
 		function initialize(dc, fntAsapCondensedBold16) {
 			UiElementBase.initialize(dc);
 			
-    		lvl1 = new Icons.Icon("MoveBar-1", dc);
-    		lvl1.setPosition(101, 219);
+    		moveBarLvl1 = new Icons.Icon("MoveBar-1", dc);
+    		moveBarLvl1.setPosition(101, 219);
     		
-    		lvls = new [4];
+    		moveBarOtherLvls = new [4];
     		
-    		for(var i = 0; i < lvls.size(); ++i) {
-    			lvls[i] = new Icons.Icon("MoveBar-2", dc);
-    			lvls[i].setPosition(120 + (i * 14), 219);
+    		for(var i = 0; i < moveBarOtherLvls.size(); ++i) {
+    			moveBarOtherLvls[i] = new Icons.Icon("MoveBar-2", dc);
+    			moveBarOtherLvls[i].setPosition(120 + (i * 14), 219);
     		}
-    		distanceIcon = new Icons.Icon("Distance", dc);
-    		caloriesIcon = new Icons.Icon("Calories", dc);
-    		stopwatchIcon = new Icons.Icon("Stopwatch", dc);
-    		stairsUpIcon = new Icons.Icon("Stairs-Up", dc);
+    		icon1 = new Icons.Icon("Distance", dc);
+    		icon2 = new Icons.Icon("Calories", dc);
+    		icon3 = new Icons.Icon("Stopwatch", dc);
+    		icon4 = new Icons.Icon("Stairs-Up", dc);
     		
-    		distanceIcon.setColor(Graphics.COLOR_RED);
-    		caloriesIcon.setColor(Graphics.COLOR_RED);
-    		stopwatchIcon.setColor(Graphics.COLOR_RED);
-    		stairsUpIcon.setColor(Graphics.COLOR_RED);
+    		icon1.setColor(Graphics.COLOR_RED);
+    		icon2.setColor(Graphics.COLOR_RED);
+    		icon3.setColor(Graphics.COLOR_RED);
+    		icon4.setColor(Graphics.COLOR_RED);
     		
-    		distanceIcon.setPosition(72, 174);
-    		caloriesIcon.setPosition(110, 185);
-    		stopwatchIcon.setPosition(150, 185);
-    		stairsUpIcon.setPosition(188, 175);
+    		icon1.setPosition(72, 174);
+    		icon2.setPosition(110, 185);
+    		icon3.setPosition(150, 185);
+    		icon4.setPosition(188, 175);
     		
-    		distanceText = new WatchUi.Text({
+    		textIcon1 = new WatchUi.Text({
 	            :color => Graphics.COLOR_WHITE,
 	            :font  => fntAsapCondensedBold16,
 	            :locX  => 72,
 	            :locY  => 190
         	});
-        	caloriesText = new WatchUi.Text({
+        	textIcon2 = new WatchUi.Text({
 	            :color => Graphics.COLOR_WHITE,
 	            :font  => fntAsapCondensedBold16,
 	            :locX  => 110,
 	            :locY  => 201
         	});
-        	stopwatchText = new WatchUi.Text({
+        	textIcon3 = new WatchUi.Text({
 	            :color => Graphics.COLOR_WHITE,
 	            :font  => fntAsapCondensedBold16,
 	            :locX  => 150,
 	            :locY  => 201
         	});
-        	stairsUpText = new WatchUi.Text({
+        	textIcon4 = new WatchUi.Text({
 	            :color => Graphics.COLOR_WHITE,
 	            :font  => fntAsapCondensedBold16,
 	            :locX  => 188,
 	            :locY  => 190
         	});
-        	distanceText.setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
-        	caloriesText.setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
-        	stopwatchText.setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
-        	stairsUpText.setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
+        	textIcon1.setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
+        	textIcon2.setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
+        	textIcon3.setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
+        	textIcon4.setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
 		}
 		
 		function draw(activityMonitorInfo) {
 			var moveBarLevel = activityMonitorInfo.moveBarLevel;
 
 			if(moveBarLevel > 0) {
-				lvl1.setColor(Graphics.COLOR_RED);
-				lvl1.draw();
+				moveBarLvl1.setColor(Graphics.COLOR_RED);
+				moveBarLvl1.draw();
 				
 				for(var i = 0; i < moveBarLevel - 1; ++i) {
-					lvls[i].setColor(Graphics.COLOR_RED);
-					lvls[i].draw();
+					moveBarOtherLvls[i].setColor(Graphics.COLOR_RED);
+					moveBarOtherLvls[i].draw();
 				}
-				for(var i = moveBarLevel - 1; i < lvls.size(); ++i) {
-					lvls[i].setColor(Graphics.COLOR_DK_GRAY);
-					lvls[i].draw();
+				for(var i = moveBarLevel - 1; i < moveBarOtherLvls.size(); ++i) {
+					moveBarOtherLvls[i].setColor(Graphics.COLOR_DK_GRAY);
+					moveBarOtherLvls[i].draw();
 				}
 			} else {
-				lvl1.setColor(Graphics.COLOR_DK_GRAY);
-				lvl1.draw();
+				moveBarLvl1.setColor(Graphics.COLOR_DK_GRAY);
+				moveBarLvl1.draw();
 				
-				for(var i = 0; i < lvls.size(); ++i) {
-					lvls[i].setColor(Graphics.COLOR_DK_GRAY);
-					lvls[i].draw();
+				for(var i = 0; i < moveBarOtherLvls.size(); ++i) {
+					moveBarOtherLvls[i].setColor(Graphics.COLOR_DK_GRAY);
+					moveBarOtherLvls[i].draw();
 				}
 			}
-			var calories = activityMonitorInfo.calories != null ? activityMonitorInfo.calories : 0;
 			var distance = activityMonitorInfo.distance != null ? activityMonitorInfo.distance : 0;
+			var calories = activityMonitorInfo.calories != null ? activityMonitorInfo.calories : 0;
 			var activeMinutesWeek = activityMonitorInfo.activeMinutesWeek != null ? activityMonitorInfo.activeMinutesWeek.total : 0;
 			var floorsClimbed = activityMonitorInfo.floorsClimbed != null ? activityMonitorInfo.floorsClimbed : 0;
 			
-			distanceIcon.draw();
-			caloriesIcon.draw();
-			stopwatchIcon.draw();
-			stairsUpIcon.draw();
+			icon1.draw();
+			icon2.draw();
+			icon3.draw();
+			icon4.draw();
 			
-			distanceText.setText(Utils.kFormatter(distance * 0.01, 1));
-			caloriesText.setText(Utils.kFormatter(calories, 1));
-			stopwatchText.setText(Utils.kFormatter(activeMinutesWeek, 1));
-			stairsUpText.setText(Utils.kFormatter(floorsClimbed, 1));
+			textIcon1.setText(Utils.kFormatter(distance * 0.01, 1));
+			textIcon2.setText(Utils.kFormatter(calories, 1));
+			textIcon3.setText(Utils.kFormatter(activeMinutesWeek, 1));
+			textIcon4.setText(Utils.kFormatter(floorsClimbed, 1));
 			
-			distanceText.draw(dc);
-			caloriesText.draw(dc);
-			stopwatchText.draw(dc);
-			stairsUpText.draw(dc);
+			textIcon1.draw(dc);
+			textIcon2.draw(dc);
+			textIcon3.draw(dc);
+			textIcon4.draw(dc);
 		}
 	}
 	
 	class Right extends UiElementBase {
-		var topValue;
-		var bottomValue;
+		var topValueText;
+		var bottomValueText;
 		var icon;
 		
 		function initialize(dc, fntAsapCondensedBold14) {
 			UiElementBase.initialize(dc);
 			
-			topValue = new WatchUi.Text({
+			topValueText = new WatchUi.Text({
 	            :color => Graphics.COLOR_WHITE,
 	            :font  => fntAsapCondensedBold14,
-	            :locX  => 241,
+	            :locX  => 240,
 	            :locY  => 87
         	});
-        	bottomValue = new WatchUi.Text({
+        	bottomValueText = new WatchUi.Text({
 	            :color => Graphics.COLOR_WHITE,
 	            :font  => fntAsapCondensedBold14,
-	            :locX  => 241,
+	            :locX  => 240,
 	            :locY  => 171
         	});
-        	topValue.setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
-        	bottomValue.setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
+        	topValueText.setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
+        	bottomValueText.setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
         	
         	icon = new Icons.Icon("Steps-Side", dc);
-        	
         	icon.setColor(Graphics.COLOR_WHITE);
 			icon.setPosition(251, 130);
 		}
 		
 		function draw(activityMonitorInfo) {
-			var steps = activityMonitorInfo.steps != null ? activityMonitorInfo.steps : 0;
-			var stepGoal = activityMonitorInfo.stepGoal != null ? activityMonitorInfo.stepGoal : 0;
+			var topValue = activityMonitorInfo.stepGoal != null ? activityMonitorInfo.stepGoal : 0;
+			var bottomValue = activityMonitorInfo.steps != null ? activityMonitorInfo.steps : 0;
 
-			topValue.setText(Utils.kFormatter(stepGoal, 1));
-			bottomValue.setText(Utils.kFormatter(steps, 1));
+			topValueText.setText(Utils.kFormatter(topValue, 1));
+			bottomValueText.setText(Utils.kFormatter(bottomValue, 1));
 			
-			topValue.draw(dc);
-			bottomValue.draw(dc);
+			topValueText.draw(dc);
+			bottomValueText.draw(dc);
+			
 			icon.draw();
 		}
 	}
 	
 	// TODO: Add "-" sign to fntAsapBold12 and add "--" as the first value instead of zero
 	class Left extends UiElementBase {
-		var topValue;
-		var bottomValue;
+		var topValueText;
+		var bottomValueText;
 		var icon;
-		var heartRate;
-		var sleep;
+		
+		// Feature only when heart rate is shown
+		var heartRateText;
+		var isInSleep;
 		var heartShown;
 		
 		function initialize(dc, fntAsapCondensedBold14, fntAsapBold12) {
 			UiElementBase.initialize(dc);
 			
-			sleep = false;
+			isInSleep = false;
 			heartShown = true;
 			
-			topValue = new WatchUi.Text({
+			topValueText = new WatchUi.Text({
 	            :color => Graphics.COLOR_WHITE,
 	            :font  => fntAsapCondensedBold14,
-	            :locX  => 19,
+	            :locX  => 20,
 	            :locY  => 87
         	});
-        	bottomValue = new WatchUi.Text({
+        	bottomValueText = new WatchUi.Text({
 	            :color => Graphics.COLOR_WHITE,
 	            :font  => fntAsapCondensedBold14,
-	            :locX  => 19,
+	            :locX  => 20,
 	            :locY  => 171
         	});
-        	heartRate = new WatchUi.Text({
+        	heartRateText = new WatchUi.Text({
         		:text  => "0",
 	            :color => Graphics.COLOR_WHITE,
 	            :font  => fntAsapBold12,
 	            :locX  => 9,
 	            :locY  => 118
         	});
-        	topValue.setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
-        	bottomValue.setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
-        	heartRate.setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
+        	topValueText.setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
+        	bottomValueText.setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
+        	heartRateText.setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
         	
         	icon = new Icons.Icon("Heart-1", dc);
-        	
         	icon.setColor(Graphics.COLOR_RED);
 			icon.setPosition(9, 130);
 		}
 		
 		function draw(userProfile) {
-			var restingHeartRate = userProfile.restingHeartRate;
-			var maxHeartRate = Utils.getMaxHeartRate();
+			var topValue = Utils.getMaxHeartRate();
+			var bottomValue = userProfile.restingHeartRate;
 
-			topValue.setText(Utils.kFormatter(maxHeartRate, 1));
-			bottomValue.setText(Utils.kFormatter(restingHeartRate, 1));
+			topValueText.setText(Utils.kFormatter(topValue, 1));
+			bottomValueText.setText(Utils.kFormatter(bottomValue, 1));
+
+			topValueText.draw(dc);
+			bottomValueText.draw(dc);
+
+			icon.draw();
 			
-			if(!sleep) {
+			drawHeartRate();
+		}
+		
+		function drawHeartRate() {
+			if(!isInSleep) {
 				var currentHeartRate = Utils.getCurrentHeartRate();
 				
-				heartRate.setText(currentHeartRate.toString());
+				heartRateText.setText(currentHeartRate.toString());
 
 				icon.setIcon(heartShown ? "Heart-1" : "Heart-2");
 				
 				heartShown = !heartShown;
 				
-				heartRate.setColor(Graphics.COLOR_WHITE);
+				heartRateText.setColor(Graphics.COLOR_WHITE);
 			} else {
 				icon.setIcon("Heart-1");
-				heartRate.setColor(Graphics.COLOR_TRANSPARENT);
+				heartRateText.setColor(Graphics.COLOR_TRANSPARENT);
 			}
-			topValue.draw(dc);
-			bottomValue.draw(dc);
-			heartRate.draw(dc);
-			icon.draw();
+			heartRateText.draw(dc);
 		}
 		
 		function onEnterSleep() {
-			sleep = true;
+			isInSleep = true;
 	    }
 	    
 	    function onExitSleep() {
-			sleep = false;
+			isInSleep = false;
 	    }
 	}
 }
