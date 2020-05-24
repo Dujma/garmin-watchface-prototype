@@ -574,10 +574,10 @@ module UiElements {
 			stopwatchIcon.draw();
 			stairsUpIcon.draw();
 			
-			distanceText.setText(Utils.kFormatter(calories, 2));
-			caloriesText.setText(Utils.kFormatter(distance, 2));
-			stopwatchText.setText(Utils.kFormatter(activeMinutesWeek, 2));
-			stairsUpText.setText(Utils.kFormatter(floorsClimbed, 2));
+			distanceText.setText(Utils.kFormatter(distance * 0.01, 1));
+			caloriesText.setText(Utils.kFormatter(calories, 1));
+			stopwatchText.setText(Utils.kFormatter(activeMinutesWeek, 1));
+			stairsUpText.setText(Utils.kFormatter(floorsClimbed, 1));
 			
 			distanceText.draw(dc);
 			caloriesText.draw(dc);
@@ -827,6 +827,8 @@ module Utils {
     
     function kFormatter(num, precision) {
     	var sign = num >= 0 ? "" : "-";
+    	
+    	num = Math.round(num).toNumber();
     	
     	return num.abs() > 999 ? sign + ((num.abs() % 1000 != 0 ? (num.abs() / 1000.0).format("%." + precision + "f") : (num.abs() / 1000.0).format("%d"))) + "k" : num + "";
 	}
