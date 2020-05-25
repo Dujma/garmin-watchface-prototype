@@ -598,6 +598,10 @@ module UiElements {
 		var icon;
 		var trophyIcon;
 		var initialX = 242;
+		var arrowIcon;
+		var maxAngle = 37;
+		var radius = 104;
+		var centerAngle = 18;
 		
 		function initialize(dc, fntAsapCondensedBold14) {
 			UiElementBase.initialize(dc);
@@ -623,6 +627,10 @@ module UiElements {
 			
 			trophyIcon.setColor(Graphics.COLOR_YELLOW);
 			trophyIcon.setPosition(251, 115);
+			
+			arrowIcon = new Icons.Icon("Arrow-Right", dc);
+			
+			arrowIcon.setColor(Graphics.COLOR_RED);
 		}
 		
 		function draw(activityMonitorInfo) {
@@ -642,6 +650,21 @@ module UiElements {
 				trophyIcon.draw();
 			}
 			icon.draw();
+			
+			drawArrow(topValue, bottomValue);
+		}
+		
+		function drawArrow(topValue, bottomValue) {
+			var percentage = bottomValue >= topValue ? 1.0 : bottomValue / topValue.toFloat();
+			var targetPosition = maxAngle * percentage;
+			
+			var pointOnCircle = Utils.getPointOnCircle(dc.getWidth() / 2, dc.getHeight() / 2, radius, -1 * targetPosition, centerAngle);
+			
+	   	 	var x = pointOnCircle[0];
+	   	 	var y = pointOnCircle[1];
+	   	 	
+	   	 	arrowIcon.setPosition(x, y);
+			arrowIcon.draw();
 		}
 		
 		function offSetXBasedOnWidth(width) {
@@ -665,6 +688,10 @@ module UiElements {
 		var bottomValueText;
 		var icon;
 		var initialX = 18;
+		var arrowIcon;
+		var maxAngle = 37;
+		var radius = 104;
+		var centerAngle = 162; // Reference to "Right". 180 - 18 = 162
 		
 		// Feature only when heart rate is shown
 		var heartRateText;
@@ -700,6 +727,10 @@ module UiElements {
         	icon = new Icons.Icon("Heart-1", dc);
         	icon.setColor(Graphics.COLOR_RED);
 			icon.setPosition(9, 130);
+			
+			arrowIcon = new Icons.Icon("Arrow-Left", dc);
+			
+			arrowIcon.setColor(Graphics.COLOR_RED);
 		}
 		
 		function draw(userProfile) {
@@ -718,6 +749,8 @@ module UiElements {
 			icon.draw();
 			
 			drawHeartRate();
+			
+			drawArrow(topValue, bottomValue);
 		}
 		
 		function drawHeartRate() {
@@ -736,6 +769,19 @@ module UiElements {
 				heartRateText.setColor(Graphics.COLOR_TRANSPARENT);
 			}
 			heartRateText.draw(dc);
+		}
+		
+		function drawArrow(topValue, bottomValue) {
+			var percentage = bottomValue >= topValue ? 1.0 : bottomValue / topValue.toFloat();
+			var targetPosition = maxAngle * percentage;
+			
+			var pointOnCircle = Utils.getPointOnCircle(dc.getWidth() / 2, dc.getHeight() / 2, radius, targetPosition, centerAngle);
+			
+	   	 	var x = pointOnCircle[0];
+	   	 	var y = pointOnCircle[1];
+	   	 	
+	   	 	arrowIcon.setPosition(x, y);
+			arrowIcon.draw();
 		}
 		
 		function onEnterSleep() {
