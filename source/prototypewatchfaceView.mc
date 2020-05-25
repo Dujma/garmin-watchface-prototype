@@ -803,7 +803,9 @@ module Icons {
 		"Calories"     => "R",
 		"Stopwatch"    => "S",
 		"Stairs-Up"    => "T",
-		"Trophy"       => "U"
+		"Trophy"       => "U",
+		"Arrow-Left"   => "V",
+		"Arrow-Right"  => "X"
 	};
 	
 	function init() {
