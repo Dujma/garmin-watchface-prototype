@@ -133,41 +133,41 @@ module UiElements {
 
 			hoursText = new Extensions.Text({
 	            :color         => Graphics.COLOR_WHITE,
-	            :font          => fntAsapBold81,
+	            :typeface      => fntAsapBold81,
 	            :locX          => 89 +(self.dc.getTextWidthInPixels("00", fntAsapBold81) / 2),
 	            :locY          => 129,
 	            :justification => Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_RIGHT
-	        }, false);
+	        }, dc, false);
 	        minutesText = new Extensions.Text({
-	            :color => Graphics.COLOR_LT_GRAY,
-	            :font  => fntAsapSemibold55,
-	            :locX  => 178,
-	            :locY  => 119
-	        }, true);
+	            :color    => Graphics.COLOR_LT_GRAY,
+	            :typeface => fntAsapSemibold55,
+	            :locX     => 178,
+	            :locY     => 119
+	        }, dc, true);
 	        minutesColon = new Extensions.Text({
-	            :color => Graphics.COLOR_LT_GRAY,
-	            :font  => fntAsapSemibold55,
-	            :locX  => 139,
-	            :locY  => 119
-	        }, true);
+	            :color    => Graphics.COLOR_LT_GRAY,
+	            :typeface => fntAsapSemibold55,
+	            :locX     => 139,
+	            :locY     => 119
+	        }, dc, true);
 	        dateText = new Extensions.Text({
-	            :color => Graphics.COLOR_WHITE,
-	            :font  => fntAsapCondensedSemiBold20,
-	            :locX  => 178,
-	            :locY  => 150
-	        }, true);
+	            :color    => Graphics.COLOR_WHITE,
+	            :typeface => fntAsapCondensedSemiBold20,
+	            :locX     => 178,
+	            :locY     => 150
+	        }, dc, true);
 	        partOfDayText = new Extensions.Text({
-	            :color => Graphics.COLOR_WHITE,
-	            :font  => fntAsapCondensedBold14,
-	            :locX  => 43,
-	            :locY  => 152
-	        }, true);
+	            :color    => Graphics.COLOR_WHITE,
+	            :typeface => fntAsapCondensedBold14,
+	            :locX     => 43,
+	            :locY     => 152
+	        }, dc, true);
 	        secondsText = new Extensions.Text({
-	            :color => Graphics.COLOR_LT_GRAY,
-	            :font  => fntAsapCondensedBold14,
-	            :locX  => 215,
-	            :locY  => 106
-	        }, true);
+	            :color    => Graphics.COLOR_LT_GRAY,
+	            :typeface => fntAsapCondensedBold14,
+	            :locX     => 215,
+	            :locY     => 106
+	        }, dc, true);
 	        
 	        hoursFormat = application.getProperty("AddLeadingZero") ? "%02d" : "%d";
 	    }
@@ -242,11 +242,11 @@ module UiElements {
 			batteryIcon.setPosition(130, 19);
 			
 			batteryText = new Extensions.Text({
-	            :color => Graphics.COLOR_WHITE,
-	            :font  => fntAsapCondensedBold14,
-	            :locX  => 130,
-	            :locY  => 8
-	        }, true);
+	            :color    => Graphics.COLOR_WHITE,
+	            :typeface => fntAsapCondensedBold14,
+	            :locX     => 130,
+	            :locY     => 8
+	        }, dc, true);
 	        
 			notificationIcon = new Icons.Icon("Notification", dc);
 			notificationIcon.setPosition(154, 16);
@@ -397,20 +397,20 @@ module UiElements {
 
 			for(var i = 0; i < daysText.size(); ++i) {
 				daysText[i] = new Extensions.Text({
-					:text  => dayNames[i],
-		            :color => Graphics.COLOR_WHITE,
-		            :font  => fntAsapBold12,
-		            :locY  => daysInitialY
-	        	}, true);
+					:text     => dayNames[i],
+		            :color    => Graphics.COLOR_WHITE,
+		            :typeface => fntAsapBold12,
+		            :locY     => daysInitialY
+	        	}, dc, true);
 			}
 			orderDaysOfWeek(application.getProperty("FirstDayOfWeek"));
 			
 			infoText = new Extensions.Text({
-	            :color => Graphics.COLOR_WHITE,
-	            :font  => fntAsapBold12,
-	            :locX  => 130,
-	            :locY  => 40
-        	}, true);
+	            :color    => Graphics.COLOR_WHITE,
+	            :typeface => fntAsapBold12,
+	            :locX     => 130,
+	            :locY     => 40
+        	}, dc, true);
 		}
 		
 		function draw() {
@@ -505,29 +505,29 @@ module UiElements {
     		icon4.setPosition(188, 175);
     		
     		textIcon1 = new Extensions.Text({
-	            :color => Graphics.COLOR_WHITE,
-	            :font  => fntAsapCondensedBold16,
-	            :locX  => 72,
-	            :locY  => 190
-        	}, true);
+	            :color    => Graphics.COLOR_WHITE,
+	            :typeface => fntAsapCondensedBold16,
+	            :locX     => 72,
+	            :locY     => 190
+        	}, dc, true);
         	textIcon2 = new Extensions.Text({
-	            :color => Graphics.COLOR_WHITE,
-	            :font  => fntAsapCondensedBold16,
-	            :locX  => 110,
-	            :locY  => 201
-        	}, true);
+	            :color    => Graphics.COLOR_WHITE,
+	            :typeface => fntAsapCondensedBold16,
+	            :locX     => 110,
+	            :locY     => 201
+        	}, dc, true);
         	textIcon3 = new Extensions.Text({
-	            :color => Graphics.COLOR_WHITE,
-	            :font  => fntAsapCondensedBold16,
-	            :locX  => 150,
-	            :locY  => 201
-        	}, true);
+	            :color    => Graphics.COLOR_WHITE,
+	            :typeface => fntAsapCondensedBold16,
+	            :locX     => 150,
+	            :locY     => 201
+        	}, dc, true);
         	textIcon4 = new Extensions.Text({
-	            :color => Graphics.COLOR_WHITE,
-	            :font  => fntAsapCondensedBold16,
-	            :locX  => 188,
-	            :locY  => 190
-        	}, true);
+	            :color    => Graphics.COLOR_WHITE,
+	            :typeface => fntAsapCondensedBold16,
+	            :locX     => 188,
+	            :locY     => 190
+        	}, dc, true);
 		}
 		
 		function draw(activityMonitorInfo) {
@@ -587,17 +587,17 @@ module UiElements {
 			UiElementBase.initialize(dc);
 			
 			topValueText = new Extensions.Text({
-	            :color => Graphics.COLOR_WHITE,
-	            :font  => fntAsapCondensedBold14,
-	            :locX  => initialX,
-	            :locY  => 87
-        	}, true);
+	            :color    => Graphics.COLOR_WHITE,
+	            :typeface => fntAsapCondensedBold14,
+	            :locX     => initialX,
+	            :locY     => 87
+        	}, dc, true);
         	bottomValueText = new Extensions.Text({
-	            :color => Graphics.COLOR_WHITE,
-	            :font  => fntAsapCondensedBold14,
-	            :locX  => initialX,
-	            :locY  => 171
-        	}, true);
+	            :color    => Graphics.COLOR_WHITE,
+	            :typeface => fntAsapCondensedBold14,
+	            :locX     => initialX,
+	            :locY     => 171
+        	}, dc, true);
 
         	icon = new Icons.Icon("Steps-Side", dc);
         	icon.setColor(Graphics.COLOR_WHITE);
@@ -645,24 +645,24 @@ module UiElements {
 			heartFilled = true;
 			
 			topValueText = new Extensions.Text({
-	            :color => Graphics.COLOR_WHITE,
-	            :font  => fntAsapCondensedBold14,
-	            :locX  => initialX,
-	            :locY  => 87
-        	}, true);
+	            :color    => Graphics.COLOR_WHITE,
+	            :typeface => fntAsapCondensedBold14,
+	            :locX     => initialX,
+	            :locY     => 87
+        	}, dc, true);
         	bottomValueText = new Extensions.Text({
-	            :color => Graphics.COLOR_WHITE,
-	            :font  => fntAsapCondensedBold14,
-	            :locX  => initialX,
-	            :locY  => 171
-        	}, true);
+	            :color    => Graphics.COLOR_WHITE,
+	            :typeface => fntAsapCondensedBold14,
+	            :locX     => initialX,
+	            :locY     => 171
+        	}, dc, true);
         	heartRateText = new Extensions.Text({
-        		:text  => "0",
-	            :color => Graphics.COLOR_WHITE,
-	            :font  => fntAsapBold12,
-	            :locX  => 9,
-	            :locY  => 118
-        	}, true);
+        		:text     => "0",
+	            :color    => Graphics.COLOR_WHITE,
+	            :typeface => fntAsapBold12,
+	            :locX     => 9,
+	            :locY     => 118
+        	}, dc, true);
 
         	icon = new Icons.Icon("Heart-1", dc);
         	icon.setColor(Graphics.COLOR_RED);
@@ -824,13 +824,19 @@ module Extensions {
 	class Text extends WatchUi.Text {
 		private var text;
 		private var color;
+		private var dc;
+		private var typeface;
 		
-		function initialize(settings, centerJustification) {
+		function initialize(settings, dc, centerJustification) {
 			WatchUi.Text.initialize(settings);
 			
+			setFont(settings.get(:typeface));
+
 			if(centerJustification) {
 				WatchUi.Text.setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
 			}
+			self.dc = dc;
+			
 			return self;
 		}
 		
@@ -838,6 +844,14 @@ module Extensions {
 			WatchUi.Text.setText(text);
 			
 			self.text = text;
+			
+			return self;
+		}
+		
+		function setFont(font) {
+			WatchUi.Text.setFont(font);
+			
+			typeface = font;
 			
 			return self;
 		}
@@ -850,6 +864,10 @@ module Extensions {
 			return self;
 		}
 		
+		function getFont() {
+			return typeface;
+		}
+		
 		function getColor() {
 			return color;
 		}
@@ -860,6 +878,10 @@ module Extensions {
 		
 		function getTextLength() {
 			return text.length();
+		}
+		
+		function getDimensions() {
+			return dc.getTextDimensions(text, typeface);
 		}
 	}
 }
@@ -890,11 +912,14 @@ module Utils {
     }
     
     function kFormatter(num, precision) {
-    	var formatted = (num / 1000.0).format("%." + precision + "f");
-    	var rounded = Math.round(num / 1000.0);
-		var isWholeNumber = formatted.toFloat() - rounded == 0;
-
-    	return num > 999 ? (!isWholeNumber ? formatted : rounded.format("%d")) + "k" : num + "";
+    	if(num != null) {
+	    	var formatted = (num / 1000.0).format("%." + precision + "f");
+	    	var rounded = Math.round(num / 1000.0);
+			var isWholeNumber = formatted.toFloat() - rounded == 0;
+	
+	    	return num > 999 ? (!isWholeNumber ? formatted : rounded.format("%d")) + "k" : Math.round(num).toNumber() + "";
+    	}
+    	return "0";
 	}
 
 	function getMaxHeartRate() {
