@@ -440,12 +440,13 @@ module UiElements {
 		}
 		
 		function getXLocationsBasedOnFirstDayOfWeek(firstDayOfWeek) {
-			var xLocations = [ 56, 83, 109, 135, 159, 182, 206 ];
+			var xLocations = [ 59, 83, 107, 131, 155, 179, 203 ];
 
 			if(firstDayOfWeek == Gregorian.DAY_MONDAY) {
-				xLocations = [ 206, 56, 83, 109, 135, 159, 182 ];
+				xLocations = [ 203, 59, 83, 107, 131, 155, 179 ];
+				             
 			} else if(firstDayOfWeek == Gregorian.DAY_SATURDAY) {
-				xLocations = [ 83, 109, 135, 159, 182, 206, 56 ];
+				xLocations = [ 83, 107, 131, 155, 179, 203, 59 ];			 
 			}
 			return xLocations;
 		}
@@ -576,6 +577,7 @@ module UiElements {
 		}
 	}
 	
+	// TODO: Think about having a base class for right and left
 	class Right extends UiElementBase {
 		var topValueText;
 		var bottomValueText;
@@ -612,9 +614,12 @@ module UiElements {
 		function draw(activityMonitorInfo) {
 			var topValue = activityMonitorInfo.stepGoal != null ? activityMonitorInfo.stepGoal : 0;
 			var bottomValue = activityMonitorInfo.steps != null ? activityMonitorInfo.steps : 0;
-
-			topValueText.setText(Utils.kFormatter(topValue, 1));
-			bottomValueText.setText(Utils.kFormatter(bottomValue, 1));
+			
+			topValueText.setText(Utils.kFormatter(topValue, topValue > 99999 ? 0 : 1));
+			bottomValueText.setText(Utils.kFormatter(bottomValue, bottomValue > 99999 ? 0 : 1));
+			
+			topValueText.locX = offSetXBasedOnWidth(topValueText.getDimensions()[0]);
+			bottomValueText.locX = offSetXBasedOnWidth(bottomValueText.getDimensions()[0]);
 			
 			topValueText.draw(dc);
 			bottomValueText.draw(dc);
@@ -623,6 +628,20 @@ module UiElements {
 				trophyIcon.draw();
 			}
 			icon.draw();
+		}
+		
+		function offSetXBasedOnWidth(width) {
+			if(width <= 16) {
+				return initialX;
+			} else if(width > 16 && width <= 24) {
+				return initialX - 2;
+			} else if(width > 24 && width <= 26) {
+				return initialX - 3;
+			} else if(width > 26 && width <= 31) {
+				return initialX - 6;
+			} else {
+				return initialX - 7;
+			}
 		}
 	}
 	
@@ -673,8 +692,11 @@ module UiElements {
 			var topValue = Utils.getMaxHeartRate();
 			var bottomValue = userProfile.restingHeartRate;
 
-			topValueText.setText(Utils.kFormatter(topValue, 1));
-			bottomValueText.setText(Utils.kFormatter(bottomValue, 1));
+			topValueText.setText(Utils.kFormatter(topValue, topValue > 99999 ? 0 : 1));
+			bottomValueText.setText(Utils.kFormatter(bottomValue, bottomValue > 99999 ? 0 : 1));
+
+			topValueText.locX = offSetXBasedOnWidth(topValueText.getDimensions()[0]);
+			bottomValueText.locX = offSetXBasedOnWidth(bottomValueText.getDimensions()[0]);
 
 			topValueText.draw(dc);
 			bottomValueText.draw(dc);
@@ -717,6 +739,20 @@ module UiElements {
 			icon.setIcon("Heart-2");
 			heartRateText.setColor(Graphics.COLOR_WHITE);
 	    }
+	    
+	    function offSetXBasedOnWidth(width) {
+			if(width <= 16) {
+				return initialX;
+			} else if(width > 16 && width <= 24) {
+				return initialX + 2;
+			} else if(width > 24 && width <= 26) {
+				return initialX + 3;
+			} else if(width > 26 && width <= 31) {
+				return initialX + 6;
+			} else {
+				return initialX + 7;
+			}
+		}
 	}
 }
 
