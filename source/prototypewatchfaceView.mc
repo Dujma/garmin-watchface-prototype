@@ -1069,4 +1069,32 @@ module Utils {
    	 	
    	 	return [ x, y ];
 	}
+	
+	function getMoonPhase(year, month, day) {
+	    if(month < 3) {
+	        year--;
+	        month += 12;
+	    }
+	    ++month;
+	
+	    var julian = ((365.25 * year) + (30.6 * month) + day - 694039.09) / 29.5305882;
+	    var result = julian.toNumber();
+	
+	    julian -= result;
+	    result = Math.round(julian * 8).toNumber();
+		result = result >= 8 ? 0 : result;
+
+	    return moonPhases[result];
+	}
+	
+	private var moonPhases = { 
+		0  => { "name" => "New Moon",             "angle" => 0,   "icon" => "Moon-0" },
+		1  => { "name" => "Waxing Crescent Moon", "angle" => 45,  "icon" => "Moon-1" },
+		2  => { "name" => "First Quarter Moon",   "angle" => 90,  "icon" => "Moon-2" },
+		3  => { "name" => "Waxing Gibbous Moon",  "angle" => 135, "icon" => "Moon-3" },
+		4  => { "name" => "Full Moon",            "angle" => 180, "icon" => "Moon-4" },
+		5  => { "name" => "Waning Gibbous Moon",  "angle" => 135, "icon" => "Moon-5" },
+		6  => { "name" => "Last Quarter Moon",    "angle" => 90,  "icon" => "Moon-6" },
+		7  => { "name" => "Waning Crescent Moon", "angle" => 45,  "icon" => "Moon-7" }
+	};
 }
