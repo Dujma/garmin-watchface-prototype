@@ -986,6 +986,17 @@ module Extensions {
 
 // TODO: All heart rate related functions need to be checked if they have heart rate monitor
 module Utils {
+	private var moonPhases = { 
+		0  => { "name" => "New Moon",             "angle" => 0,   "icon" => "Moon-0" },
+		1  => { "name" => "Waxing Crescent Moon", "angle" => 45,  "icon" => "Moon-1" },
+		2  => { "name" => "First Quarter Moon",   "angle" => 90,  "icon" => "Moon-2" },
+		3  => { "name" => "Waxing Gibbous Moon",  "angle" => 135, "icon" => "Moon-3" },
+		4  => { "name" => "Full Moon",            "angle" => 180, "icon" => "Moon-4" },
+		5  => { "name" => "Waning Gibbous Moon",  "angle" => 135, "icon" => "Moon-5" },
+		6  => { "name" => "Last Quarter Moon",    "angle" => 90,  "icon" => "Moon-6" },
+		7  => { "name" => "Waning Crescent Moon", "angle" => 45,  "icon" => "Moon-7" }
+	};
+	
 	function getDayWithMondayStarting(daySundayStarting) {
     	if(daySundayStarting != 1) {
     		return daySundayStarting - 1;
@@ -1086,15 +1097,4 @@ module Utils {
 
 	    return moonPhases[result];
 	}
-	
-	private var moonPhases = { 
-		0  => { "name" => "New Moon",             "angle" => 0,   "icon" => "Moon-0" },
-		1  => { "name" => "Waxing Crescent Moon", "angle" => 45,  "icon" => "Moon-1" },
-		2  => { "name" => "First Quarter Moon",   "angle" => 90,  "icon" => "Moon-2" },
-		3  => { "name" => "Waxing Gibbous Moon",  "angle" => 135, "icon" => "Moon-3" },
-		4  => { "name" => "Full Moon",            "angle" => 180, "icon" => "Moon-4" },
-		5  => { "name" => "Waning Gibbous Moon",  "angle" => 135, "icon" => "Moon-5" },
-		6  => { "name" => "Last Quarter Moon",    "angle" => 90,  "icon" => "Moon-6" },
-		7  => { "name" => "Waning Crescent Moon", "angle" => 45,  "icon" => "Moon-7" }
-	};
 }
