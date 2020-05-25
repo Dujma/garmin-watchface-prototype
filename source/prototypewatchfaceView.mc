@@ -1016,4 +1016,11 @@ module Utils {
 		}
 		return heartRate;
 	}
+	
+	function getPointOnCircle(cx, cy, radius, angle, startAngleOffset) {
+		var x = Math.round(cx + radius * Math.cos(Math.toRadians(angle + startAngleOffset)));
+   	 	var y = Math.round(cy + radius * Math.sin(Math.toRadians(angle + startAngleOffset)));
+   	 	
+   	 	return [ x, y ];
+	}
 }
