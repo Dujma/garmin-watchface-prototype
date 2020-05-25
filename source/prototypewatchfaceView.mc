@@ -440,13 +440,14 @@ module UiElements {
 		}
 		
 		function getXLocationsBasedOnFirstDayOfWeek(firstDayOfWeek) {
-			var xLocations = [ 59, 83, 107, 131, 155, 179, 203 ];
+			var xLocations = [ 55, 80, 105, 130, 155, 180, 205 ];
 
 			if(firstDayOfWeek == Gregorian.DAY_MONDAY) {
-				xLocations = [ 203, 59, 83, 107, 131, 155, 179 ];
+				xLocations = [ 205, 55, 80, 105, 130, 155, 180 ];
+				
 				             
 			} else if(firstDayOfWeek == Gregorian.DAY_SATURDAY) {
-				xLocations = [ 83, 107, 131, 155, 179, 203, 59 ];			 
+				xLocations = [ 80, 105, 130, 155, 180, 205, 55 ];
 			}
 			return xLocations;
 		}
