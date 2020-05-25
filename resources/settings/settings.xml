@@ -29,5 +29,13 @@
             <listEntry value="7">@Strings.Saturday</listEntry>
         </settingConfig>
     </setting>
+    
+    <setting propertyKey="@Properties.PowerSavingMode" title="@Strings.PowerSavingModeTitle">
+        <settingConfig type="list">
+            <listEntry value="0">@Strings.Off</listEntry>
+            <listEntry value="1">@Strings.On</listEntry>
+            <listEntry value="2">@Strings.DuringDnd</listEntry>
+        </settingConfig>
+    </setting>
 
 </settings>

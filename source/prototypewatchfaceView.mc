@@ -21,6 +21,7 @@ class prototypewatchfaceView extends WatchUi.WatchFace {
 	private var bottom;
 	private var right;
 	private var left;
+	private var powerSavingMode;
 
     function initialize() {
         WatchFace.initialize();
@@ -40,6 +41,8 @@ class prototypewatchfaceView extends WatchUi.WatchFace {
     	var fntAsapCondensedBold14 = WatchUi.loadResource(Rez.Fonts.AsapCondensedBold14);
     	var fntAsapBold12 = WatchUi.loadResource(Rez.Fonts.AsapBold12);
     	var fntAsapCondensedBold16 = WatchUi.loadResource(Rez.Fonts.AsapCondensedBold16);
+    	
+    	powerSavingMode = application.getProperty("PowerSavingMode");
     	
         clockArea = new UiElements.ClockArea(dc, fntAsapCondensedBold14, application);
         topIcons = new UiElements.TopIcons(dc, fntAsapCondensedBold14);
