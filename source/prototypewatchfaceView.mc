@@ -69,13 +69,21 @@ class prototypewatchfaceView extends WatchUi.WatchFace {
    	 	var activityMonitorInfo = ActivityMonitor.getInfo();
 		
 		// UiElements
-		clockArea.draw(deviceSettings);
-		topIcons.draw(deviceSettings, systemStats);
-		bottomIcons.draw(deviceSettings, userProfile, activityMonitorInfo);
-		top.draw();
-		bottom.draw(activityMonitorInfo);
-		right.draw(activityMonitorInfo);
-		left.draw(userProfile);
+		if(!isPowerSavingModeActive(deviceSettings.doNotDisturb)) {
+			clockArea.draw(deviceSettings);
+			topIcons.draw(deviceSettings, systemStats);
+			bottomIcons.draw(deviceSettings, userProfile, activityMonitorInfo);
+			top.draw();
+			bottom.draw(activityMonitorInfo);
+			right.draw(activityMonitorInfo);
+			left.draw(userProfile);
+		} else {
+			clockArea.draw(deviceSettings);
+		}
+    }
+    
+    function isPowerSavingModeActive(doNotDisturb) {
+    	return powerSavingMode == 1 || (powerSavingMode == 2 && doNotDisturb);
     }
 
     function onHide() {
@@ -98,6 +106,8 @@ class prototypewatchfaceView extends WatchUi.WatchFace {
     }
     
     function handleSettingUpdate() {
+    	powerSavingMode = application.getProperty("PowerSavingMode");
+    
     	clockArea.onSettingUpdate();
     	top.onSettingUpdate();
     }
