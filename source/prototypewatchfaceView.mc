@@ -31,7 +31,7 @@ class prototypewatchfaceView extends WatchUi.WatchFace {
         setLayout(Rez.Layouts.WatchFace(dc));
         application = Application.getApp();
         
-        Icons.init();
+        Textures.init();
         
         mockBackground = new WatchUi.Bitmap({
         	:rezId => Rez.Drawables.MockBackground,
@@ -209,8 +209,8 @@ module UiElements {
 				secondsText.setText(now.sec.format("%02d"));
 				secondsText.draw(dc);
 			}
-			Utils.drawLine(dc, 130, 96, 186, 3, Graphics.COLOR_RED);
-			Utils.drawLine(dc, 130, 162, 186, 3, Graphics.COLOR_RED);
+			Utils.drawLine(dc, 130, 96, 185, 3, Graphics.COLOR_RED);
+			Utils.drawLine(dc, 130, 162, 185, 3, Graphics.COLOR_RED);
 	    }
 
 	    function onSettingUpdate() {
@@ -253,7 +253,7 @@ module UiElements {
 		function initialize(dc, fntAsapCondensedBold14) {
 			UiElementBase.initialize(dc);
 		
-			batteryIcon = new Icons.Icon("Battery-100", dc);
+			batteryIcon = new Textures.Icon("Battery-100", dc);
 			batteryIcon.setPosition(130, 19);
 			
 			batteryText = new Extensions.Text({
@@ -263,10 +263,10 @@ module UiElements {
 	            :locY     => 8
 	        }, dc, true);
 	        
-			notificationIcon = new Icons.Icon("Notification", dc);
+			notificationIcon = new Textures.Icon("Notification", dc);
 			notificationIcon.setPosition(154, 16);
 			
-			alarmIcon = new Icons.Icon("Alarm", dc);
+			alarmIcon = new Textures.Icon("Alarm", dc);
 			alarmIcon.setPosition(104, 15);
 		}
 		
@@ -306,7 +306,7 @@ module UiElements {
 				}
 			}
 			if(targetIcon != null) {
-				if(batteryIcon.getIconName() != targetIcon) {
+				if(batteryIcon.getName() != targetIcon) {
 					batteryIcon.setIcon(targetIcon);
 				}
 			}
@@ -321,13 +321,13 @@ module UiElements {
 		function initialize(dc) {
 			UiElementBase.initialize(dc);
 			
-			moveIcon = new Icons.Icon("Move-1", dc);
+			moveIcon = new Textures.Icon("Move-1", dc);
 			moveIcon.setPosition(104, 243);
 			
-			dndIcon = new Icons.Icon("Dnd", dc);
+			dndIcon = new Textures.Icon("Dnd", dc);
 			dndIcon.setPosition(130, 247);
 			
-			btIcon = new Icons.Icon("Bluetooth", dc);
+			btIcon = new Textures.Icon("Bluetooth", dc);
 			btIcon.setPosition(155, 244);
 		}
 		
@@ -410,19 +410,19 @@ module UiElements {
 			UiElementBase.initialize(dc);
 			self.application = application;
 
-			arrowIcon = new Icons.Icon("Arrow-Up", dc);
+			arrowIcon = new Textures.Icon("Arrow-Up", dc);
 			arrowIcon.setColor(Graphics.COLOR_RED);
 			arrowIcon.setPosition(56, 93);
 			
-			iconLeft = new Icons.Icon("Calendar", dc);
+			iconLeft = new Textures.Icon("Calendar", dc);
 			iconLeft.setColor(Graphics.COLOR_WHITE);
 			iconLeft.setPosition(93, 65);
 			
-			iconMiddle = new Icons.Icon("Moon-0", dc);
+			iconMiddle = new Textures.Icon("Moon-0", dc);
 			iconMiddle.setColor(Graphics.COLOR_WHITE);
 			iconMiddle.setPosition(138, 65);
 			
-			iconRight = new Icons.Icon("Elevation", dc);
+			iconRight = new Textures.Icon("Elevation", dc);
 			iconRight.setColor(Graphics.COLOR_WHITE);
 			iconRight.setPosition(192, 65);
 			
@@ -557,19 +557,19 @@ module UiElements {
 		function initialize(dc, fntAsapCondensedBold16) {
 			UiElementBase.initialize(dc);
 			
-    		moveBarLvl1 = new Icons.Icon("MoveBar-1", dc);
+    		moveBarLvl1 = new Textures.Icon("MoveBar-1", dc);
     		moveBarLvl1.setPosition(101, 219);
     		
     		moveBarOtherLvls = new [4];
     		
     		for(var i = 0; i < moveBarOtherLvls.size(); ++i) {
-    			moveBarOtherLvls[i] = new Icons.Icon("MoveBar-2", dc);
+    			moveBarOtherLvls[i] = new Textures.Icon("MoveBar-2", dc);
     			moveBarOtherLvls[i].setPosition(120 + (i * 14), 219);
     		}
-    		icon1 = new Icons.Icon("Distance", dc);
-    		icon2 = new Icons.Icon("Calories", dc);
-    		icon3 = new Icons.Icon("Stopwatch", dc);
-    		icon4 = new Icons.Icon("Stairs-Up", dc);
+    		icon1 = new Textures.Icon("Distance", dc);
+    		icon2 = new Textures.Icon("Calories", dc);
+    		icon3 = new Textures.Icon("Stopwatch", dc);
+    		icon4 = new Textures.Icon("Stairs-Up", dc);
     		
     		icon1.setColor(Graphics.COLOR_RED);
     		icon2.setColor(Graphics.COLOR_RED);
@@ -664,6 +664,7 @@ module UiElements {
 		var maxAngle = 37;
 		var radius = 104;
 		var centerAngle = 18;
+		var lineBitmap;
 		
 		function initialize(dc, fntAsapCondensedBold14) {
 			UiElementBase.initialize(dc);
@@ -681,24 +682,28 @@ module UiElements {
 	            :locY     => 171
         	}, dc, true);
 
-        	icon = new Icons.Icon("Steps-Side", dc);
+        	icon = new Textures.Icon("Steps-Side", dc);
         	icon.setColor(Graphics.COLOR_WHITE);
 			icon.setPosition(251, 130);
 			
-			trophyIcon = new Icons.Icon("Trophy", dc);
+			trophyIcon = new Textures.Icon("Trophy", dc);
 			
 			trophyIcon.setColor(Graphics.COLOR_YELLOW);
 			trophyIcon.setPosition(251, 115);
 			
-			arrowIcon = new Icons.Icon("Arrow-Right", dc);
+			arrowIcon = new Textures.Icon("Arrow-Right", dc);
 			
 			arrowIcon.setColor(Graphics.COLOR_RED);
+			
+			lineBitmap = new Textures.Bitmap("Line-Right", dc);
+			
+			lineBitmap.setPosition(241, 130);
 		}
 		
 		function draw(activityMonitorInfo) {
 			var topValue = activityMonitorInfo.stepGoal != null ? activityMonitorInfo.stepGoal : 0;
 			var bottomValue = activityMonitorInfo.steps != null ? activityMonitorInfo.steps : 0;
-			
+			bottomValue = 2500;
 			topValueText.setText(Utils.kFormatter(topValue, topValue > 99999 ? 0 : 1));
 			bottomValueText.setText(Utils.kFormatter(bottomValue, bottomValue > 99999 ? 0 : 1));
 			
@@ -713,6 +718,7 @@ module UiElements {
 			}
 			icon.draw();
 			
+			lineBitmap.draw();
 			drawArrow(topValue, bottomValue);
 		}
 		
@@ -753,6 +759,7 @@ module UiElements {
 		var maxAngle = 37;
 		var radius = 104;
 		var centerAngle = 162; // Reference to "Right". 180 - 18 = 162
+		var lineBitmap;
 		
 		// Feature only when heart rate is shown
 		var heartRateText;
@@ -785,13 +792,17 @@ module UiElements {
 	            :locY     => 118
         	}, dc, true);
 
-        	icon = new Icons.Icon("Heart-1", dc);
+        	icon = new Textures.Icon("Heart-1", dc);
         	icon.setColor(Graphics.COLOR_RED);
 			icon.setPosition(9, 130);
 			
-			arrowIcon = new Icons.Icon("Arrow-Left", dc);
+			arrowIcon = new Textures.Icon("Arrow-Left", dc);
 			
 			arrowIcon.setColor(Graphics.COLOR_RED);
+			
+			lineBitmap = new Textures.Bitmap("Line-Left", dc);
+			
+			lineBitmap.setPosition(19, 130);
 		}
 		
 		function draw(userProfile) {
@@ -811,6 +822,7 @@ module UiElements {
 			
 			drawHeartRate();
 			
+			lineBitmap.draw();
 			drawArrow(topValue, bottomValue);
 		}
 		
@@ -877,8 +889,10 @@ module UiElements {
 	}
 }
 
-module Icons {
+module Textures {
 	var iconsFont;
+	var bitmapsFont;
+	
 	var icons = {
 		"Battery-100"   => "B",
 		"Battery-90"    => "A",
@@ -937,31 +951,34 @@ module Icons {
 		"Moon-7"        => "s"  // Waning Creacent
 	};
 	
+	var bitmaps = {
+		"Line-Top"    => "012345",
+		"Line-Bottom" => "6789AB",
+		"Line-Right"  => "C",
+		"Line-Left"   => "G"
+	};
+	
 	function init() {
 		iconsFont = WatchUi.loadResource(Rez.Fonts.Icons);
+		bitmapsFont = WatchUi.loadResource(Rez.Fonts.Bitmaps);
 	}
-
-	class Icon {
+	
+	class Texture {
 		var text;
 		
-		private var name;
-		private var dimensions;
-		private var dc;
-		private var char;
+		protected var name;
+		protected var dimensions;
+		protected var dc;
+		protected var char;
+		
 		private var color;
 
-		function initialize(name, dc) {
-			text = new WatchUi.Text({
-	            :font  => iconsFont,
-	            :locX  => 0,
-	            :locY  => 0
-        	});
-        	self.dc = dc;
-        	
-        	setIcon(name);
+		function initialize(dc) {
         	text.setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
         	
         	setColor(Graphics.COLOR_WHITE);
+        	
+        	self.dc = dc;
         	
         	return self;
 		}
@@ -974,17 +991,6 @@ module Icons {
 			}
 			return text;
 		}
-		
-		function setIcon(name) {
-			if(name != self.name) {
-				self.name = name;
-				char = Icons.icons[name];
-				
-				text.setText(char);
-				dimensions = dc.getTextDimensions(char, iconsFont);
-			}
-			return text;
-		}
 
 		function setPosition(x, y) {
 			text.locX = x;
@@ -993,7 +999,7 @@ module Icons {
 			return text;
 		}
 		
-		function getIconName() {
+		function getName() {
 			return name;
 		}
 		
@@ -1003,6 +1009,58 @@ module Icons {
 		
 		function draw() {
 			text.draw(dc);
+		}
+	}
+
+	class Icon extends Texture {
+		function initialize(name, dc) {
+			text = new WatchUi.Text({
+	            :font  => iconsFont,
+	            :locX  => 0,
+	            :locY  => 0
+        	});
+        	Textures.Texture.initialize(dc);
+
+        	setIcon(name);
+
+        	return self;
+		}
+		
+		function setIcon(name) {
+			if(name != self.name) {
+				self.name = name;
+				char = Textures.icons[name];
+				
+				text.setText(char);
+				dimensions = dc.getTextDimensions(char, iconsFont);
+			}
+			return text;
+		}
+	}
+	
+	class Bitmap extends Texture {
+		function initialize(name, dc) {
+			text = new WatchUi.Text({
+	            :font  => bitmapsFont,
+	            :locX  => 0,
+	            :locY  => 0
+        	});
+        	Textures.Texture.initialize(dc);
+
+        	setBitmap(name);
+        	
+        	return self;
+		}
+
+		function setBitmap(name) {
+			if(name != self.name) {
+				self.name = name;
+				char = Textures.bitmaps[name];
+				
+				text.setText(char);
+				dimensions = dc.getTextDimensions(char, iconsFont);
+			}
+			return text;
 		}
 	}
 }

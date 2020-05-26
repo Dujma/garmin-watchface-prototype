@@ -7,4 +7,5 @@
 	<font id="AsapCondensedBold16" antialias="true" filename="/asap-condensed-bold-16/asap-condensed-bold-16.fnt" filter="01213456789k.°" />
 	
 	<font id="Icons" antialias="true" filename="/icons/icons.fnt" filter="0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstu" />
+	<font id="Bitmaps" antialias="true" filename="/bitmaps/bitmaps.fnt" filter="0123456789ABCG" />
 </fonts>
