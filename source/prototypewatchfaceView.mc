@@ -927,12 +927,12 @@ module Icons {
 		"Calendar"      => "l",
 		"Moon-0"        => "m", // Full Moon
 		"Moon-1"        => "n", // New Moon
-		"Moon-2"        => "o", // First Quarter
-		"Moon-3"        => "p", // Last Quarter
-		"Moon-4"        => "q", // Waxing Gibbous
-		"Moon-5"        => "r", // Waning Gibbous
-		"Moon-6"        => "s", // Waning Creacent
-		"Moon-7"        => "t"  // Waning Creacent
+		"Moon-2"        => "p", // First Quarter
+		"Moon-3"        => "o", // Last Quarter
+		"Moon-4"        => "r", // Waxing Gibbous
+		"Moon-5"        => "q", // Waning Gibbous
+		"Moon-6"        => "t", // Waning Creacent
+		"Moon-7"        => "s"  // Waning Creacent
 	};
 	
 	function init() {
