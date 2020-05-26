@@ -47,7 +47,7 @@ class prototypewatchfaceView extends WatchUi.WatchFace {
         clockArea = new UiElements.ClockArea(dc, fntAsapCondensedBold14, application);
         topIcons = new UiElements.TopIcons(dc, fntAsapCondensedBold14);
         bottomIcons = new UiElements.BottomIcons(dc);
-        top = new UiElements.Top(dc, application, fntAsapBold12);
+        top = new UiElements.Top(dc, application, fntAsapBold12, fntAsapCondensedBold16);
         bottom = new UiElements.Bottom(dc, fntAsapCondensedBold16);
         right = new UiElements.Right(dc, fntAsapCondensedBold14);
         left = new UiElements.Left(dc, fntAsapCondensedBold14, fntAsapBold12);
@@ -147,7 +147,7 @@ module UiElements {
 			hoursText = new Extensions.Text({
 	            :color         => Graphics.COLOR_WHITE,
 	            :typeface      => fntAsapBold81,
-	            :locX          => 89 +(self.dc.getTextWidthInPixels("00", fntAsapBold81) / 2),
+	            :locX          => 89 + (self.dc.getTextWidthInPixels("00", fntAsapBold81) / 2),
 	            :locY          => 129,
 	            :justification => Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_RIGHT
 	        }, dc, false);
@@ -397,14 +397,56 @@ module UiElements {
 		private var dayNames = [ "SU", "MO", "TU", "WE", "TH", "FR", "SA" ];
 		private var application;
 		private var infoText;
+		private var iconLeft;
+		private var iconMiddle;
+		private var iconRight;
+		private var iconTextLeft;
+		private var iconTextMiddle;
+		private var iconTextRight;
 
-		function initialize(dc, application, fntAsapBold12) {
+		function initialize(dc, application, fntAsapBold12, fntAsapCondensedBold16) {
 			UiElementBase.initialize(dc);
 			self.application = application;
 
 			arrowIcon = new Icons.Icon("Arrow-Up", dc);
 			arrowIcon.setColor(Graphics.COLOR_RED);
 			arrowIcon.setPosition(56, 93);
+			
+			iconLeft = new Icons.Icon("Calendar", dc);
+			iconLeft.setColor(Graphics.COLOR_WHITE);
+			iconLeft.setPosition(93, 65);
+			
+			iconMiddle = new Icons.Icon("Moon-0", dc);
+			iconMiddle.setColor(Graphics.COLOR_WHITE);
+			iconMiddle.setPosition(138, 65);
+			
+			iconRight = new Icons.Icon("Elevation", dc);
+			iconRight.setColor(Graphics.COLOR_WHITE);
+			iconRight.setPosition(192, 65);
+			
+			iconTextLeft = new Extensions.Text({
+	            :color         => Graphics.COLOR_WHITE,
+	            :typeface      => fntAsapCondensedBold16,
+	            :locX          => 83,
+	            :locY          => 58,
+	            :justification => Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_RIGHT
+        	}, dc, false);
+        	
+        	iconTextMiddle = new Extensions.Text({
+	            :color         => Graphics.COLOR_WHITE,
+	            :typeface      => fntAsapCondensedBold16,
+	            :locX          => 133,
+	            :locY          => 58,
+	            :justification => Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_RIGHT
+        	}, dc, false);
+        	
+        	iconTextRight = new Extensions.Text({
+	            :color         => Graphics.COLOR_WHITE,
+	            :typeface      => fntAsapCondensedBold16,
+	            :locX          => 182,
+	            :locY          => 58,
+	            :justification => Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_RIGHT
+        	}, dc, false);
 
 			daysText = new [7];
 
@@ -451,6 +493,23 @@ module UiElements {
 			// infoText.setText("Week " + Utils.getCurrentWeekNumber());
 			infoText.setText(Utils.getTimeByOffset(application));
 			infoText.draw(dc);
+			
+			// TODO: Store this and update it only once a day
+			var currentMoonPhase = Utils.getCurrentMoonPhase();
+			
+			iconTextLeft.setText(Utils.getCurrentWeekNumber().toString());
+			iconTextMiddle.setText(currentMoonPhase["angle"] + "°");
+			iconTextRight.setText(Utils.kFormatter(Utils.getCurrentElevation(), 1));
+			
+			iconMiddle.setIcon(currentMoonPhase["icon"]);
+			
+			iconLeft.draw();
+			iconMiddle.draw();
+			iconRight.draw();
+			
+			iconTextLeft.draw(dc);
+			iconTextMiddle.draw(dc);
+			iconTextRight.draw(dc);
 		}
 		
 		function getXLocationsBasedOnFirstDayOfWeek(firstDayOfWeek) {
@@ -683,7 +742,6 @@ module UiElements {
 		}
 	}
 	
-	// TODO: Add "-" sign to fntAsapBold12 and add "--" as the first value instead of zero
 	class Left extends UiElementBase {
 		var topValueText;
 		var bottomValueText;
@@ -718,7 +776,7 @@ module UiElements {
 	            :locY     => 171
         	}, dc, true);
         	heartRateText = new Extensions.Text({
-        		:text     => "0",
+        		:text     => "--",
 	            :color    => Graphics.COLOR_WHITE,
 	            :typeface => fntAsapBold12,
 	            :locX     => 9,
@@ -820,39 +878,61 @@ module UiElements {
 module Icons {
 	var iconsFont;
 	var icons = {
-		"Battery-100"  => "B",
-		"Battery-90"   => "A",
-		"Battery-80"   => "9",
-		"Battery-70"   => "8",
-		"Battery-60"   => "7",
-		"Battery-50"   => "6",
-		"Battery-40"   => "5",
-		"Battery-30"   => "4",
-		"Battery-20"   => "3",
-		"Battery-10"   => "2",
-		"Battery-5"    => "1",
-		"Battery-0"    => "0",
-		"Notification" => "C",
-		"Alarm"        => "D",
-		"Move-1"       => "E",
-		"Move-5"       => "F",
-		"Dnd"          => "G",
-		"Bluetooth"    => "H",
-		"Arrow-Up"     => "I",
-		"MoveBar-1"    => "J",
-		"MoveBar-2"    => "K",
-		"Move-0"       => "L",
-		"Sleep"        => "M",
-		"Heart-1"      => "N",
-		"Heart-2"      => "O",
-		"Steps-Side"   => "P",
-		"Distance"     => "Q",
-		"Calories"     => "R",
-		"Stopwatch"    => "S",
-		"Stairs-Up"    => "T",
-		"Trophy"       => "U",
-		"Arrow-Left"   => "V",
-		"Arrow-Right"  => "X"
+		"Battery-100"   => "B",
+		"Battery-90"    => "A",
+		"Battery-80"    => "9",
+		"Battery-70"    => "8",
+		"Battery-60"    => "7",
+		"Battery-50"    => "6",
+		"Battery-40"    => "5",
+		"Battery-30"    => "4",
+		"Battery-20"    => "3",
+		"Battery-10"    => "2",
+		"Battery-5"     => "1",
+		"Battery-0"     => "0",
+		"Notification"  => "C",
+		"Alarm"         => "D",
+		"Move-1"        => "E",
+		"Move-5"        => "F",
+		"Dnd"           => "G",
+		"Bluetooth"     => "H",
+		"Arrow-Up"      => "I",
+		"MoveBar-1"     => "J",
+		"MoveBar-2"     => "K",
+		"Move-0"        => "L",
+		"Sleep"         => "M",
+		"Heart-1"       => "N",
+		"Heart-2"       => "O",
+		"Steps-Side"    => "P",
+		"Distance"      => "Q",
+		"Calories"      => "R",
+		"Stopwatch"     => "S",
+		"Stairs-Up"     => "T",
+		"Trophy"        => "U",
+		"Arrow-Left"    => "V",
+		"Arrow-Right"   => "X",
+		"Battery-L-100" => "j",
+		"Battery-L-90"  => "i",
+		"Battery-L-80"  => "h",
+		"Battery-L-70"  => "g",
+		"Battery-L-60"  => "f",
+		"Battery-L-50"  => "e",
+		"Battery-L-40"  => "d",
+		"Battery-L-30"  => "c",
+		"Battery-L-20"  => "b",
+		"Battery-L-10"  => "a",
+		"Battery-L-5"   => "Z",
+		"Battery-L-0"   => "Y",
+		"Elevation"     => "k",
+		"Calendar"      => "l",
+		"Moon-0"        => "m", // Full Moon
+		"Moon-1"        => "n", // New Moon
+		"Moon-2"        => "o", // First Quarter
+		"Moon-3"        => "p", // Last Quarter
+		"Moon-4"        => "q", // Waxing Gibbous
+		"Moon-5"        => "r", // Waning Gibbous
+		"Moon-6"        => "s", // Waning Creacent
+		"Moon-7"        => "t"  // Waning Creacent
 	};
 	
 	function init() {
@@ -990,13 +1070,13 @@ module Extensions {
 // TODO: All heart rate related functions need to be checked if they have heart rate monitor
 module Utils {
 	var moonPhases = { 
-		0  => { "name" => "New Moon",             "angle" => 0,   "icon" => "Moon-0" },
-		1  => { "name" => "Waxing Crescent Moon", "angle" => 45,  "icon" => "Moon-1" },
+		0  => { "name" => "New Moon",             "angle" => 0,   "icon" => "Moon-1" },
+		1  => { "name" => "Waxing Crescent Moon", "angle" => 45,  "icon" => "Moon-6" },
 		2  => { "name" => "First Quarter Moon",   "angle" => 90,  "icon" => "Moon-2" },
-		3  => { "name" => "Waxing Gibbous Moon",  "angle" => 135, "icon" => "Moon-3" },
-		4  => { "name" => "Full Moon",            "angle" => 180, "icon" => "Moon-4" },
+		3  => { "name" => "Waxing Gibbous Moon",  "angle" => 135, "icon" => "Moon-4" },
+		4  => { "name" => "Full Moon",            "angle" => 180, "icon" => "Moon-0" },
 		5  => { "name" => "Waning Gibbous Moon",  "angle" => 135, "icon" => "Moon-5" },
-		6  => { "name" => "Last Quarter Moon",    "angle" => 90,  "icon" => "Moon-6" },
+		6  => { "name" => "Last Quarter Moon",    "angle" => 90,  "icon" => "Moon-3" },
 		7  => { "name" => "Waning Crescent Moon", "angle" => 45,  "icon" => "Moon-7" }
 	};
 	
@@ -1077,6 +1157,13 @@ module Utils {
 		return heartRate;
 	}
 	
+	function getCurrentElevation() {
+		if((Toybox has :SensorHistory) && (Toybox.SensorHistory has :getElevationHistory)) {
+        	return Toybox.SensorHistory.getElevationHistory({}).next().data;
+	    }
+	    return null;
+	}
+	
 	function getPointOnCircle(cx, cy, radius, angle, startAngleOffset) {
 		var x = Math.round(cx + radius * Math.cos(Math.toRadians(angle + startAngleOffset)));
    	 	var y = Math.round(cy + radius * Math.sin(Math.toRadians(angle + startAngleOffset)));
@@ -1084,7 +1171,13 @@ module Utils {
    	 	return [ x, y ];
 	}
 	
-	function getMoonPhase(year, month, day) {
+	function getCurrentMoonPhase() {
+		var now = Gregorian.info(Time.now(), Time.FORMAT_SHORT);
+		
+		var year = now.year;
+		var month = now.month;
+		var day = now.day;
+
 	    if(month < 3) {
 	        year--;
 	        month += 12;
