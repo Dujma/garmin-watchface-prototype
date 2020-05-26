@@ -209,6 +209,8 @@ module UiElements {
 				secondsText.setText(now.sec.format("%02d"));
 				secondsText.draw(dc);
 			}
+			Utils.drawLine(dc, 130, 96, 186, 3, Graphics.COLOR_RED);
+			Utils.drawLine(dc, 130, 162, 186, 3, Graphics.COLOR_RED);
 	    }
 
 	    function onSettingUpdate() {
@@ -1201,5 +1203,11 @@ module Utils {
 		var info = Gregorian.utcInfo(time, Time.FORMAT_SHORT);
 
 		return Lang.format("$1$:$2$ (GMT$3$$4$)", [ info.hour.format(application.getProperty("AddLeadingZero") ? "%02d" : "%d"), info.min.format("%02d"), offset >= 0 ? "+" : "-", offset.abs() ]);
+	}
+	
+	function drawLine(dc, x, y, width, height, color) {
+		dc.setColor(color, Graphics.COLOR_TRANSPARENT);
+
+		dc.fillRectangle(x - width / 2, y - height / 2, width, height);
 	}
 }

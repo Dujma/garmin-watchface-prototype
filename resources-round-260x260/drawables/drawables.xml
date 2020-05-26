@@ -1,3 +1,5 @@
 <drawables>
     <bitmap id="MockBackground" filename="../bitmaps/mock-background.png" />
+    <bitmap id="LineLeft" filename="../bitmaps/line-left.png" />
+    <bitmap id="LineRight" filename="../bitmaps/line-right.png" />
 </drawables>
