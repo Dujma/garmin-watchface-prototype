@@ -948,10 +948,10 @@ module Icons {
 		private var dimensions;
 		private var dc;
 		private var char;
+		private var color;
 
 		function initialize(name, dc) {
 			text = new WatchUi.Text({
-	            :color => Graphics.COLOR_WHITE,
 	            :font  => iconsFont,
 	            :locX  => 0,
 	            :locY  => 0
@@ -961,22 +961,28 @@ module Icons {
         	setIcon(name);
         	text.setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
         	
+        	setColor(Graphics.COLOR_WHITE);
+        	
         	return self;
 		}
 		
 		function setColor(color) {
-			text.setColor(color);
-			
+			if(color != self.color) {
+				self.color = color;
+				
+				text.setColor(color);
+			}
 			return text;
 		}
 		
 		function setIcon(name) {
-			self.name = name;
-			char = Icons.icons[name];
-			
-			text.setText(char);
-			dimensions = dc.getTextDimensions(char, iconsFont);
-			
+			if(name != self.name) {
+				self.name = name;
+				char = Icons.icons[name];
+				
+				text.setText(char);
+				dimensions = dc.getTextDimensions(char, iconsFont);
+			}
 			return text;
 		}
 
@@ -1024,26 +1030,29 @@ module Extensions {
 		}
 		
 		function setText(text) {
-			WatchUi.Text.setText(text);
-			
-			self.text = text;
-			
+			if(text != self.text) {
+				WatchUi.Text.setText(text);
+				
+				self.text = text;
+			}
 			return self;
 		}
 		
 		function setFont(font) {
-			WatchUi.Text.setFont(font);
-			
-			typeface = font;
-			
+			if(font != typeface) {
+				WatchUi.Text.setFont(font);
+				
+				typeface = font;
+			}
 			return self;
 		}
 		
 		function setColor(color) {
-			WatchUi.Text.setColor(color);
-			
-			self.color = color;
-			
+			if(color != self.color) {
+				WatchUi.Text.setColor(color);
+				
+				self.color = color;
+			}
 			return self;
 		}
 		
