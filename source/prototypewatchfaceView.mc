@@ -54,7 +54,7 @@ class prototypewatchfaceView extends WatchUi.WatchFace {
     }
 
     function onShow() {
-
+		
     }
     
     function onUpdate(dc) {
@@ -448,7 +448,8 @@ module UiElements {
 				daysText[i].draw(dc);
 				arrowIcon.draw();
 			}
-			infoText.setText("Week " + Utils.getCurrentWeekNumber());
+			// infoText.setText("Week " + Utils.getCurrentWeekNumber());
+			infoText.setText(Utils.getTimeByOffset(application));
 			infoText.draw(dc);
 		}
 		
@@ -928,7 +929,9 @@ module Extensions {
 		function initialize(settings, dc, centerJustification) {
 			WatchUi.Text.initialize(settings);
 			
-			setFont(settings.get(:typeface));
+			var typeface = settings.get(:typeface);
+			
+			self.setFont(typeface);
 
 			if(centerJustification) {
 				WatchUi.Text.setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
@@ -986,7 +989,7 @@ module Extensions {
 
 // TODO: All heart rate related functions need to be checked if they have heart rate monitor
 module Utils {
-	private var moonPhases = { 
+	var moonPhases = { 
 		0  => { "name" => "New Moon",             "angle" => 0,   "icon" => "Moon-0" },
 		1  => { "name" => "Waxing Crescent Moon", "angle" => 45,  "icon" => "Moon-1" },
 		2  => { "name" => "First Quarter Moon",   "angle" => 90,  "icon" => "Moon-2" },
@@ -1096,5 +1099,14 @@ module Utils {
 		result = result >= 8 ? 0 : result;
 
 	    return moonPhases[result];
+	}
+	
+	function getTimeByOffset(application) {
+		var offset = application.getProperty("AlternativeTimezone");
+		var time = new Time.Moment(Time.now().value() + offset * 3600);
+		
+		var info = Gregorian.utcInfo(time, Time.FORMAT_SHORT);
+
+		return Lang.format("$1$:$2$ (GMT$3$$4$)", [ info.hour.format(application.getProperty("AddLeadingZero") ? "%02d" : "%d"), info.min.format("%02d"), offset >= 0 ? "+" : "-", offset.abs() ]);
 	}
 }

@@ -37,5 +37,35 @@
             <listEntry value="2">@Strings.DuringDnd</listEntry>
         </settingConfig>
     </setting>
+    
+    <setting propertyKey="@Properties.AlternativeTimezone" title="@Strings.PowerSavingModeTitle">
+        <settingConfig type="list">
+        	<listEntry value="12">@Strings.GmtPlus12</listEntry>
+        	<listEntry value="11">@Strings.GmtPlus11</listEntry>
+        	<listEntry value="10">@Strings.GmtPlus10</listEntry>
+        	<listEntry value="9">@Strings.GmtPlus9</listEntry>
+        	<listEntry value="8">@Strings.GmtPlus8</listEntry>
+        	<listEntry value="7">@Strings.GmtPlus7</listEntry>
+        	<listEntry value="6">@Strings.GmtPlus6</listEntry>
+        	<listEntry value="5">@Strings.GmtPlus5</listEntry>
+        	<listEntry value="4">@Strings.GmtPlus4</listEntry>
+        	<listEntry value="3">@Strings.GmtPlus3</listEntry>
+        	<listEntry value="2">@Strings.GmtPlus2</listEntry>
+        	<listEntry value="1">@Strings.GmtPlus1</listEntry>
+            <listEntry value="0">@Strings.Gmt</listEntry>
+            <listEntry value="-1">@Strings.GmtMinus1</listEntry>
+            <listEntry value="-2">@Strings.GmtMinus2</listEntry>
+            <listEntry value="-3">@Strings.GmtMinus3</listEntry>
+            <listEntry value="-4">@Strings.GmtMinus4</listEntry>
+            <listEntry value="-5">@Strings.GmtMinus5</listEntry>
+            <listEntry value="-6">@Strings.GmtMinus6</listEntry>
+            <listEntry value="-7">@Strings.GmtMinus7</listEntry>
+            <listEntry value="-8">@Strings.GmtMinus8</listEntry>
+            <listEntry value="-9">@Strings.GmtMinus9</listEntry>
+            <listEntry value="-10">@Strings.GmtMinus10</listEntry>
+            <listEntry value="-11">@Strings.GmtMinus11</listEntry>
+            <listEntry value="-12">@Strings.GmtMinus12</listEntry>
+        </settingConfig>
+    </setting>
 
 </settings>

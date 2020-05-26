@@ -5,5 +5,6 @@
     <property id="AddLeadingZero" type="boolean">true</property>
 	<property id="FirstDayOfWeek" type="number">2</property>
 	<property id="PowerSavingMode" type="number">0</property>
+	<property id="AlternativeTimezone" type="number">0</property>
 	
 </properties>

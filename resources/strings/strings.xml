@@ -7,6 +7,7 @@
     <string id="AddLeadingZeroTitle">Add Leading Zero</string>
     <string id="FirstDayOfWeekTitle">First Day of Week</string>
     <string id="PowerSavingModeTitle">Power Saving Mode</string>
+    <string id="AlternativeTimezoneTitle">Alternative Time Zone</string>
 
     <string id="ColorBlack">Black</string>
     <string id="ColorDarkGray">Dark Gray</string>
@@ -19,8 +20,34 @@
     <string id="Sunday">Sunday</string>
     <string id="Saturday">Saturday</string>
     
-     <string id="On">On</string>
-     <string id="Off">Off</string>
-     <string id="DuringDnd">During DND</string>
+    <string id="On">On</string>
+    <string id="Off">Off</string>
+    <string id="DuringDnd">During DND</string>
+    
+    <string id="GmtPlus12">New Zealand Standard Time (GMT+12)</string>
+    <string id="GmtPlus11">Sakhalin Time (GMT + 11)</string>
+    <string id="GmtPlus10">Eastern Australia Standard Time (GMT+10)</string>
+    <string id="GmtPlus9">Japan Standard Time (GMT+9)</string>
+    <string id="GmtPlus8">China Standard Time (GMT+8)</string>
+    <string id="GmtPlus7">Kranoyask Time (GMT+7)</string>
+    <string id="GmtPlus6">Omsk Time (GMT+6)</string>
+    <string id="GmtPlus5">Pakistan Standard Time (GMT+5)</string>
+    <string id="GmtPlus4">Armenia Time (GMT+4)</string>
+    <string id="GmtPlus3">Moscow Time (GMT+3)</string>
+    <string id="GmtPlus2">Eastern European Time (GMT+2)</string>
+    <string id="GmtPlus1">Central European Time (GMT+1)</string>
+    <string id="Gmt">Greenwich Mean Time (GMT+0)</string>
+    <string id="GmtMinus1">West Africa Time (GMT-1)</string>
+    <string id="GmtMinus2">Azores Time (GMT-2)</string>
+    <string id="GmtMinus3">Argentina Time (GMT-3)</string>
+    <string id="GmtMinus4">Atlantic Standard Time (GMT-4)</string>
+    <string id="GmtMinus5">Eastern Standard Time (GMT-5)</string>
+    <string id="GmtMinus6">Central Standard Time (GMT-6)</string>
+    <string id="GmtMinus7">Mountain Standard Time (GMT-7)</string>
+    <string id="GmtMinus8">Pacific Standard Time (GMT-8)</string>
+    <string id="GmtMinus9">Alaska Standard Time (GMT-9)</string>
+    <string id="GmtMinus10">Hawaii Standard Time (GMT-10)</string>
+    <string id="GmtMinus11">Nome Time (GMT-11)</string>
+    <string id="GmtMinus12">International Date Line West (GMT-12)</string>
 
 </strings>
