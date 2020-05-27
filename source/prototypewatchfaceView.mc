@@ -1471,11 +1471,11 @@ module Utils {
 	function getActiveCalories(calories) {
 		var today = Gregorian.info(Time.now(), Time.FORMAT_SHORT);		
 		var profile = UserProfile.getProfile();
-		var age = 1991 - profile.birthYear;
+		var age = today.year - profile.birthYear;
 		var weight = profile.weight / 1000.0;
-		var restCalories = (profile.gender == UserProfile.GENDER_MALE ? 5.2 : -197.6) - 6.116 * age + 7.628 * profile.height + 12.2 * weight;
+		var restCalories = (profile.gender == UserProfile.GENDER_MALE ? 5.2 : -197.6) - 12.2 * weight + 7.628 * profile.height + 6.116 * age;
 
-		restCalories = Math.round((today.hour * 60 + today.min) * restCalories / 1440 ).toNumber();
+		restCalories = Math.round((today.hour * 60 + today.min) / 1440.0 * restCalories).toNumber();
 		
 		return calories > restCalories ? calories - restCalories : 0;
 	}
