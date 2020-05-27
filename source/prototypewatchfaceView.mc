@@ -8,6 +8,7 @@ using Toybox.Time.Gregorian;
 using Toybox.Math;
 using Toybox.ActivityMonitor;
 using Toybox.Activity;
+using Toybox.UserProfile;
 
 class prototypewatchfaceView extends WatchUi.WatchFace {
 	private var application;
@@ -1456,5 +1457,17 @@ module Utils {
 		dc.setColor(color, Graphics.COLOR_TRANSPARENT);
 
 		dc.fillRectangle((x - width / 2).abs(), (y - height / 2).abs(), width, height);
+	}
+	
+	function getActiveCalories(calories) {
+		var today = Gregorian.info(Time.now(), Time.FORMAT_SHORT);		
+		var profile = UserProfile.getProfile();
+		var age = 1991 - profile.birthYear;
+		var weight = profile.weight / 1000.0;
+		var restCalories = (profile.gender == UserProfile.GENDER_MALE ? 5.2 : -197.6) - 6.116 * age + 7.628 * profile.height + 12.2 * weight;
+
+		restCalories = Math.round((today.hour * 60 + today.min) * restCalories / 1440 ).toNumber();
+		
+		return calories > restCalories ? calories - restCalories : 0;
 	}
 }
