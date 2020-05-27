@@ -1473,7 +1473,7 @@ module Utils {
 		var profile = UserProfile.getProfile();
 		var age = today.year - profile.birthYear;
 		var weight = profile.weight / 1000.0;
-		var restCalories = (profile.gender == UserProfile.GENDER_MALE ? 5.2 : -197.6) - 12.2 * weight + 7.628 * profile.height + 6.116 * age;
+		var restCalories = (profile.gender == UserProfile.GENDER_MALE ? 5.2 : -197.6) - 6.116 * age + 7.628 * profile.height + 12.2 * weight;
 
 		restCalories = Math.round((today.hour * 60 + today.min) / 1440.0 * restCalories).toNumber();
 		
