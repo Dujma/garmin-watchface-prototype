@@ -703,7 +703,7 @@ module UiElements {
 		function draw(activityMonitorInfo) {
 			var topValue = activityMonitorInfo.stepGoal != null ? activityMonitorInfo.stepGoal : 0;
 			var bottomValue = activityMonitorInfo.steps != null ? activityMonitorInfo.steps : 0;
-			bottomValue = 2500;
+
 			topValueText.setText(Utils.kFormatter(topValue, topValue > 99999 ? 0 : 1));
 			bottomValueText.setText(Utils.kFormatter(bottomValue, bottomValue > 99999 ? 0 : 1));
 			
@@ -894,61 +894,68 @@ module Textures {
 	var bitmapsFont;
 	
 	var icons = {
-		"Battery-100"   => "B",
-		"Battery-90"    => "A",
-		"Battery-80"    => "9",
-		"Battery-70"    => "8",
-		"Battery-60"    => "7",
-		"Battery-50"    => "6",
-		"Battery-40"    => "5",
-		"Battery-30"    => "4",
-		"Battery-20"    => "3",
-		"Battery-10"    => "2",
-		"Battery-5"     => "1",
-		"Battery-0"     => "0",
-		"Notification"  => "C",
-		"Alarm"         => "D",
-		"Move-1"        => "E",
-		"Move-5"        => "F",
-		"Dnd"           => "G",
-		"Bluetooth"     => "H",
-		"Arrow-Up"      => "I",
-		"MoveBar-1"     => "J",
-		"MoveBar-2"     => "K",
-		"Move-0"        => "L",
-		"Sleep"         => "M",
-		"Heart-1"       => "N",
-		"Heart-2"       => "O",
-		"Steps-Side"    => "P",
-		"Distance"      => "Q",
-		"Calories"      => "R",
-		"Stopwatch"     => "S",
-		"Stairs-Up"     => "T",
-		"Trophy"        => "U",
-		"Arrow-Left"    => "V",
-		"Arrow-Right"   => "X",
-		"Battery-L-100" => "j",
-		"Battery-L-90"  => "i",
-		"Battery-L-80"  => "h",
-		"Battery-L-70"  => "g",
-		"Battery-L-60"  => "f",
-		"Battery-L-50"  => "e",
-		"Battery-L-40"  => "d",
-		"Battery-L-30"  => "c",
-		"Battery-L-20"  => "b",
-		"Battery-L-10"  => "a",
-		"Battery-L-5"   => "Z",
-		"Battery-L-0"   => "Y",
-		"Elevation"     => "k",
-		"Calendar"      => "l",
-		"Moon-0"        => "m", // Full Moon
-		"Moon-1"        => "n", // New Moon
-		"Moon-2"        => "p", // First Quarter
-		"Moon-3"        => "o", // Last Quarter
-		"Moon-4"        => "r", // Waxing Gibbous
-		"Moon-5"        => "q", // Waning Gibbous
-		"Moon-6"        => "t", // Waning Creacent
-		"Moon-7"        => "s"  // Waning Creacent
+		"Battery-100"    => "B",
+		"Battery-90"     => "A",
+		"Battery-80"     => "9",
+		"Battery-70"     => "8",
+		"Battery-60"     => "7",
+		"Battery-50"     => "6",
+		"Battery-40"     => "5",
+		"Battery-30"     => "4",
+		"Battery-20"     => "3",
+		"Battery-10"     => "2",
+		"Battery-5"      => "1",
+		"Battery-0"      => "0",
+		"Notification"   => "C",
+		"Alarm"          => "D",
+		"Move-1"         => "E",
+		"Move-5"         => "F",
+		"Dnd"            => "G",
+		"Bluetooth"      => "H",
+		"Arrow-Up"       => "I",
+		"MoveBar-1"      => "J",
+		"MoveBar-2"      => "K",
+		"Move-0"         => "L",
+		"Sleep"          => "M",
+		"Heart-1"        => "N",
+		"Heart-2"        => "O",
+		"Steps-Side"     => "P",
+		"Distance"       => "Q",
+		"Calories"       => "R",
+		"Stopwatch"      => "S",
+		"Stairs-Up"      => "T",
+		"Trophy"         => "U",
+		"Arrow-Left"     => "V",
+		"Arrow-Right"    => "X",
+		"Battery-L-100"  => "j",
+		"Battery-L-90"   => "i",
+		"Battery-L-80"   => "h",
+		"Battery-L-70"   => "g",
+		"Battery-L-60"   => "f",
+		"Battery-L-50"   => "e",
+		"Battery-L-40"   => "d",
+		"Battery-L-30"   => "c",
+		"Battery-L-20"   => "b",
+		"Battery-L-10"   => "a",
+		"Battery-L-5"    => "Z",
+		"Battery-L-0"    => "Y",
+		"Elevation"      => "k",
+		"Calendar"       => "l",
+		"Moon-0"         => "m", // Full Moon
+		"Moon-1"         => "n", // New Moon
+		"Moon-2"         => "p", // First Quarter
+		"Moon-3"         => "o", // Last Quarter
+		"Moon-4"         => "r", // Waxing Gibbous
+		"Moon-5"         => "q", // Waning Gibbous
+		"Moon-6"         => "t", // Waning Creacent
+		"Moon-7"         => "s", // Waning Creacent
+		"Notification-L" => "#",
+		"Dnd-L"          => "$",
+		"Bluetooth-L"    => "%",
+		"Move-1-L"       => "(",
+		"Move-5-L"       => "&",
+		"Move-0-L"       => ")",
+		"Sleep-L"        => "*"
 	};
 	
 	var bitmaps = {
