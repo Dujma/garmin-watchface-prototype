@@ -230,7 +230,62 @@ module UiElements {
 	    }
 	}
 	
-	class TopIcons extends UiElementBase {
+	class TopIconsBase extends UiElementBase {
+		protected var batteryText;
+		protected var batteryIcon;
+		protected var notificationIcon;
+		protected var alarmIcon;
+		
+		function initialize(dc) {
+			UiElementBase.initialize(dc);
+			
+			return self;
+		}
+		
+		function draw(deviceSettings, systemStats, batteryIcons) {
+			var batteryLvl = Math.round(systemStats.battery);
+
+			batteryText.setText(Lang.format("$1$%", [ (batteryLvl + 0.5).format( "%d" ) ]));
+			batteryText.draw(dc);
+			
+			setBatteryIcon(batteryLvl, batteryIcons);
+			
+			if(!systemStats.charging) { // 3.0.0
+				batteryIcon.setColor(batteryLvl <= 20 ? Graphics.COLOR_RED : Graphics.COLOR_WHITE);
+			} else {
+				if(batteryLvl < 99.5) {
+					batteryIcon.setColor(Graphics.COLOR_BLUE);
+				} else {
+					batteryIcon.setColor(Graphics.COLOR_GREEN);
+				}
+			}
+			notificationIcon.setColor(deviceSettings.notificationCount > 0 ? Graphics.COLOR_RED : Graphics.COLOR_WHITE);
+			alarmIcon.setColor(deviceSettings.alarmCount > 0 ? Graphics.COLOR_RED : Graphics.COLOR_WHITE);
+
+			batteryIcon.draw();
+			notificationIcon.draw();
+			alarmIcon.draw();
+		}
+		
+		function setBatteryIcon(lvl, icons) {
+			var targetIcon = null;
+			var batteryIconsValues = icons.values();
+			
+			for(var i = 0; i < icons.size(); ++i) {
+				if(lvl > batteryIconsValues[i]["min"] && lvl <= batteryIconsValues[i]["max"]) {
+					targetIcon = icons.keys()[i];
+					break;
+				}
+			}
+			if(targetIcon != null) {
+				if(batteryIcon.getName() != targetIcon) {
+					batteryIcon.setIcon(targetIcon);
+				}
+			}
+		}
+	}
+	
+	class TopIcons extends TopIconsBase {
 		private var batteryIcons = { 
 			"Battery-100" => { "max" => 100, "min" => 90 },
 			"Battery-90"  => { "max" => 90,  "min" => 80 },
@@ -245,13 +300,9 @@ module UiElements {
 			"Battery-5"   => { "max" => 5,   "min" => 1  },
 			"Battery-0"   => { "max" => 1,   "min" => -1 }
 		};
-		private var batteryText;
-		private var batteryIcon;
-		private var notificationIcon;
-		private var alarmIcon;
 
 		function initialize(dc, fntAsapCondensedBold14) {
-			UiElementBase.initialize(dc);
+			TopIconsBase.initialize(dc);
 		
 			batteryIcon = new Textures.Icon("Battery-100", dc);
 			batteryIcon.setPosition(130, 19);
@@ -271,92 +322,86 @@ module UiElements {
 		}
 		
 		function draw(deviceSettings, systemStats) {
-			var batteryLvl = Math.round(systemStats.battery);
-
-			batteryText.setText(Lang.format("$1$%", [ (batteryLvl + 0.5).format( "%d" ) ]));
-			batteryText.draw(dc);
-			
-			setBatteryIcon(batteryLvl);
-			
-			if(!systemStats.charging) { // 3.0.0
-				batteryIcon.setColor(batteryLvl <= 20 ? Graphics.COLOR_RED : Graphics.COLOR_WHITE);
-			} else {
-				if(batteryLvl < 99.5) {
-					batteryIcon.setColor(Graphics.COLOR_BLUE);
-				} else {
-					batteryIcon.setColor(Graphics.COLOR_GREEN);
-				}
-			}
-			notificationIcon.setColor(deviceSettings.notificationCount > 0 ? Graphics.COLOR_RED : Graphics.COLOR_WHITE);
-			alarmIcon.setColor(deviceSettings.alarmCount > 0 ? Graphics.COLOR_RED : Graphics.COLOR_WHITE);
-
-			batteryIcon.draw();
-			notificationIcon.draw();
-			alarmIcon.draw();
-		}
-		
-		function setBatteryIcon(lvl) {
-			var targetIcon = null;
-			var batteryIconsValues = batteryIcons.values();
-			
-			for(var i = 0; i < batteryIcons.size(); ++i) {
-				if(lvl > batteryIconsValues[i]["min"] && lvl <= batteryIconsValues[i]["max"]) {
-					targetIcon = batteryIcons.keys()[i];
-					break;
-				}
-			}
-			if(targetIcon != null) {
-				if(batteryIcon.getName() != targetIcon) {
-					batteryIcon.setIcon(targetIcon);
-				}
-			}
+			TopIconsBase.draw(deviceSettings, systemStats, batteryIcons);
 		}
 	}
 	
-	class BottomIcons extends UiElementBase {
-		private var moveIcon;
-		private var dndIcon;
-		private var btIcon;
+	class TopIconsLarge extends TopIconsBase {
+		private var batteryIcons = { 
+			"Battery-100-L" => { "max" => 100, "min" => 90 },
+			"Battery-90-L"  => { "max" => 90,  "min" => 80 },
+			"Battery-80-L"  => { "max" => 80,  "min" => 70 },
+			"Battery-70-L"  => { "max" => 70,  "min" => 60 },
+			"Battery-60-L"  => { "max" => 60,  "min" => 50 },
+			"Battery-50-L"  => { "max" => 50,  "min" => 40 },
+			"Battery-40-L"  => { "max" => 40,  "min" => 30 },
+			"Battery-30-L"  => { "max" => 30,  "min" => 20 },
+			"Battery-20-L"  => { "max" => 20,  "min" => 10 },
+			"Battery-10-L"  => { "max" => 10,  "min" => 5  },
+			"Battery-5-L"   => { "max" => 5,   "min" => 1  },
+			"Battery-0-L"   => { "max" => 1,   "min" => -1 }
+		};
 
-		function initialize(dc) {
-			UiElementBase.initialize(dc);
+		function initialize(dc, fntAsapCondensedBold14) {
+			TopIconsBase.initialize(dc);
+		
+			batteryIcon = new Textures.Icon("Battery-100-L", dc);
+			batteryIcon.setPosition(130, 19);
 			
-			moveIcon = new Textures.Icon("Move-1", dc);
-			moveIcon.setPosition(104, 243);
+			batteryText = new Extensions.Text({
+	            :color    => Graphics.COLOR_WHITE,
+	            :typeface => fntAsapCondensedBold14,
+	            :locX     => 130,
+	            :locY     => 8
+	        }, dc, true);
+	        
+			notificationIcon = new Textures.Icon("Notification-L", dc);
+			notificationIcon.setPosition(154, 16);
 			
-			dndIcon = new Textures.Icon("Dnd", dc);
-			dndIcon.setPosition(130, 247);
-			
-			btIcon = new Textures.Icon("Bluetooth", dc);
-			btIcon.setPosition(155, 244);
+			alarmIcon = new Textures.Icon("Alarm-L", dc);
+			alarmIcon.setPosition(104, 15);
 		}
 		
-		function draw(deviceSettings, userProfile, activityMonitorInfo) {
+		function draw(deviceSettings, systemStats) {
+			TopIconsBase.draw(deviceSettings, systemStats, batteryIcons);
+		}
+	}
+	
+	class BottomIconsBase extends UiElementBase {
+		protected var moveIcon;
+		protected var dndIcon;
+		protected var btIcon;
+		
+		function initialize(dc) {
+			UiElementBase.initialize(dc);
+		}
+		
+		function draw(deviceSettings, userProfile, activityMonitorInfo, isLarge) {
 			var moveBarLevel = activityMonitorInfo.moveBarLevel;
 
 			dndIcon.setColor(deviceSettings.doNotDisturb ? Graphics.COLOR_RED : Graphics.COLOR_WHITE); // 2.1.0
 			btIcon.setColor(deviceSettings.phoneConnected ? Graphics.COLOR_RED : Graphics.COLOR_WHITE);
-			setMoveIcon(moveBarLevel, userProfile);
+			setMoveIcon(moveBarLevel, userProfile, isLarge);
 			
 			moveIcon.draw();
 			dndIcon.draw();
 			btIcon.draw();
 		}
 		
-		function setMoveIcon(lvl, userProfile) {
+		function setMoveIcon(lvl, userProfile, isLarge) {
 			var targetIcon = null;
 			var isInSleeptTime = isInSleepTime(userProfile);
 			
 			if(!isInSleeptTime) {
 				if(lvl == 0) {
-					targetIcon = "Move-0";
+					targetIcon = "Move-0" + (isLarge ? "-L" : "");
 				} else if(lvl > 0 && lvl < 3) {
-					targetIcon = "Move-1";
+					targetIcon = "Move-1" + (isLarge ? "-L" : "");
 				} else {
-					targetIcon = "Move-5";
+					targetIcon = "Move-5" + (isLarge ? "-L" : "");
 				}
 			} else {
-				targetIcon = "Sleep";
+				targetIcon = "Sleep" + (isLarge ? "-L" : "");
 			}
 			moveIcon.setIcon(targetIcon);
 			
@@ -389,6 +434,44 @@ module UiElements {
 	        	}
 	        }
     	}
+	}
+	
+	class BottomIcons extends BottomIconsBase {
+		function initialize(dc) {
+			BottomIconsBase.initialize(dc);
+			
+			moveIcon = new Textures.Icon("Move-1", dc);
+			moveIcon.setPosition(104, 243);
+			
+			dndIcon = new Textures.Icon("Dnd", dc);
+			dndIcon.setPosition(130, 247);
+			
+			btIcon = new Textures.Icon("Bluetooth", dc);
+			btIcon.setPosition(155, 244);
+		}
+		
+		function draw(deviceSettings, userProfile, activityMonitorInfo) {
+			BottomIconsBase.draw(deviceSettings, userProfile, activityMonitorInfo, false);
+		}
+	}
+	
+	class BottomIconsLarge extends BottomIconsBase {
+		function initialize(dc) {
+			BottomIconsBase.initialize(dc);
+			
+			moveIcon = new Textures.Icon("Move-1-L", dc);
+			moveIcon.setPosition(104, 243);
+			
+			dndIcon = new Textures.Icon("Dnd-L", dc);
+			dndIcon.setPosition(130, 247);
+			
+			btIcon = new Textures.Icon("Bluetooth-L", dc);
+			btIcon.setPosition(155, 244);
+		}
+		
+		function draw(deviceSettings, userProfile, activityMonitorInfo) {
+			BottomIconsBase.draw(deviceSettings, userProfile, activityMonitorInfo, true);
+		}
 	}
 
 	class Top extends UiElementBase {
@@ -949,6 +1032,7 @@ module Textures {
 		"Moon-5"         => "q", // Waning Gibbous
 		"Moon-6"         => "t", // Waning Creacent
 		"Moon-7"         => "s", // Waning Creacent
+		"Alarm-L"        => "u",
 		"Notification-L" => "#",
 		"Dnd-L"          => "$",
 		"Bluetooth-L"    => "%",
