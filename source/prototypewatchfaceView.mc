@@ -74,13 +74,13 @@ class prototypewatchfaceView extends WatchUi.WatchFace {
    	 	var powerSavingModeActive = isPowerSavingModeActive(deviceSettings.doNotDisturb);
    	 	
    	 	if(!powerSavingModeActive) {
+   	 		bottomLine.draw();
    	 		mockBackground.draw(dc);
    	 	}
 		clockArea.draw(deviceSettings, powerSavingModeActive);
 		
 		// UiElements
 		if(!powerSavingModeActive) {
-			// bottomLine.draw();
 			topIcons.draw(deviceSettings, systemStats);
 			bottomIcons.draw(deviceSettings, userProfile, activityMonitorInfo);
 			top.draw();
@@ -985,12 +985,22 @@ module UiElements {
 	class BottomLine extends UiElementBase {
 		var line;		
 		var lineFill;
+		var dot;
+		
+		var maxAngle = 124;
+		var radius = 109;
+		var centerAngle = 152;
+		var maxRectangleWidth = 196;
+		var rectangleLocX = 32;
+		var rectangleLocY = 208;
+		var rectangleHeight = 51;
 
 		function initialize(dc) {
 			UiElementBase.initialize(dc);
 		
 			line = new Textures.Bitmap("Line-Bottom", dc);
         	lineFill = new Textures.Bitmap("Line-Bottom", dc);
+        	dot = new Textures.Icon("Dot", dc);
 
         	lineFill.setColor(Graphics.Graphics.COLOR_TRANSPARENT);
         	lineFill.setBackgroundColor(Graphics.COLOR_BLACK);
@@ -1000,13 +1010,28 @@ module UiElements {
 			line.setPosition(130, 208);
         	lineFill.setPosition(130, 208);
 		}
-		
+
 		function draw() {
+			var leftValue = 250;
+			var rightValue = 300;
+			
+			var percentage = leftValue >= rightValue ? 1.0 : leftValue / rightValue.toFloat();
+			var targetPosition = maxAngle * percentage;
+			
+			var pointOnCircle = Utils.getPointOnCircle(dc.getWidth() / 2, dc.getHeight() / 2, radius, -1 * targetPosition, centerAngle);
+			
 			line.draw();
 			
-			Utils.drawRectangleStartingFromLeft(dc, 32, 208, 180, 51, Graphics.COLOR_RED); // 196 max
+			Utils.drawRectangleStartingFromLeft(dc, rectangleLocX, rectangleLocY, pointOnCircle[0] - rectangleLocX, rectangleHeight, Graphics.COLOR_RED);
 			
 			lineFill.draw();
+
+			if(pointOnCircle[0] >= 89 && pointOnCircle[0] <= 170) {
+				pointOnCircle[1] = 231;
+			}
+			dot.setPosition(pointOnCircle[0], pointOnCircle[1]);
+			
+			dot.draw();
 		}	
 	}
 }
@@ -1078,7 +1103,9 @@ module Textures {
 		"Move-1-L"       => "(",
 		"Move-5-L"       => "&",
 		"Move-0-L"       => ")",
-		"Sleep-L"        => "*"
+		"Sleep-L"        => "*",
+		"Dot"            => "+",
+		"Dot-L"          => ",",
 	};
 	
 	var bitmaps = {
