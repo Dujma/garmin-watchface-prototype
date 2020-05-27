@@ -992,12 +992,15 @@ module UiElements {
 		var dot;
 		
 		var maxAngle = 124;
-		var radius = 109;
+		var radius = 109.5;
 		var centerAngle = 152;
 		var maxRectangleWidth = 196;
 		var rectangleLocX = 32;
 		var rectangleLocY = 208;
 		var rectangleHeight = 51;
+		
+		var lastX;
+		var lastY;
 
 		function initialize(dc, application) {
 			UiElementBase.initialize(dc);
@@ -1035,8 +1038,19 @@ module UiElements {
 			if(pointOnCircle[0] >= 89 && pointOnCircle[0] <= 170) {
 				pointOnCircle[1] = 231;
 			}
-			dot.setPosition(pointOnCircle[0], pointOnCircle[1]);
-			
+			if(pointOnCircle[1] != 231) {
+				if(lastX != pointOnCircle[0] && lastY != pointOnCircle[1]) {
+					dot.setPosition(pointOnCircle[0], pointOnCircle[1]);
+					
+					lastX = pointOnCircle[0];
+					lastY = pointOnCircle[1];
+				}
+			} else {
+				dot.setPosition(pointOnCircle[0], pointOnCircle[1]);
+					
+				lastX = pointOnCircle[0];
+				lastY = pointOnCircle[1];
+			}
 			dot.draw();
 		}
 		
