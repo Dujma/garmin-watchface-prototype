@@ -67,5 +67,9 @@
             <listEntry value="-12">@Strings.GmtMinus12</listEntry>
         </settingConfig>
     </setting>
+    
+    <setting propertyKey="@Properties.ActiveCaloriesGoal" title="@Strings.ActiveCaloriesGoalTitle" prompt="@Strings.ActiveCaloriesGoalPrompt">
+		<settingConfig type="numeric" min="0" errorMessage="@Strings.ActiveCaloriesGoalError" />
+	</setting>
 
 </settings>

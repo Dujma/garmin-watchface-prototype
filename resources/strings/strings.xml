@@ -49,5 +49,8 @@
     <string id="GmtMinus10">Hawaii Standard Time (GMT-10)</string>
     <string id="GmtMinus11">Nome Time (GMT-11)</string>
     <string id="GmtMinus12">International Date Line West (GMT-12)</string>
-
+    
+    <string id="ActiveCaloriesGoalTitle">Active Calories Goal</string>
+    <string id="ActiveCaloriesGoalError">Invalid value for active calories.</string>
+	<string id="ActiveCaloriesGoalPrompt">Enter daily active calories goal</string>
 </strings>

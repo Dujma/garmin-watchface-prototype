@@ -57,7 +57,7 @@ class prototypewatchfaceView extends WatchUi.WatchFace {
         left = new UiElements.Left(dc, fntAsapCondensedBold14, fntAsapBold12);
         topIconsPowerSaving = new UiElements.TopIconsLarge(dc, fntAsapCondensedBold16);
         bottomIconsPowerSaving = new UiElements.BottomIconsLarge(dc);
-        bottomLine = new UiElements.BottomLine(dc);
+        bottomLine = new UiElements.BottomLine(dc, application);
     }
 
     function onShow() {
@@ -75,7 +75,7 @@ class prototypewatchfaceView extends WatchUi.WatchFace {
    	 	var powerSavingModeActive = isPowerSavingModeActive(deviceSettings.doNotDisturb);
    	 	
    	 	if(!powerSavingModeActive) {
-   	 		bottomLine.draw();
+   	 		bottomLine.draw(activityMonitorInfo);
    	 		mockBackground.draw(dc);
    	 	}
 		clockArea.draw(deviceSettings, powerSavingModeActive);
@@ -122,6 +122,7 @@ class prototypewatchfaceView extends WatchUi.WatchFace {
     
     	clockArea.onSettingUpdate();
     	top.onSettingUpdate();
+    	bottomLine.onSettingUpdate();
     }
 }
 
@@ -984,6 +985,8 @@ module UiElements {
 	}
 	
 	class BottomLine extends UiElementBase {
+		var caloriesGoal;
+		
 		var line;		
 		var lineFill;
 		var dot;
@@ -996,7 +999,7 @@ module UiElements {
 		var rectangleLocY = 208;
 		var rectangleHeight = 51;
 
-		function initialize(dc) {
+		function initialize(dc, application) {
 			UiElementBase.initialize(dc);
 		
 			line = new Textures.Bitmap("Line-Bottom", dc);
@@ -1010,11 +1013,13 @@ module UiElements {
 			
 			line.setPosition(130, 208);
         	lineFill.setPosition(130, 208);
+        	
+        	caloriesGoal = application.getProperty("ActiveCaloriesGoal");
 		}
 
-		function draw() {
-			var leftValue = 250;
-			var rightValue = 300;
+		function draw(activityMonitorInfo) {
+			var leftValue = Utils.getActiveCalories(activityMonitorInfo.calories);
+			var rightValue = caloriesGoal;
 			
 			var percentage = leftValue >= rightValue ? 1.0 : leftValue / rightValue.toFloat();
 			var targetPosition = maxAngle * percentage;
@@ -1033,7 +1038,11 @@ module UiElements {
 			dot.setPosition(pointOnCircle[0], pointOnCircle[1]);
 			
 			dot.draw();
-		}	
+		}
+		
+		function onSettingUpdate() {
+	    	caloriesGoal = application.getProperty("ActiveCaloriesGoal");
+	    }
 	}
 }
 
