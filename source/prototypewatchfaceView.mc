@@ -24,6 +24,7 @@ class prototypewatchfaceView extends WatchUi.WatchFace {
 	private var powerSavingMode;
 	private var topIconsPowerSaving;
 	private var bottomIconsPowerSaving;
+	private var bottomLine;
 
     function initialize() {
         WatchFace.initialize();
@@ -55,6 +56,7 @@ class prototypewatchfaceView extends WatchUi.WatchFace {
         left = new UiElements.Left(dc, fntAsapCondensedBold14, fntAsapBold12);
         topIconsPowerSaving = new UiElements.TopIconsLarge(dc, fntAsapCondensedBold16);
         bottomIconsPowerSaving = new UiElements.BottomIconsLarge(dc);
+        bottomLine = new UiElements.BottomLine(dc);
     }
 
     function onShow() {
@@ -64,7 +66,7 @@ class prototypewatchfaceView extends WatchUi.WatchFace {
     function onUpdate(dc) {
     	// Background
     	drawBackground(dc);
-
+		
     	var deviceSettings = System.getDeviceSettings();
     	var systemStats = System.getSystemStats();
    	 	var userProfile = UserProfile.getProfile();
@@ -78,6 +80,7 @@ class prototypewatchfaceView extends WatchUi.WatchFace {
 		
 		// UiElements
 		if(!powerSavingModeActive) {
+			// bottomLine.draw();
 			topIcons.draw(deviceSettings, systemStats);
 			bottomIcons.draw(deviceSettings, userProfile, activityMonitorInfo);
 			top.draw();
@@ -354,13 +357,13 @@ module UiElements {
 			TopIconsBase.initialize(dc);
 		
 			batteryIcon = new Textures.Icon("Battery-100-L", dc);
-			batteryIcon.setPosition(130, 55);
+			batteryIcon.setPosition(130, 50);
 			
 			batteryText = new Extensions.Text({
 	            :color    => Graphics.COLOR_WHITE,
 	            :typeface => fntAsapCondensedBold16,
 	            :locX     => 130,
-	            :locY     => 38
+	            :locY     => 33
 	        }, dc, true);
 
 			notificationIcon = new Textures.Icon("Notification-L", dc);
@@ -471,7 +474,7 @@ module UiElements {
 			moveIcon.setPosition(80, 205);
 			
 			dndIcon = new Textures.Icon("Dnd-L", dc);
-			dndIcon.setPosition(130, 210);
+			dndIcon.setPosition(130, 215);
 			
 			btIcon = new Textures.Icon("Bluetooth-L", dc);
 			btIcon.setPosition(180, 205);
@@ -644,7 +647,7 @@ module UiElements {
 		var textIcon2; 
 		var textIcon3;
 		var textIcon4;
-		
+
 		function initialize(dc, fntAsapCondensedBold16) {
 			UiElementBase.initialize(dc);
 			
@@ -978,6 +981,34 @@ module UiElements {
 			}
 		}
 	}
+	
+	class BottomLine extends UiElementBase {
+		var line;		
+		var lineFill;
+
+		function initialize(dc) {
+			UiElementBase.initialize(dc);
+		
+			line = new Textures.Bitmap("Line-Bottom", dc);
+        	lineFill = new Textures.Bitmap("Line-Bottom", dc);
+
+        	lineFill.setColor(Graphics.Graphics.COLOR_TRANSPARENT);
+        	lineFill.setBackgroundColor(Graphics.COLOR_BLACK);
+        	
+        	line.setColor(Graphics.COLOR_DK_GRAY);
+			
+			line.setPosition(130, 208);
+        	lineFill.setPosition(130, 208);
+		}
+		
+		function draw() {
+			line.draw();
+			
+			Utils.drawRectangleStartingFromLeft(dc, 32, 208, 180, 51, Graphics.COLOR_RED); // 196 max
+			
+			lineFill.draw();
+		}	
+	}
 }
 
 module Textures {
@@ -1071,11 +1102,13 @@ module Textures {
 		protected var char;
 		
 		private var color;
+		private var backgroundColor;
 
 		function initialize(dc) {
         	text.setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
         	
         	setColor(Graphics.COLOR_WHITE);
+        	setBackgroundColor(Graphics.COLOR_TRANSPARENT);
         	
         	self.dc = dc;
         	
@@ -1087,6 +1120,15 @@ module Textures {
 				self.color = color;
 				
 				text.setColor(color);
+			}
+			return text;
+		}
+		
+		function setBackgroundColor(color) {
+			if(color != self.color) {
+				backgroundColor = color;
+				
+				text.setBackgroundColor(color);
 			}
 			return text;
 		}
@@ -1374,6 +1416,18 @@ module Utils {
 	function drawLine(dc, x, y, width, height, color) {
 		dc.setColor(color, Graphics.COLOR_TRANSPARENT);
 
-		dc.fillRectangle(x - width / 2, y - height / 2, width, height);
+		dc.fillRectangle((x - width / 2).abs(), (y - height / 2).abs(), width, height);
+	}
+	
+	function drawRectangleStartingFromLeft(dc, x, y, width, height, color) {
+		dc.setColor(color, Graphics.COLOR_TRANSPARENT);
+
+		dc.fillRectangle(x, (y - height / 2).abs(), width, height);
+	}
+	
+	function drawRectangleStartingFromMiddle(dc, x, y, width, height, color) {
+		dc.setColor(color, Graphics.COLOR_TRANSPARENT);
+
+		dc.fillRectangle((x - width / 2).abs(), (y - height / 2).abs(), width, height);
 	}
 }
