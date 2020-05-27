@@ -22,6 +22,8 @@ class prototypewatchfaceView extends WatchUi.WatchFace {
 	private var right;
 	private var left;
 	private var powerSavingMode;
+	private var topIconsPowerSaving;
+	private var bottomIconsPowerSaving;
 
     function initialize() {
         WatchFace.initialize();
@@ -51,6 +53,8 @@ class prototypewatchfaceView extends WatchUi.WatchFace {
         bottom = new UiElements.Bottom(dc, fntAsapCondensedBold16);
         right = new UiElements.Right(dc, fntAsapCondensedBold14);
         left = new UiElements.Left(dc, fntAsapCondensedBold14, fntAsapBold12);
+        topIconsPowerSaving = new UiElements.TopIconsLarge(dc, fntAsapCondensedBold16);
+        bottomIconsPowerSaving = new UiElements.BottomIconsLarge(dc);
     }
 
     function onShow() {
@@ -60,17 +64,20 @@ class prototypewatchfaceView extends WatchUi.WatchFace {
     function onUpdate(dc) {
     	// Background
     	drawBackground(dc);
-    	
-    	mockBackground.draw(dc);
-    	
+
     	var deviceSettings = System.getDeviceSettings();
     	var systemStats = System.getSystemStats();
    	 	var userProfile = UserProfile.getProfile();
    	 	var activityMonitorInfo = ActivityMonitor.getInfo();
+   	 	var powerSavingModeActive = isPowerSavingModeActive(deviceSettings.doNotDisturb);
+   	 	
+   	 	if(!powerSavingModeActive) {
+   	 		mockBackground.draw(dc);
+   	 	}
+		clockArea.draw(deviceSettings, powerSavingModeActive);
 		
 		// UiElements
-		if(!isPowerSavingModeActive(deviceSettings.doNotDisturb)) {
-			clockArea.draw(deviceSettings);
+		if(!powerSavingModeActive) {
 			topIcons.draw(deviceSettings, systemStats);
 			bottomIcons.draw(deviceSettings, userProfile, activityMonitorInfo);
 			top.draw();
@@ -78,7 +85,8 @@ class prototypewatchfaceView extends WatchUi.WatchFace {
 			right.draw(activityMonitorInfo);
 			left.draw(userProfile);
 		} else {
-			clockArea.draw(deviceSettings);
+			topIconsPowerSaving.draw(deviceSettings, systemStats);
+			bottomIconsPowerSaving.draw(deviceSettings, userProfile, activityMonitorInfo);
 		}
     }
     
@@ -185,7 +193,7 @@ module UiElements {
 	        hoursFormat = application.getProperty("AddLeadingZero") ? "%02d" : "%d";
 	    }
 	
-	    function draw(deviceSettings) {
+	    function draw(deviceSettings, powerSavingModeActive) {
 	    	var now = Gregorian.info(Time.now(), Time.FORMAT_MEDIUM);
 	    	var hours = now.hour;
 
@@ -205,7 +213,7 @@ module UiElements {
 			dateText.draw(dc);
 			partOfDayText.draw(dc);
 
-			if(!isSleep) {
+			if(!isSleep && !powerSavingModeActive) {
 				secondsText.setText(now.sec.format("%02d"));
 				secondsText.draw(dc);
 			}
@@ -342,24 +350,24 @@ module UiElements {
 			"Battery-0-L"   => { "max" => 1,   "min" => -1 }
 		};
 
-		function initialize(dc, fntAsapCondensedBold14) {
+		function initialize(dc, fntAsapCondensedBold16) {
 			TopIconsBase.initialize(dc);
 		
 			batteryIcon = new Textures.Icon("Battery-100-L", dc);
-			batteryIcon.setPosition(130, 19);
+			batteryIcon.setPosition(130, 55);
 			
 			batteryText = new Extensions.Text({
 	            :color    => Graphics.COLOR_WHITE,
-	            :typeface => fntAsapCondensedBold14,
+	            :typeface => fntAsapCondensedBold16,
 	            :locX     => 130,
-	            :locY     => 8
+	            :locY     => 38
 	        }, dc, true);
-	        
+
 			notificationIcon = new Textures.Icon("Notification-L", dc);
-			notificationIcon.setPosition(154, 16);
+			notificationIcon.setPosition(180, 55);
 			
 			alarmIcon = new Textures.Icon("Alarm-L", dc);
-			alarmIcon.setPosition(104, 15);
+			alarmIcon.setPosition(80, 55);
 		}
 		
 		function draw(deviceSettings, systemStats) {
@@ -460,13 +468,13 @@ module UiElements {
 			BottomIconsBase.initialize(dc);
 			
 			moveIcon = new Textures.Icon("Move-1-L", dc);
-			moveIcon.setPosition(104, 243);
+			moveIcon.setPosition(80, 205);
 			
 			dndIcon = new Textures.Icon("Dnd-L", dc);
-			dndIcon.setPosition(130, 247);
+			dndIcon.setPosition(130, 210);
 			
 			btIcon = new Textures.Icon("Bluetooth-L", dc);
-			btIcon.setPosition(155, 244);
+			btIcon.setPosition(180, 205);
 		}
 		
 		function draw(deviceSettings, userProfile, activityMonitorInfo) {
@@ -1010,18 +1018,18 @@ module Textures {
 		"Trophy"         => "U",
 		"Arrow-Left"     => "V",
 		"Arrow-Right"    => "X",
-		"Battery-L-100"  => "j",
-		"Battery-L-90"   => "i",
-		"Battery-L-80"   => "h",
-		"Battery-L-70"   => "g",
-		"Battery-L-60"   => "f",
-		"Battery-L-50"   => "e",
-		"Battery-L-40"   => "d",
-		"Battery-L-30"   => "c",
-		"Battery-L-20"   => "b",
-		"Battery-L-10"   => "a",
-		"Battery-L-5"    => "Z",
-		"Battery-L-0"    => "Y",
+		"Battery-100-L"  => "j",
+		"Battery-90-L"   => "i",
+		"Battery-80-L"   => "h",
+		"Battery-70-L"   => "g",
+		"Battery-60-L"   => "f",
+		"Battery-50-L"   => "e",
+		"Battery-40-L"   => "d",
+		"Battery-30-L"   => "c",
+		"Battery-20-L"   => "b",
+		"Battery-10-L"   => "a",
+		"Battery-5-L"    => "Z",
+		"Battery-0-L"    => "Y",
 		"Elevation"      => "k",
 		"Calendar"       => "l",
 		"Moon-0"         => "m", // Full Moon
