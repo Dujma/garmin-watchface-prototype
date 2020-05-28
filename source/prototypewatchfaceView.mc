@@ -753,7 +753,9 @@ module UiElements {
 				}
 			}
 			var distance = activityMonitorInfo.distance != null ? activityMonitorInfo.distance : 0;
-			var calories = activityMonitorInfo.calories != null ? activityMonitorInfo.calories : 0;
+			// TODO: Change later
+			// var calories = activityMonitorInfo.calories != null ? activityMonitorInfo.calories : 0;
+			var calories = Utils.getActiveCalories(activityMonitorInfo.calories);
 			var activeMinutesWeek = activityMonitorInfo.activeMinutesWeek != null ? activityMonitorInfo.activeMinutesWeek.total : 0;
 			var floorsClimbed = activityMonitorInfo.floorsClimbed != null ? activityMonitorInfo.floorsClimbed : 0;
 			
