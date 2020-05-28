@@ -26,6 +26,7 @@ class prototypewatchfaceView extends WatchUi.WatchFace {
 	private var topIconsPowerSaving;
 	private var bottomIconsPowerSaving;
 	private var bottomLine;
+	private var deviceSettings;
 
     function initialize() {
         WatchFace.initialize();
@@ -47,8 +48,9 @@ class prototypewatchfaceView extends WatchUi.WatchFace {
     	var fntAsapCondensedBold16 = WatchUi.loadResource(Rez.Fonts.AsapCondensedBold16);
     	
     	powerSavingMode = application.getProperty("PowerSavingMode");
-    	
-        clockArea = new UiElements.ClockArea(dc, fntAsapCondensedBold14, application);
+    	deviceSettings = System.getDeviceSettings();
+
+        clockArea = new UiElements.ClockArea(dc, fntAsapCondensedBold14, application, isPowerSavingModeActive(deviceSettings.doNotDisturb));
         topIcons = new UiElements.TopIcons(dc, fntAsapCondensedBold14);
         bottomIcons = new UiElements.BottomIcons(dc);
         top = new UiElements.Top(dc, application, fntAsapBold12, fntAsapCondensedBold16);
@@ -67,11 +69,13 @@ class prototypewatchfaceView extends WatchUi.WatchFace {
     function onUpdate(dc) {
     	// Background
     	drawBackground(dc);
-		
-    	var deviceSettings = System.getDeviceSettings();
+
     	var systemStats = System.getSystemStats();
    	 	var userProfile = UserProfile.getProfile();
    	 	var activityMonitorInfo = ActivityMonitor.getInfo();
+   	 	
+   	 	deviceSettings = System.getDeviceSettings();
+   	 	
    	 	var powerSavingModeActive = isPowerSavingModeActive(deviceSettings.doNotDisturb);
    	 	
    	 	if(!powerSavingModeActive) {
@@ -120,7 +124,7 @@ class prototypewatchfaceView extends WatchUi.WatchFace {
     function handleSettingUpdate() {
     	powerSavingMode = application.getProperty("PowerSavingMode");
     
-    	clockArea.onSettingUpdate();
+    	clockArea.onSettingUpdate(isPowerSavingModeActive(deviceSettings.doNotDisturb));
     	top.onSettingUpdate();
     	bottomLine.onSettingUpdate();
     }
@@ -148,10 +152,12 @@ module UiElements {
 		private var clockElements;
 		private var displaySeconds;
 		private var powerSavingModeActive;
+		private var wereSecondsDisplayed;
 
-	    function initialize(dc, fntAsapCondensedBold14, application) {
+	    function initialize(dc, fntAsapCondensedBold14, application, powerSavingModeActive) {
 			UiElementBase.initialize(dc);
 			self.application = application;
+			self.powerSavingModeActive = powerSavingModeActive;
 			
 			isSleep = false;
 			clockElements = new [0];
@@ -192,6 +198,7 @@ module UiElements {
 	            :locY     => 152
 	        }, dc, true))[clockElements.size() - 1];
 	        secondsText = new Extensions.Text({
+	        	:text     => "00",
 	            :color    => Graphics.COLOR_LT_GRAY,
 	            :typeface => fntAsapCondensedBold14,
 	            :locX     => 215,
@@ -200,6 +207,10 @@ module UiElements {
 
 	        hoursFormat = application.getProperty("AddLeadingZero") ? "%02d" : "%d";
 	        displaySeconds = application.getProperty("DisplaySeconds");
+	        
+	        if(!shouldDisplaySeconds()) {
+	        	setClockPosition();
+	        }
 	    }
 	
 	    function draw(deviceSettings, powerSavingModeActive) {
@@ -224,7 +235,7 @@ module UiElements {
 			dateText.draw(dc);
 			partOfDayText.draw(dc);
 
-			if(!isSleep && !self.powerSavingModeActive) {
+			if(shouldDisplaySeconds()) {
 				secondsText.setText(now.sec.format("%02d"));
 				secondsText.draw(dc);
 			}
@@ -232,9 +243,12 @@ module UiElements {
 			Utils.drawLine(dc, 130, 162, 185, 3, Graphics.COLOR_RED);
 	    }
 
-	    function onSettingUpdate() {
+	    function onSettingUpdate(powerSavingModeActive) {
+	    	self.powerSavingModeActive = powerSavingModeActive;
 	    	hoursFormat = application.getProperty("AddLeadingZero") ? "%02d" : "%d";
 	    	displaySeconds = application.getProperty("DisplaySeconds");
+	    	
+	    	setClockPosition();
 	    }
 	    
 	    function onEnterSleep() {
@@ -249,14 +263,20 @@ module UiElements {
 	    	secondsText.setColor(Graphics.COLOR_LT_GRAY);
 	    }
 	    
-	    function setClockPosition(secondsEnabled) {
-	    	// TODO: Old state needs to be checked
-	    	if(shouldDisplaySeconds()) {
-		    	for(var i = 0; i < clockElements.size(); ++i) {
-		    		
-		    	}
-	    	} else {
-	    	
+	    function setClockPosition() {
+	    	var shouldDisplaySeconds = shouldDisplaySeconds();
+
+	    	if(shouldDisplaySeconds != wereSecondsDisplayed) {
+	    		if(shouldDisplaySeconds) {
+		    		for(var i = 0; i < clockElements.size(); ++i) {
+			    		clockElements[i].locX -= secondsText.getDimensions()[0] / 2;
+			    	}
+	    		} else {
+	    			for(var i = 0; i < clockElements.size(); ++i) {
+			    		clockElements[i].locX += secondsText.getDimensions()[0] / 2;
+			    	}
+	    		}
+		    	wereSecondsDisplayed = shouldDisplaySeconds;
 	    	}
 	    }
 	    
@@ -1357,11 +1377,17 @@ module Extensions {
 		}
 		
 		function getTextLength() {
-			return text.length();
+			if(text != null) {
+				return text.length();
+			}
+			return 0;
 		}
 		
 		function getDimensions() {
-			return dc.getTextDimensions(text, typeface);
+			if(text != null) {
+				return dc.getTextDimensions(text, typeface);
+			}
+			return [ 0, 0 ];
 		}
 	}
 }
