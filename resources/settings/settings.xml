@@ -22,6 +22,14 @@
         <settingConfig type="boolean" />
     </setting>
     
+    <setting propertyKey="@Properties.DisplaySeconds" title="@Strings.DisplaySecondsTitle">
+        <settingConfig type="list">
+            <listEntry value="0">@Strings.OnWake</listEntry>
+            <listEntry value="1">@Strings.AlwaysOn</listEntry>
+            <listEntry value="2">@Strings.Off</listEntry>
+        </settingConfig>
+    </setting>
+    
     <setting propertyKey="@Properties.FirstDayOfWeek" title="@Strings.FirstDayOfWeekTitle">
         <settingConfig type="list">
             <listEntry value="2">@Strings.Monday</listEntry>

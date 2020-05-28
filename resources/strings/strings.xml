@@ -23,6 +23,10 @@
     <string id="On">On</string>
     <string id="Off">Off</string>
     <string id="DuringDnd">During DND</string>
+    <string id="AlwaysOn">Always On</string>
+    <string id="OnWake">On Wake</string>
+    
+    <string id="DisplaySecondsTitle">Display Seconds</string>
     
     <string id="GmtPlus12">New Zealand Standard Time (GMT+12)</string>
     <string id="GmtPlus11">Sakhalin Time (GMT + 11)</string>

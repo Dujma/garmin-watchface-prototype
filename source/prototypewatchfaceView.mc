@@ -136,8 +136,7 @@ module UiElements {
 	}
 	
 	class ClockArea extends UiElementBase {
-		var isSleep;
-	
+		private var isSleep;
 		private var hoursText;
 		private var hoursFormat;
 		private var minutesText;
@@ -146,59 +145,68 @@ module UiElements {
 		private var dateText;
 		private var partOfDayText;
 		private var application;
+		private var clockElements;
+		private var displaySeconds;
+		private var powerSavingModeActive;
 
 	    function initialize(dc, fntAsapCondensedBold14, application) {
 			UiElementBase.initialize(dc);
 			self.application = application;
 			
 			isSleep = false;
+			clockElements = new [0];
 
 			var fntAsapBold81 = WatchUi.loadResource(Rez.Fonts.AsapBold81);
 	        var fntAsapSemibold55 = WatchUi.loadResource(Rez.Fonts.AsapSemibold55);
 	        var fntAsapCondensedSemiBold20 = WatchUi.loadResource(Rez.Fonts.AsapCondensedSemiBold20);
 
-			hoursText = new Extensions.Text({
+			hoursText = clockElements.add(new Extensions.Text({
 	            :color         => Graphics.COLOR_WHITE,
 	            :typeface      => fntAsapBold81,
 	            :locX          => 89 + (self.dc.getTextWidthInPixels("00", fntAsapBold81) / 2),
 	            :locY          => 129,
 	            :justification => Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_RIGHT
-	        }, dc, false);
-	        minutesText = new Extensions.Text({
+	        }, dc, false))[clockElements.size() - 1];
+	        minutesText = clockElements.add(new Extensions.Text({
 	            :color    => Graphics.COLOR_LT_GRAY,
 	            :typeface => fntAsapSemibold55,
 	            :locX     => 178,
 	            :locY     => 119
-	        }, dc, true);
-	        minutesColon = new Extensions.Text({
+	        }, dc, true))[clockElements.size() - 1];
+	        minutesColon = clockElements.add(new Extensions.Text({
 	            :color    => Graphics.COLOR_LT_GRAY,
 	            :typeface => fntAsapSemibold55,
 	            :locX     => 139,
 	            :locY     => 119
-	        }, dc, true);
-	        dateText = new Extensions.Text({
+	        }, dc, true))[clockElements.size() - 1];
+	        dateText = clockElements.add(new Extensions.Text({
 	            :color    => Graphics.COLOR_WHITE,
 	            :typeface => fntAsapCondensedSemiBold20,
 	            :locX     => 178,
 	            :locY     => 150
-	        }, dc, true);
-	        partOfDayText = new Extensions.Text({
+	        }, dc, true))[clockElements.size() - 1];
+	        partOfDayText = clockElements.add(new Extensions.Text({
 	            :color    => Graphics.COLOR_WHITE,
 	            :typeface => fntAsapCondensedBold14,
 	            :locX     => 43,
 	            :locY     => 152
-	        }, dc, true);
+	        }, dc, true))[clockElements.size() - 1];
 	        secondsText = new Extensions.Text({
 	            :color    => Graphics.COLOR_LT_GRAY,
 	            :typeface => fntAsapCondensedBold14,
 	            :locX     => 215,
 	            :locY     => 106
 	        }, dc, true);
-	        
+
 	        hoursFormat = application.getProperty("AddLeadingZero") ? "%02d" : "%d";
+	        displaySeconds = application.getProperty("DisplaySeconds");
+
+	        setClockPosition(true);
 	    }
 	
 	    function draw(deviceSettings, powerSavingModeActive) {
+	    	self.powerSavingModeActive = powerSavingModeActive;
+	    	
 	    	var now = Gregorian.info(Time.now(), Time.FORMAT_MEDIUM);
 	    	var hours = now.hour;
 
@@ -228,6 +236,7 @@ module UiElements {
 
 	    function onSettingUpdate() {
 	    	hoursFormat = application.getProperty("AddLeadingZero") ? "%02d" : "%d";
+	    	displaySeconds = application.getProperty("DisplaySeconds");
 	    }
 	    
 	    function onEnterSleep() {
@@ -240,6 +249,24 @@ module UiElements {
 	    	isSleep = false;
 	    	
 	    	secondsText.setColor(Graphics.COLOR_LT_GRAY);
+	    }
+	    
+	    function setClockPosition(secondsEnabled) {
+	    	// TODO: Old state needs to be checked
+	    	if(shouldDisplaySecond()) {
+		    	for(var i = 0; i < clockElements.size(); ++i) {
+		    		
+		    	}
+	    	} else {
+	    	
+	    	}
+	    }
+	    
+	    function shouldDisplaySeconds() {
+	    	if(!powerSavingModeActive) {
+	    		return (displaySeconds == 0 && !isSleep) || displaySeconds == 1 ? true : false;
+	    	}
+	    	return false;
 	    }
 	}
 	
@@ -637,18 +664,18 @@ module UiElements {
 	}
 	
 	class Bottom extends UiElementBase {
-		var moveBarLvl1;
-		var moveBarOtherLvls;
+		private var moveBarLvl1;
+		private var moveBarOtherLvls;
 		
-		var icon1;
-		var icon2;
-		var icon3;
-		var icon4;
+		private var icon1;
+		private var icon2;
+		private var icon3;
+		private var icon4;
 		
-		var textIcon1;
-		var textIcon2; 
-		var textIcon3;
-		var textIcon4;
+		private var textIcon1;
+		private var textIcon2; 
+		private var textIcon3;
+		private var textIcon4;
 
 		function initialize(dc, fntAsapCondensedBold16) {
 			UiElementBase.initialize(dc);
@@ -751,16 +778,16 @@ module UiElements {
 	
 	// TODO: Think about having a base class for right and left
 	class Right extends UiElementBase {
-		var topValueText;
-		var bottomValueText;
-		var icon;
-		var trophyIcon;
-		var initialX = 242;
-		var arrowIcon;
-		var maxAngle = 37;
-		var radius = 104;
-		var centerAngle = 18;
-		var lineBitmap;
+		private var topValueText;
+		private var bottomValueText;
+		private var icon;
+		private var trophyIcon;
+		private var initialX = 242;
+		private var arrowIcon;
+		private var maxAngle = 37;
+		private var radius = 104;
+		private var centerAngle = 18;
+		private var lineBitmap;
 		
 		function initialize(dc, fntAsapCondensedBold14) {
 			UiElementBase.initialize(dc);
@@ -847,15 +874,15 @@ module UiElements {
 	}
 	
 	class Left extends UiElementBase {
-		var topValueText;
-		var bottomValueText;
-		var icon;
-		var initialX = 18;
-		var arrowIcon;
-		var maxAngle = 37;
-		var radius = 104;
-		var centerAngle = 162; // Reference to "Right". 180 - 18 = 162
-		var lineBitmap;
+		private var topValueText;
+		private var bottomValueText;
+		private var icon;
+		private var initialX = 18;
+		private var arrowIcon;
+		private var maxAngle = 37;
+		private var radius = 104;
+		private var centerAngle = 162; // Reference to "Right". 180 - 18 = 162
+		private var lineBitmap;
 		
 		// Feature only when heart rate is shown
 		var heartRateText;
@@ -985,25 +1012,28 @@ module UiElements {
 	}
 	
 	class BottomLine extends UiElementBase {
-		var caloriesGoal;
+		private var caloriesGoal;
+		private var application;
 		
-		var line;		
-		var lineFill;
-		var dot;
+		private var line;		
+		private var lineFill;
+		private var dot;
 		
-		var maxAngle = 124;
-		var radius = 109.5;
-		var centerAngle = 152;
-		var maxRectangleWidth = 196;
-		var rectangleLocX = 32;
-		var rectangleLocY = 208;
-		var rectangleHeight = 51;
+		private var maxAngle = 124;
+		private var radius = 109.5;
+		private var centerAngle = 152;
+		private var maxRectangleWidth = 196;
+		private var rectangleLocX = 32;
+		private var rectangleLocY = 208;
+		private var rectangleHeight = 51;
 		
-		var lastX;
-		var lastY;
+		private var lastX;
+		private var lastY;
 
 		function initialize(dc, application) {
 			UiElementBase.initialize(dc);
+			
+			self.application = application;
 		
 			line = new Textures.Bitmap("Line-Bottom", dc);
         	lineFill = new Textures.Bitmap("Line-Bottom", dc);
@@ -1250,7 +1280,7 @@ module Textures {
 				char = Textures.bitmaps[name];
 				
 				text.setText(char);
-				dimensions = dc.getTextDimensions(char, iconsFont);
+				dimensions = dc.getTextDimensions(char, bitmapsFont);
 			}
 			return text;
 		}
@@ -1267,15 +1297,23 @@ module Extensions {
 		function initialize(settings, dc, centerJustification) {
 			WatchUi.Text.initialize(settings);
 			
-			var typeface = settings.get(:typeface);
+			self.dc = dc;
 			
-			self.setFont(typeface);
+			var typeface = settings.get(:typeface);
+			var text = settings.get(:text);
+			var color = settings.get(:color);
 
+			self.setFont(typeface);
+			
+			if(text != null) {
+				self.setText(text);
+			}
+			if(color != null) {
+				self.setColor(color);
+			}
 			if(centerJustification) {
 				WatchUi.Text.setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
 			}
-			self.dc = dc;
-			
 			return self;
 		}
 		
