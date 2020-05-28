@@ -213,8 +213,12 @@ module UiElements {
 	        hoursFormat = application.getProperty("AddLeadingZero") ? "%02d" : "%d";
 	        displaySeconds = application.getProperty("DisplaySeconds");
 	        
-	        if(!shouldDisplaySeconds()) {
+	        var shouldDisplaySeconds = shouldDisplaySeconds();
+
+	        if(!shouldDisplaySeconds) {
 	        	setClockPosition();
+	        } else {
+	        	wereSecondsDisplayed = shouldDisplaySeconds;
 	        }
 	    }
 	
