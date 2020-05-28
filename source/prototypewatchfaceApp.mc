@@ -2,8 +2,6 @@ using Toybox.Application;
 using Toybox.WatchUi;
 
 class prototypewatchfaceApp extends Application.AppBase {
-	var initialView;
-	
     function initialize() {
         AppBase.initialize();
     }
@@ -17,13 +15,11 @@ class prototypewatchfaceApp extends Application.AppBase {
     }
 
     function getInitialView() {
-    	initialView = new prototypewatchfaceView();
-    	
-        return [ initialView ];
+        return [ new prototypewatchfaceView() ];
     }
 
     function onSettingsChanged() {
-    	initialView.handleSettingUpdate();
+    	MainController.handleSettingUpdate();
     
         WatchUi.requestUpdate();
     }

@@ -11,32 +11,61 @@ using Toybox.Activity;
 using Toybox.UserProfile;
 
 class prototypewatchfaceView extends WatchUi.WatchFace {
-	private var application;
-	private var mockBackground;
-	
-	// UiElements
-	private var clockArea;
-	private var topIcons;
-	private var bottomIcons;
-	private var top;
-	private var bottom;
-	private var right;
-	private var left;
-	private var powerSavingMode;
-	private var topIconsPowerSaving;
-	private var bottomIconsPowerSaving;
-	private var bottomLine;
-	private var deviceSettings;
-	private var displayIconsOnPowerSavingMode;
-
     function initialize() {
         WatchFace.initialize();
     }
 
     function onLayout(dc) {
-        setLayout(Rez.Layouts.WatchFace(dc));
-        application = Application.getApp();
-        
+        MainController.onLayout(dc);
+    }
+
+    function onUpdate(dc) {
+    	MainController.onUpdate(dc);
+    }
+    
+    function onShow() {
+		MainController.onShow();
+    }
+
+    function onHide() {
+    	MainController.onHide();
+    }
+
+    function onExitSleep() {
+    	MainController.onExitSleep();
+    }
+
+    function onEnterSleep() {
+    	MainController.onEnterSleep();
+    }
+}
+
+module MainController {
+	// Watch Properties
+	var deviceSettings;
+	var systemStats;
+	var userProfile;
+	var activityMonitorInfo;
+	
+	var mockBackground;
+	
+	// UiElements
+	var clockArea;
+	var topIcons;
+	var bottomIcons;
+	var top;
+	var bottom;
+	var right;
+	var left;
+	var topIconsPowerSaving;
+	var bottomIconsPowerSaving;
+	var bottomLine;
+	
+	// Settings
+	var powerSavingMode;
+	var displayIconsOnPowerSavingMode;
+	
+	function onLayout(dc) {
         Textures.init();
         
         mockBackground = new WatchUi.Bitmap({
@@ -48,62 +77,54 @@ class prototypewatchfaceView extends WatchUi.WatchFace {
     	var fntAsapBold12 = WatchUi.loadResource(Rez.Fonts.AsapBold12);
     	var fntAsapCondensedBold16 = WatchUi.loadResource(Rez.Fonts.AsapCondensedBold16);
     	
-    	powerSavingMode = application.getProperty("PowerSavingMode");
-    	deviceSettings = System.getDeviceSettings();
-    	displayIconsOnPowerSavingMode = application.getProperty("DisplayIconsOnPowerSavingMode");
+    	powerSavingMode = Application.getApp().getProperty("PowerSavingMode");
+    	displayIconsOnPowerSavingMode = Application.getApp().getProperty("DisplayIconsOnPowerSavingMode");
 
-        clockArea = new UiElements.ClockArea(dc, fntAsapCondensedBold14, application, isPowerSavingModeActive(deviceSettings.doNotDisturb));
+        clockArea = new UiElements.ClockArea(dc, fntAsapCondensedBold14);
         topIcons = new UiElements.TopIcons(dc, fntAsapCondensedBold14);
         bottomIcons = new UiElements.BottomIcons(dc);
-        top = new UiElements.Top(dc, application, fntAsapBold12, fntAsapCondensedBold16);
+        top = new UiElements.Top(dc, fntAsapBold12, fntAsapCondensedBold16);
         bottom = new UiElements.Bottom(dc, fntAsapCondensedBold16);
         right = new UiElements.Right(dc, fntAsapCondensedBold14);
         left = new UiElements.Left(dc, fntAsapCondensedBold14, fntAsapBold12);
         topIconsPowerSaving = new UiElements.TopIconsLarge(dc, fntAsapCondensedBold16);
         bottomIconsPowerSaving = new UiElements.BottomIconsLarge(dc);
-        bottomLine = new UiElements.BottomLine(dc, application);
+        bottomLine = new UiElements.BottomLine(dc);
+    }
+
+    function onUpdate(dc) {
+    	drawBackground(dc);
+
+    	systemStats = System.getSystemStats();
+   	 	userProfile = UserProfile.getProfile();
+   	 	activityMonitorInfo = ActivityMonitor.getInfo();
+   	 	deviceSettings = System.getDeviceSettings();
+   	 	
+   	 	var isPowerSavingModeActive = isPowerSavingModeActive();
+   	 	
+   	 	if(!isPowerSavingModeActive) {
+   	 		bottomLine.draw();
+   	 		mockBackground.draw(dc);
+   	 	}
+		clockArea.draw();
+
+		if(!isPowerSavingModeActive) {
+			topIcons.draw();
+			bottomIcons.draw();
+			top.draw();
+			bottom.draw();
+			right.draw();
+			left.draw();
+		} else {
+			if(displayIconsOnPowerSavingMode) {
+				topIconsPowerSaving.draw();
+				bottomIconsPowerSaving.draw();
+			}
+		}
     }
 
     function onShow() {
 		
-    }
-    
-    function onUpdate(dc) {
-    	// Background
-    	drawBackground(dc);
-
-    	var systemStats = System.getSystemStats();
-   	 	var userProfile = UserProfile.getProfile();
-   	 	var activityMonitorInfo = ActivityMonitor.getInfo();
-   	 	
-   	 	deviceSettings = System.getDeviceSettings();
-   	 	
-   	 	var powerSavingModeActive = isPowerSavingModeActive(deviceSettings.doNotDisturb);
-   	 	
-   	 	if(!powerSavingModeActive) {
-   	 		bottomLine.draw(activityMonitorInfo);
-   	 		mockBackground.draw(dc);
-   	 	}
-		clockArea.draw(deviceSettings, powerSavingModeActive);
-		
-		// UiElements
-		if(!powerSavingModeActive) {
-			topIcons.draw(deviceSettings, systemStats);
-			bottomIcons.draw(deviceSettings, userProfile, activityMonitorInfo);
-			top.draw();
-			bottom.draw(activityMonitorInfo);
-			right.draw(activityMonitorInfo);
-			left.draw(userProfile);
-		} else {
-			if(displayIconsOnPowerSavingMode) {
-				topIconsPowerSaving.draw(deviceSettings, systemStats);
-				bottomIconsPowerSaving.draw(deviceSettings, userProfile, activityMonitorInfo);
-			}
-		}
-    }
-    
-    function isPowerSavingModeActive(doNotDisturb) {
-    	return powerSavingMode == 1 || (powerSavingMode == 2 && doNotDisturb);
     }
 
     function onHide() {
@@ -120,18 +141,22 @@ class prototypewatchfaceView extends WatchUi.WatchFace {
     	left.onEnterSleep();
     }
     
+    function handleSettingUpdate() {
+    	powerSavingMode = Application.getApp().getProperty("PowerSavingMode");
+    	displayIconsOnPowerSavingMode = Application.getApp().getProperty("DisplayIconsOnPowerSavingMode");
+    
+    	clockArea.onSettingUpdate();
+    	top.onSettingUpdate();
+    	bottomLine.onSettingUpdate();
+    }
+
+    function isPowerSavingModeActive() {
+    	return powerSavingMode == 1 || (powerSavingMode == 2 && deviceSettings.doNotDisturb);
+    }
+    
     function drawBackground(dc) {
     	dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_BLACK);
         dc.clear();
-    }
-    
-    function handleSettingUpdate() {
-    	powerSavingMode = application.getProperty("PowerSavingMode");
-    	displayIconsOnPowerSavingMode = application.getProperty("DisplayIconsOnPowerSavingMode");
-    
-    	clockArea.onSettingUpdate(isPowerSavingModeActive(deviceSettings.doNotDisturb));
-    	top.onSettingUpdate();
-    	bottomLine.onSettingUpdate();
     }
 }
 
@@ -153,17 +178,13 @@ module UiElements {
 		private var secondsText;
 		private var dateText;
 		private var partOfDayText;
-		private var application;
 		private var clockElements;
 		private var displaySeconds;
-		private var powerSavingModeActive;
 		private var wereSecondsDisplayed;
 
-	    function initialize(dc, fntAsapCondensedBold14, application, powerSavingModeActive) {
+	    function initialize(dc, fntAsapCondensedBold14) {
 			UiElementBase.initialize(dc);
-			self.application = application;
-			self.powerSavingModeActive = powerSavingModeActive;
-			
+
 			isSleep = false;
 			clockElements = new [0];
 
@@ -210,8 +231,8 @@ module UiElements {
 	            :locY     => 106
 	        }, dc, true);
 
-	        hoursFormat = application.getProperty("AddLeadingZero") ? "%02d" : "%d";
-	        displaySeconds = application.getProperty("DisplaySeconds");
+	        hoursFormat = Application.getApp().getProperty("AddLeadingZero") ? "%02d" : "%d";
+	        displaySeconds = Application.getApp().getProperty("DisplaySeconds");
 	        
 	        var shouldDisplaySeconds = shouldDisplaySeconds();
 
@@ -222,15 +243,13 @@ module UiElements {
 	        }
 	    }
 	
-	    function draw(deviceSettings, powerSavingModeActive) {
-	    	self.powerSavingModeActive = powerSavingModeActive;
-	    	
+	    function draw() {
 	    	var now = Gregorian.info(Time.now(), Time.FORMAT_MEDIUM);
 	    	var hours = now.hour;
 
 		    partOfDayText.setText(hours > 12 ? "P" : "A");
 		    
-		    if(!deviceSettings.is24Hour) {
+		    if(!MainController.deviceSettings.is24Hour) {
 				hours -= hours > 12 ? 12 : 0;
 			}
 			hoursText.setText(hours.format(hoursFormat));
@@ -252,10 +271,9 @@ module UiElements {
 			Utils.drawLine(dc, 130, 162, 185, 3, Graphics.COLOR_RED);
 	    }
 
-	    function onSettingUpdate(powerSavingModeActive) {
-	    	self.powerSavingModeActive = powerSavingModeActive;
-	    	hoursFormat = application.getProperty("AddLeadingZero") ? "%02d" : "%d";
-	    	displaySeconds = application.getProperty("DisplaySeconds");
+	    function onSettingUpdate() {
+	    	hoursFormat = Application.getApp().getProperty("AddLeadingZero") ? "%02d" : "%d";
+	    	displaySeconds = Application.getApp().getProperty("DisplaySeconds");
 	    	
 	    	setClockPosition();
 	    }
@@ -290,7 +308,7 @@ module UiElements {
 	    }
 	    
 	    function shouldDisplaySeconds() {
-	    	if(!powerSavingModeActive) {
+	    	if(!MainController.isPowerSavingModeActive()) {
 	    		return (displaySeconds == 0 && !isSleep) || displaySeconds == 1 ? true : false;
 	    	}
 	    	return false;
@@ -309,15 +327,15 @@ module UiElements {
 			return self;
 		}
 		
-		function draw(deviceSettings, systemStats, batteryIcons) {
-			var batteryLvl = Math.round(systemStats.battery);
+		function draw(batteryIcons) {
+			var batteryLvl = Math.round(MainController.systemStats.battery);
 
 			batteryText.setText(Lang.format("$1$%", [ (batteryLvl + 0.5).format( "%d" ) ]));
 			batteryText.draw(dc);
 			
 			setBatteryIcon(batteryLvl, batteryIcons);
 			
-			if(!systemStats.charging) { // 3.0.0
+			if(!MainController.systemStats.charging) { // 3.0.0
 				batteryIcon.setColor(batteryLvl <= 20 ? Graphics.COLOR_RED : Graphics.COLOR_WHITE);
 			} else {
 				if(batteryLvl < 99.5) {
@@ -326,8 +344,8 @@ module UiElements {
 					batteryIcon.setColor(Graphics.COLOR_GREEN);
 				}
 			}
-			notificationIcon.setColor(deviceSettings.notificationCount > 0 ? Graphics.COLOR_RED : Graphics.COLOR_WHITE);
-			alarmIcon.setColor(deviceSettings.alarmCount > 0 ? Graphics.COLOR_RED : Graphics.COLOR_WHITE);
+			notificationIcon.setColor(MainController.deviceSettings.notificationCount > 0 ? Graphics.COLOR_RED : Graphics.COLOR_WHITE);
+			alarmIcon.setColor(MainController.deviceSettings.alarmCount > 0 ? Graphics.COLOR_RED : Graphics.COLOR_WHITE);
 
 			batteryIcon.draw();
 			notificationIcon.draw();
@@ -388,8 +406,8 @@ module UiElements {
 			alarmIcon.setPosition(104, 15);
 		}
 		
-		function draw(deviceSettings, systemStats) {
-			TopIconsBase.draw(deviceSettings, systemStats, batteryIcons);
+		function draw() {
+			TopIconsBase.draw(batteryIcons);
 		}
 	}
 	
@@ -429,8 +447,8 @@ module UiElements {
 			alarmIcon.setPosition(80, 55);
 		}
 		
-		function draw(deviceSettings, systemStats) {
-			TopIconsBase.draw(deviceSettings, systemStats, batteryIcons);
+		function draw() {
+			TopIconsBase.draw(batteryIcons);
 		}
 	}
 	
@@ -443,21 +461,21 @@ module UiElements {
 			UiElementBase.initialize(dc);
 		}
 		
-		function draw(deviceSettings, userProfile, activityMonitorInfo, isLarge) {
-			var moveBarLevel = activityMonitorInfo.moveBarLevel;
+		function draw(isLarge) {
+			var moveBarLevel = MainController.activityMonitorInfo.moveBarLevel;
 
-			dndIcon.setColor(deviceSettings.doNotDisturb ? Graphics.COLOR_RED : Graphics.COLOR_WHITE); // 2.1.0
-			btIcon.setColor(deviceSettings.phoneConnected ? Graphics.COLOR_RED : Graphics.COLOR_WHITE);
-			setMoveIcon(moveBarLevel, userProfile, isLarge);
+			dndIcon.setColor(MainController.deviceSettings.doNotDisturb ? Graphics.COLOR_RED : Graphics.COLOR_WHITE); // 2.1.0
+			btIcon.setColor(MainController.deviceSettings.phoneConnected ? Graphics.COLOR_RED : Graphics.COLOR_WHITE);
+			setMoveIcon(moveBarLevel, isLarge);
 			
 			moveIcon.draw();
 			dndIcon.draw();
 			btIcon.draw();
 		}
 		
-		function setMoveIcon(lvl, userProfile, isLarge) {
+		function setMoveIcon(lvl, isLarge) {
 			var targetIcon = null;
-			var isInSleeptTime = isInSleepTime(userProfile);
+			var isInSleeptTime = isInSleepTime();
 			
 			if(!isInSleeptTime) {
 				if(lvl == 0) {
@@ -483,16 +501,16 @@ module UiElements {
 			}
 		}
 		
-		function isInSleepTime(userProfile) {
+		function isInSleepTime() {
 	        var today = Time.today().value();
 	        
-	        var sleepTime = new Time.Moment(today + userProfile.sleepTime.value());
+	        var sleepTime = new Time.Moment(today + MainController.userProfile.sleepTime.value());
 	        var now = new Time.Moment(Time.now().value());
 	        
 	        if(now.value() >= sleepTime.value()) {
 	       		return true;
 	        } else {
-	         	var wakeTime = new Time.Moment(today + userProfile.wakeTime.value());
+	         	var wakeTime = new Time.Moment(today + MainController.userProfile.wakeTime.value());
 	         	
 	        	if(now.value() <= wakeTime.value()) {
 	        		return true;
@@ -517,8 +535,8 @@ module UiElements {
 			btIcon.setPosition(155, 244);
 		}
 		
-		function draw(deviceSettings, userProfile, activityMonitorInfo) {
-			BottomIconsBase.draw(deviceSettings, userProfile, activityMonitorInfo, false);
+		function draw() {
+			BottomIconsBase.draw(false);
 		}
 	}
 	
@@ -536,8 +554,8 @@ module UiElements {
 			btIcon.setPosition(180, 205);
 		}
 		
-		function draw(deviceSettings, userProfile, activityMonitorInfo) {
-			BottomIconsBase.draw(deviceSettings, userProfile, activityMonitorInfo, true);
+		function draw() {
+			BottomIconsBase.draw(true);
 		}
 	}
 
@@ -547,7 +565,6 @@ module UiElements {
 		private var daysInitialY = 87;
 		private var daysYOffset = 3;
 		private var dayNames = [ "SU", "MO", "TU", "WE", "TH", "FR", "SA" ];
-		private var application;
 		private var infoText;
 		private var iconLeft;
 		private var iconMiddle;
@@ -556,9 +573,8 @@ module UiElements {
 		private var iconTextMiddle;
 		private var iconTextRight;
 
-		function initialize(dc, application, fntAsapBold12, fntAsapCondensedBold16) {
+		function initialize(dc, fntAsapBold12, fntAsapCondensedBold16) {
 			UiElementBase.initialize(dc);
-			self.application = application;
 
 			arrowIcon = new Textures.Icon("Arrow-Up", dc);
 			arrowIcon.setColor(Graphics.COLOR_RED);
@@ -610,7 +626,7 @@ module UiElements {
 		            :locY     => daysInitialY
 	        	}, dc, true);
 			}
-			orderDaysOfWeek(application.getProperty("FirstDayOfWeek"));
+			orderDaysOfWeek(Application.getApp().getProperty("FirstDayOfWeek"));
 			
 			infoText = new Extensions.Text({
 	            :color    => Graphics.COLOR_WHITE,
@@ -643,7 +659,7 @@ module UiElements {
 				arrowIcon.draw();
 			}
 			// infoText.setText("Week " + Utils.getCurrentWeekNumber());
-			infoText.setText(Utils.getTimeByOffset(application));
+			infoText.setText(Utils.getTimeByOffset());
 			infoText.draw(dc);
 			
 			// TODO: Store this and update it only once a day
@@ -686,7 +702,7 @@ module UiElements {
 		}
 		
 		function onSettingUpdate() {
-	    	orderDaysOfWeek(application.getProperty("FirstDayOfWeek"));
+	    	orderDaysOfWeek(Application.getApp().getProperty("FirstDayOfWeek"));
 	    }
 	}
 	
@@ -757,8 +773,8 @@ module UiElements {
         	}, dc, true);
 		}
 		
-		function draw(activityMonitorInfo) {
-			var moveBarLevel = activityMonitorInfo.moveBarLevel;
+		function draw() {
+			var moveBarLevel = MainController.activityMonitorInfo.moveBarLevel;
 
 			if(moveBarLevel > 0) {
 				moveBarLvl1.setColor(Graphics.COLOR_RED);
@@ -781,12 +797,12 @@ module UiElements {
 					moveBarOtherLvls[i].draw();
 				}
 			}
-			var distance = activityMonitorInfo.distance != null ? activityMonitorInfo.distance : 0;
+			var distance = MainController.activityMonitorInfo.distance != null ? MainController.activityMonitorInfo.distance : 0;
 			// TODO: Change later
-			// var calories = activityMonitorInfo.calories != null ? activityMonitorInfo.calories : 0;
-			var calories = Utils.getActiveCalories(activityMonitorInfo.calories);
-			var activeMinutesWeek = activityMonitorInfo.activeMinutesWeek != null ? activityMonitorInfo.activeMinutesWeek.total : 0;
-			var floorsClimbed = activityMonitorInfo.floorsClimbed != null ? activityMonitorInfo.floorsClimbed : 0;
+			// var calories = MainController.activityMonitorInfo.calories != null ? MainController.activityMonitorInfo.calories : 0;
+			var calories = Utils.getActiveCalories(MainController.activityMonitorInfo.calories);
+			var activeMinutesWeek = MainController.activityMonitorInfo.activeMinutesWeek != null ? MainController.activityMonitorInfo.activeMinutesWeek.total : 0;
+			var floorsClimbed = MainController.activityMonitorInfo.floorsClimbed != null ? MainController.activityMonitorInfo.floorsClimbed : 0;
 			
 			icon1.draw();
 			icon2.draw();
@@ -852,9 +868,9 @@ module UiElements {
 			lineBitmap.setPosition(241, 130);
 		}
 		
-		function draw(activityMonitorInfo) {
-			var topValue = activityMonitorInfo.stepGoal != null ? activityMonitorInfo.stepGoal : 0;
-			var bottomValue = activityMonitorInfo.steps != null ? activityMonitorInfo.steps : 0;
+		function draw() {
+			var topValue = MainController.activityMonitorInfo.stepGoal != null ? MainController.activityMonitorInfo.stepGoal : 0;
+			var bottomValue = MainController.activityMonitorInfo.steps != null ? MainController.activityMonitorInfo.steps : 0;
 
 			topValueText.setText(Utils.kFormatter(topValue, topValue > 99999 ? 0 : 1));
 			bottomValueText.setText(Utils.kFormatter(bottomValue, bottomValue > 99999 ? 0 : 1));
@@ -957,9 +973,9 @@ module UiElements {
 			lineBitmap.setPosition(19, 130);
 		}
 		
-		function draw(userProfile) {
+		function draw() {
 			var topValue = Utils.getMaxHeartRate();
-			var bottomValue = userProfile.restingHeartRate;
+			var bottomValue = MainController.userProfile.restingHeartRate;
 
 			topValueText.setText(Utils.kFormatter(topValue, topValue > 99999 ? 0 : 1));
 			bottomValueText.setText(Utils.kFormatter(bottomValue, bottomValue > 99999 ? 0 : 1));
@@ -1042,8 +1058,7 @@ module UiElements {
 	
 	class BottomLine extends UiElementBase {
 		private var caloriesGoal;
-		private var application;
-		
+
 		private var line;		
 		private var lineFill;
 		private var dot;
@@ -1059,11 +1074,9 @@ module UiElements {
 		private var lastX;
 		private var lastY;
 
-		function initialize(dc, application) {
+		function initialize(dc) {
 			UiElementBase.initialize(dc);
-			
-			self.application = application;
-		
+
 			line = new Textures.Bitmap("Line-Bottom", dc);
         	lineFill = new Textures.Bitmap("Line-Bottom", dc);
         	dot = new Textures.Icon("Dot", dc);
@@ -1076,11 +1089,11 @@ module UiElements {
 			line.setPosition(130, 208);
         	lineFill.setPosition(130, 208);
         	
-        	caloriesGoal = application.getProperty("ActiveCaloriesGoal");
+        	caloriesGoal = Application.getApp().getProperty("ActiveCaloriesGoal");
 		}
 
-		function draw(activityMonitorInfo) {
-			var leftValue = Utils.getActiveCalories(activityMonitorInfo.calories);
+		function draw() {
+			var leftValue = Utils.getActiveCalories(MainController.activityMonitorInfo.calories);
 			var rightValue = caloriesGoal;
 			
 			var percentage = leftValue >= rightValue ? 1.0 : leftValue / rightValue.toFloat();
@@ -1114,7 +1127,7 @@ module UiElements {
 		}
 		
 		function onSettingUpdate() {
-	    	caloriesGoal = application.getProperty("ActiveCaloriesGoal");
+	    	caloriesGoal = Application.getApp().getProperty("ActiveCaloriesGoal");
 	    }
 	}
 }
@@ -1545,13 +1558,13 @@ module Utils {
 	    return moonPhases[result];
 	}
 	
-	function getTimeByOffset(application) {
-		var offset = application.getProperty("AlternativeTimezone");
+	function getTimeByOffset() {
+		var offset = Application.getApp().getProperty("AlternativeTimezone");
 		var time = new Time.Moment(Time.now().value() + offset * 3600);
 		
 		var info = Gregorian.utcInfo(time, Time.FORMAT_SHORT);
 
-		return Lang.format("$1$:$2$ (GMT$3$$4$)", [ info.hour.format(application.getProperty("AddLeadingZero") ? "%02d" : "%d"), info.min.format("%02d"), offset >= 0 ? "+" : "-", offset.abs() ]);
+		return Lang.format("$1$:$2$ (GMT$3$$4$)", [ info.hour.format(Application.getApp().getProperty("AddLeadingZero") ? "%02d" : "%d"), info.min.format("%02d"), offset >= 0 ? "+" : "-", offset.abs() ]);
 	}
 	
 	function drawLine(dc, x, y, width, height, color) {
@@ -1574,7 +1587,7 @@ module Utils {
 	
 	function getActiveCalories(calories) {
 		var today = Gregorian.info(Time.now(), Time.FORMAT_SHORT);		
-		var profile = UserProfile.getProfile();
+		var profile = MainController.userProfile;
 		var age = today.year - profile.birthYear;
 		var weight = profile.weight / 1000.0;
 		var restCalories = (profile.gender == UserProfile.GENDER_MALE ? 5.2 : -197.6) - 6.116 * age + 7.628 * profile.height + 12.2 * weight;
