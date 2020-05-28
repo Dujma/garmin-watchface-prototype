@@ -27,6 +27,7 @@ class prototypewatchfaceView extends WatchUi.WatchFace {
 	private var bottomIconsPowerSaving;
 	private var bottomLine;
 	private var deviceSettings;
+	private var displayIconsOnPowerSavingMode;
 
     function initialize() {
         WatchFace.initialize();
@@ -49,6 +50,7 @@ class prototypewatchfaceView extends WatchUi.WatchFace {
     	
     	powerSavingMode = application.getProperty("PowerSavingMode");
     	deviceSettings = System.getDeviceSettings();
+    	displayIconsOnPowerSavingMode = application.getProperty("DisplayIconsOnPowerSavingMode");
 
         clockArea = new UiElements.ClockArea(dc, fntAsapCondensedBold14, application, isPowerSavingModeActive(deviceSettings.doNotDisturb));
         topIcons = new UiElements.TopIcons(dc, fntAsapCondensedBold14);
@@ -93,8 +95,10 @@ class prototypewatchfaceView extends WatchUi.WatchFace {
 			right.draw(activityMonitorInfo);
 			left.draw(userProfile);
 		} else {
-			topIconsPowerSaving.draw(deviceSettings, systemStats);
-			bottomIconsPowerSaving.draw(deviceSettings, userProfile, activityMonitorInfo);
+			if(displayIconsOnPowerSavingMode) {
+				topIconsPowerSaving.draw(deviceSettings, systemStats);
+				bottomIconsPowerSaving.draw(deviceSettings, userProfile, activityMonitorInfo);
+			}
 		}
     }
     
@@ -123,6 +127,7 @@ class prototypewatchfaceView extends WatchUi.WatchFace {
     
     function handleSettingUpdate() {
     	powerSavingMode = application.getProperty("PowerSavingMode");
+    	displayIconsOnPowerSavingMode = application.getProperty("DisplayIconsOnPowerSavingMode");
     
     	clockArea.onSettingUpdate(isPowerSavingModeActive(deviceSettings.doNotDisturb));
     	top.onSettingUpdate();

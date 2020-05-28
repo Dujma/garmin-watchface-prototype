@@ -3,11 +3,12 @@
     <string id="AppName">prototype-watchface</string>
 
     <string id="BackgroundColorTitle">Background Color</string>
-    <string id="ForegroundColorTitle">Foreground Color</string>
     <string id="AddLeadingZeroTitle">Add Leading Zero</string>
     <string id="FirstDayOfWeekTitle">First Day of Week</string>
     <string id="PowerSavingModeTitle">Power Saving Mode</string>
     <string id="AlternativeTimezoneTitle">Alternative Time Zone</string>
+    <string id="DisplaySecondsTitle">Display Seconds</string>
+    <string id="DisplayIconsOnPowerSavingModeTitle">Display Icons On Power Saving Mode</string>
 
     <string id="ColorBlack">Black</string>
     <string id="ColorDarkGray">Dark Gray</string>
@@ -25,9 +26,7 @@
     <string id="DuringDnd">During DND</string>
     <string id="AlwaysOn">Always On</string>
     <string id="OnWake">On Wake</string>
-    
-    <string id="DisplaySecondsTitle">Display Seconds</string>
-    
+
     <string id="GmtPlus12">New Zealand Standard Time (GMT+12)</string>
     <string id="GmtPlus11">Sakhalin Time (GMT + 11)</string>
     <string id="GmtPlus10">Eastern Australia Standard Time (GMT+10)</string>
