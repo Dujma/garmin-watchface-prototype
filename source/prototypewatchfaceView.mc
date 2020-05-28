@@ -253,7 +253,7 @@ module UiElements {
 	    
 	    function setClockPosition(secondsEnabled) {
 	    	// TODO: Old state needs to be checked
-	    	if(shouldDisplaySecond()) {
+	    	if(shouldDisplaySeconds()) {
 		    	for(var i = 0; i < clockElements.size(); ++i) {
 		    		
 		    	}
