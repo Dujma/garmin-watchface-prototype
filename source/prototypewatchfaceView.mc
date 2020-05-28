@@ -200,8 +200,6 @@ module UiElements {
 
 	        hoursFormat = application.getProperty("AddLeadingZero") ? "%02d" : "%d";
 	        displaySeconds = application.getProperty("DisplaySeconds");
-
-	        setClockPosition(true);
 	    }
 	
 	    function draw(deviceSettings, powerSavingModeActive) {
@@ -226,7 +224,7 @@ module UiElements {
 			dateText.draw(dc);
 			partOfDayText.draw(dc);
 
-			if(!isSleep && !powerSavingModeActive) {
+			if(!isSleep && !self.powerSavingModeActive) {
 				secondsText.setText(now.sec.format("%02d"));
 				secondsText.draw(dc);
 			}
