@@ -400,37 +400,35 @@ module UiElements {
 			var batteryIconsValues = icons.values();
 			
 			for(var i = 0; i < icons.size(); ++i) {
-				if(lvl > batteryIconsValues[i]["min"] && lvl <= batteryIconsValues[i]["max"]) {
+				if(lvl > batteryIconsValues[i]['l'] && lvl <= batteryIconsValues[i]['h']) {
 					targetIcon = icons.keys()[i];
 					break;
 				}
 			}
 			if(targetIcon != null) {
-				if(batteryIcon.getName() != targetIcon) {
-					batteryIcon.setIcon(targetIcon);
-				}
+				batteryIcon.setIcon(targetIcon);
 			}
 		}
 	}
 	
 	class TopIcons extends TopIconsBase {
 		private var batteryIcons = { 
-			"Battery-100" => { "max" => 100, "min" => 90 },
-			"Battery-90"  => { "max" => 90,  "min" => 80 },
-			"Battery-80"  => { "max" => 80,  "min" => 70 },
-			"Battery-70"  => { "max" => 70,  "min" => 60 },
-			"Battery-60"  => { "max" => 60,  "min" => 50 },
-			"Battery-50"  => { "max" => 50,  "min" => 40 },
-			"Battery-40"  => { "max" => 40,  "min" => 30 },
-			"Battery-30"  => { "max" => 30,  "min" => 20 },
-			"Battery-20"  => { "max" => 20,  "min" => 10 },
-			"Battery-10"  => { "max" => 10,  "min" => 5  },
-			"Battery-5"   => { "max" => 5,   "min" => 1  },
-			"Battery-0"   => { "max" => 1,   "min" => -1 }
+			'B' => { 'h' => 100, 'l' => 90 },
+			'A' => { 'h' => 90,  'l' => 80 },
+			'9' => { 'h' => 80,  'l' => 70 },
+			'8' => { 'h' => 70,  'l' => 60 },
+			'7' => { 'h' => 60,  'l' => 50 },
+			'6' => { 'h' => 50,  'l' => 40 },
+			'5' => { 'h' => 40,  'l' => 30 },
+			'4' => { 'h' => 30,  'l' => 20 },
+			'3' => { 'h' => 20,  'l' => 10 },
+			'2' => { 'h' => 10,  'l' => 5  },
+			'1' => { 'h' => 5,   'l' => 1  },
+			'0' => { 'h' => 1,   'l' => -1 }
 		};
 
 		function initialize(fntAsapCondensedBold14) {
-			batteryIcon = new Textures.Icon("Battery-100");
+			batteryIcon = new Textures.Icon('B');
 			batteryIcon.setPosition(130, 19);
 			
 			batteryText = new Extensions.Text({
@@ -440,10 +438,10 @@ module UiElements {
 	            :locY     => 8
 	        }, true);
 	        
-			notificationIcon = new Textures.Icon("Notification");
+			notificationIcon = new Textures.Icon('C');
 			notificationIcon.setPosition(154, 16);
 			
-			alarmIcon = new Textures.Icon("Alarm");
+			alarmIcon = new Textures.Icon('D');
 			alarmIcon.setPosition(104, 15);
 		}
 		
@@ -454,22 +452,22 @@ module UiElements {
 	
 	class TopIconsLarge extends TopIconsBase {
 		private var batteryIcons = { 
-			"Battery-100-L" => { "max" => 100, "min" => 90 },
-			"Battery-90-L"  => { "max" => 90,  "min" => 80 },
-			"Battery-80-L"  => { "max" => 80,  "min" => 70 },
-			"Battery-70-L"  => { "max" => 70,  "min" => 60 },
-			"Battery-60-L"  => { "max" => 60,  "min" => 50 },
-			"Battery-50-L"  => { "max" => 50,  "min" => 40 },
-			"Battery-40-L"  => { "max" => 40,  "min" => 30 },
-			"Battery-30-L"  => { "max" => 30,  "min" => 20 },
-			"Battery-20-L"  => { "max" => 20,  "min" => 10 },
-			"Battery-10-L"  => { "max" => 10,  "min" => 5  },
-			"Battery-5-L"   => { "max" => 5,   "min" => 1  },
-			"Battery-0-L"   => { "max" => 1,   "min" => -1 }
+			'j' => { 'm' => 100, 'l' => 90 },
+			'i' => { 'm' => 90,  'l' => 80 },
+			'h' => { 'm' => 80,  'l' => 70 },
+			'g' => { 'm' => 70,  'l' => 60 },
+			'f' => { 'm' => 60,  'l' => 50 },
+			'e' => { 'm' => 50,  'l' => 40 },
+			'd' => { 'm' => 40,  'l' => 30 },
+			'c' => { 'm' => 30,  'l' => 20 },
+			'b' => { 'm' => 20,  'l' => 10 },
+			'a' => { 'm' => 10,  'l' => 5  },
+			'z' => { 'm' => 5,   'l' => 1  },
+			'y' => { 'm' => 1,   'l' => -1 }
 		};
 
 		function initialize(fntAsapCondensedBold16) {
-			batteryIcon = new Textures.Icon("Battery-100-L");
+			batteryIcon = new Textures.Icon('j');
 			batteryIcon.setPosition(130, 50);
 			
 			batteryText = new Extensions.Text({
@@ -479,10 +477,10 @@ module UiElements {
 	            :locY     => 33
 	        }, true);
 
-			notificationIcon = new Textures.Icon("Notification-L");
+			notificationIcon = new Textures.Icon('#');
 			notificationIcon.setPosition(180, 55);
 			
-			alarmIcon = new Textures.Icon("Alarm-L");
+			alarmIcon = new Textures.Icon('u');
 			alarmIcon.setPosition(80, 55);
 		}
 		
@@ -514,14 +512,14 @@ module UiElements {
 			
 			if(!isInSleeptTime) {
 				if(lvl == 0) {
-					targetIcon = "Move-0" + (isLarge ? "-L" : "");
+					targetIcon = isLarge ? ')' : 'L';
 				} else if(lvl > 0 && lvl < 3) {
-					targetIcon = "Move-1" + (isLarge ? "-L" : "");
+					targetIcon = isLarge ? '(' : 'E';
 				} else {
-					targetIcon = "Move-5" + (isLarge ? "-L" : "");
+					targetIcon = isLarge ? '&' : 'F';
 				}
 			} else {
-				targetIcon = "Sleep" + (isLarge ? "-L" : "");
+				targetIcon = isLarge ? '*' : 'M';
 			}
 			moveIcon.setIcon(targetIcon);
 			
@@ -560,13 +558,13 @@ module UiElements {
 		function initialize() {
 			BottomIconsBase.initialize();
 			
-			moveIcon = new Textures.Icon("Move-1");
+			moveIcon = new Textures.Icon('E');
 			moveIcon.setPosition(104, 243);
 			
-			dndIcon = new Textures.Icon("Dnd");
+			dndIcon = new Textures.Icon('G');
 			dndIcon.setPosition(130, 247);
 			
-			btIcon = new Textures.Icon("Bluetooth");
+			btIcon = new Textures.Icon('H');
 			btIcon.setPosition(155, 244);
 		}
 		
@@ -579,13 +577,13 @@ module UiElements {
 		function initialize() {
 			BottomIconsBase.initialize();
 			
-			moveIcon = new Textures.Icon("Move-1-L");
+			moveIcon = new Textures.Icon('(');
 			moveIcon.setPosition(80, 205);
 			
-			dndIcon = new Textures.Icon("Dnd-L");
+			dndIcon = new Textures.Icon('$');
 			dndIcon.setPosition(130, 215);
 			
-			btIcon = new Textures.Icon("Bluetooth-L");
+			btIcon = new Textures.Icon('%');
 			btIcon.setPosition(180, 205);
 		}
 		
@@ -609,19 +607,19 @@ module UiElements {
 		private var iconTextRight;
 
 		function initialize(fntAsapBold12, fntAsapCondensedBold16) {
-			arrowIcon = new Textures.Icon("Arrow-Up");
+			arrowIcon = new Textures.Icon('I');
 			arrowIcon.setColor(Graphics.COLOR_RED);
 			arrowIcon.setPosition(56, 93);
 			
-			iconLeft = new Textures.Icon("Calendar");
+			iconLeft = new Textures.Icon('l');
 			iconLeft.setColor(Graphics.COLOR_WHITE);
 			iconLeft.setPosition(93, 65);
 			
-			iconMiddle = new Textures.Icon("Moon-0");
+			iconMiddle = new Textures.Icon('m');
 			iconMiddle.setColor(Graphics.COLOR_WHITE);
 			iconMiddle.setPosition(138, 65);
 			
-			iconRight = new Textures.Icon("Elevation");
+			iconRight = new Textures.Icon('k');
 			iconRight.setColor(Graphics.COLOR_WHITE);
 			iconRight.setPosition(192, 65);
 			
@@ -699,10 +697,10 @@ module UiElements {
 			var currentMoonPhase = Utils.getCurrentMoonPhase();
 			
 			iconTextLeft.setText(Utils.getCurrentWeekNumber().toString());
-			iconTextMiddle.setText(currentMoonPhase["angle"] + "°");
+			iconTextMiddle.setText(currentMoonPhase['a'] + "°");
 			iconTextRight.setText(Utils.kFormatter(Utils.getCurrentElevation(), 1));
 			
-			iconMiddle.setIcon(currentMoonPhase["icon"]);
+			iconMiddle.setIcon(currentMoonPhase['i']);
 			
 			iconLeft.draw();
 			iconMiddle.draw();
@@ -754,19 +752,19 @@ module UiElements {
 		private var textIcon4;
 
 		function initialize(fntAsapCondensedBold16) {
-    		moveBarLvl1 = new Textures.Icon("MoveBar-1");
+    		moveBarLvl1 = new Textures.Icon('J');
     		moveBarLvl1.setPosition(101, 219);
     		
     		moveBarOtherLvls = new [4];
     		
     		for(var i = 0; i < moveBarOtherLvls.size(); ++i) {
-    			moveBarOtherLvls[i] = new Textures.Icon("MoveBar-2");
+    			moveBarOtherLvls[i] = new Textures.Icon('K');
     			moveBarOtherLvls[i].setPosition(120 + (i * 14), 219);
     		}
-    		icon1 = new Textures.Icon("Distance");
-    		icon2 = new Textures.Icon("Calories");
-    		icon3 = new Textures.Icon("Stopwatch");
-    		icon4 = new Textures.Icon("Stairs-Up");
+    		icon1 = new Textures.Icon('Q');
+    		icon2 = new Textures.Icon('R');
+    		icon3 = new Textures.Icon('S');
+    		icon4 = new Textures.Icon('T');
     		
     		icon1.setColor(Graphics.COLOR_RED);
     		icon2.setColor(Graphics.COLOR_RED);
@@ -879,20 +877,20 @@ module UiElements {
 	            :locY     => 171
         	}, true);
 
-        	icon = new Textures.Icon("Steps-Side");
+        	icon = new Textures.Icon('P');
         	icon.setColor(Graphics.COLOR_WHITE);
 			icon.setPosition(251, 130);
 			
-			trophyIcon = new Textures.Icon("Trophy");
+			trophyIcon = new Textures.Icon('U');
 			
 			trophyIcon.setColor(Graphics.COLOR_YELLOW);
 			trophyIcon.setPosition(251, 115);
 			
-			arrowIcon = new Textures.Icon("Arrow-Right");
+			arrowIcon = new Textures.Icon('X');
 			
 			arrowIcon.setColor(Graphics.COLOR_RED);
 			
-			lineBitmap = new Textures.Bitmap("Line-Right");
+			lineBitmap = new Textures.Bitmap('C');
 			
 			lineBitmap.setPosition(241, 130);
 		}
@@ -987,15 +985,15 @@ module UiElements {
 	            :locY     => 118
         	}, true);
 
-        	icon = new Textures.Icon("Heart-1");
+        	icon = new Textures.Icon('N');
         	icon.setColor(Graphics.COLOR_RED);
 			icon.setPosition(9, 130);
 			
-			arrowIcon = new Textures.Icon("Arrow-Left");
+			arrowIcon = new Textures.Icon('V');
 			
 			arrowIcon.setColor(Graphics.COLOR_RED);
 			
-			lineBitmap = new Textures.Bitmap("Line-Left");
+			lineBitmap = new Textures.Bitmap('G');
 			
 			lineBitmap.setPosition(19, 130);
 		}
@@ -1027,13 +1025,13 @@ module UiElements {
 				
 				heartRateText.setText(currentHeartRate.toString());
 
-				icon.setIcon(heartFilled ? "Heart-1" : "Heart-2");
+				icon.setIcon(heartFilled ? 'N' : 'O');
 				
 				heartFilled = !heartFilled;
 				
 				heartRateText.setColor(Graphics.COLOR_WHITE);
 			} else {
-				icon.setIcon("Heart-1");
+				icon.setIcon('O');
 				heartRateText.setColor(Graphics.COLOR_TRANSPARENT);
 			}
 			heartRateText.draw();
@@ -1056,7 +1054,7 @@ module UiElements {
 			isSleep = true;
 			heartFilled = true;
 			
-			icon.setIcon("Heart-1");
+			icon.setIcon('N');
 			heartRateText.setColor(Graphics.COLOR_TRANSPARENT);
 	    }
 	    
@@ -1064,7 +1062,7 @@ module UiElements {
 			isSleep = false;
 			heartFilled = false;
 			
-			icon.setIcon("Heart-2");
+			icon.setIcon('O');
 			heartRateText.setColor(Graphics.COLOR_WHITE);
 	    }
 	    
@@ -1102,9 +1100,9 @@ module UiElements {
 		private var lastY;
 
 		function initialize() {
-			line = new Textures.Bitmap("Line-Bottom");
-        	lineFill = new Textures.Bitmap("Line-Bottom");
-        	dot = new Textures.Icon("Dot");
+			line = new Textures.Bitmap("6789AB");
+        	lineFill = new Textures.Bitmap("6789AB");
+        	dot = new Textures.Icon('+');
 
         	lineFill.setColor(Graphics.Graphics.COLOR_TRANSPARENT);
         	lineFill.setBackgroundColor(Graphics.COLOR_BLACK);
@@ -1161,93 +1159,91 @@ module Textures {
 	var iconsFont;
 	var bitmapsFont;
 	
-	var icons = {
-		"Battery-100"    => 'B',
-		"Battery-90"     => 'A',
-		"Battery-80"     => '9',
-		"Battery-70"     => '8',
-		"Battery-60"     => '7',
-		"Battery-50"     => '6',
-		"Battery-40"     => '5',
-		"Battery-30"     => '4',
-		"Battery-20"     => '3',
-		"Battery-10"     => '2',
-		"Battery-5"      => '1',
-		"Battery-0"      => '0',
-		"Notification"   => 'C',
-		"Alarm"          => 'D',
-		"Move-1"         => 'E',
-		"Move-5"         => 'F',
-		"Dnd"            => 'G',
-		"Bluetooth"      => 'H',
-		"Arrow-Up"       => 'I',
-		"MoveBar-1"      => 'J',
-		"MoveBar-2"      => 'K',
-		"Move-0"         => 'L',
-		"Sleep"          => 'M',
-		"Heart-1"        => 'N',
-		"Heart-2"        => 'O',
-		"Steps-Side"     => 'P',
-		"Distance"       => 'Q',
-		"Calories"       => 'R',
-		"Stopwatch"      => 'S',
-		"Stairs-Up"      => 'T',
-		"Trophy"         => 'U',
-		"Arrow-Left"     => 'V',
-		"Arrow-Right"    => 'X',
-		"Battery-100-L"  => 'j',
-		"Battery-90-L"   => 'i',
-		"Battery-80-L"   => 'h',
-		"Battery-70-L"   => 'g',
-		"Battery-60-L"   => 'f',
-		"Battery-50-L"   => 'e',
-		"Battery-40-L"   => 'd',
-		"Battery-30-L"   => 'c',
-		"Battery-20-L"   => 'b',
-		"Battery-10-L"   => 'a',
-		"Battery-5-L"    => 'Z',
-		"Battery-0-L"    => 'Y',
-		"Elevation"      => 'k',
-		"Calendar"       => 'l',
-		"Moon-0"         => 'm', // New Moon
-		"Moon-1"         => 'n', // Waxing Crescent
-		"Moon-2"         => 'o', // First Quarter
-		"Moon-3"         => 'p', // Waxing Gibbous
-		"Moon-4"         => 'q', // Full Moon
-		"Moon-5"         => 'r', // Waning Gibbous
-		"Moon-6"         => 's', // Third Quarter
-		"Moon-7"         => 't', // Waning Crescent
-		"Alarm-L"        => 'u',
-		"Notification-L" => '#',
-		"Dnd-L"          => '$',
-		"Bluetooth-L"    => '%',
-		"Move-1-L"       => '(',
-		"Move-5-L"       => '&',
-		"Move-0-L"       => ')',
-		"Sleep-L"        => '*',
-		"Dot"            => '+',
+/*
+	Icons:
+		"Battery-100"    => 'B'
+		"Battery-90"     => 'A'
+		"Battery-80"     => '9'
+		"Battery-70"     => '8'
+		"Battery-60"     => '7'
+		"Battery-50"     => '6'
+		"Battery-40"     => '5'
+		"Battery-30"     => '4'
+		"Battery-20"     => '3'
+		"Battery-10"     => '2'
+		"Battery-5"      => '1'
+		"Battery-0"      => '0'
+		"Notification"   => 'C'
+		"Alarm"          => 'D'
+		"Move-1"         => 'E'
+		"Move-5"         => 'F'
+		"Dnd"            => 'G'
+		"Bluetooth"      => 'H'
+		"Arrow-Up"       => 'I'
+		"MoveBar-1"      => 'J'
+		"MoveBar-2"      => 'K'
+		"Move-0"         => 'L'
+		"Sleep"          => 'M'
+		"Heart-1"        => 'N'
+		"Heart-2"        => 'O'
+		"Steps-Side"     => 'P'
+		"Distance"       => 'Q'
+		"Calories"       => 'R'
+		"Stopwatch"      => 'S'
+		"Stairs-Up"      => 'T'
+		"Trophy"         => 'U'
+		"Arrow-Left"     => 'V'
+		"Arrow-Right"    => 'X'
+		"Battery-100-L"  => 'j'
+		"Battery-90-L"   => 'i'
+		"Battery-80-L"   => 'h'
+		"Battery-70-L"   => 'g'
+		"Battery-60-L"   => 'f'
+		"Battery-50-L"   => 'e'
+		"Battery-40-L"   => 'd'
+		"Battery-30-L"   => 'c'
+		"Battery-20-L"   => 'b'
+		"Battery-10-L"   => 'a'
+		"Battery-5-L"    => 'Z'
+		"Battery-0-L"    => 'Y'
+		"Elevation"      => 'k'
+		"Calendar"       => 'l'
+		"Moon-0"         => 'm' // New Moon
+		"Moon-1"         => 'n' // Waxing Crescent
+		"Moon-2"         => 'o' // First Quarter
+		"Moon-3"         => 'p' // Waxing Gibbous
+		"Moon-4"         => 'q' // Full Moon
+		"Moon-5"         => 'r' // Waning Gibbous
+		"Moon-6"         => 's' // Third Quarter
+		"Moon-7"         => 't' // Waning Crescent
+		"Alarm-L"        => 'u'
+		"Notification-L" => '#'
+		"Dnd-L"          => '$'
+		"Bluetooth-L"    => '%'
+		"Move-1-L"       => '('
+		"Move-5-L"       => '&'
+		"Move-0-L"       => ')'
+		"Sleep-L"        => '*'
+		"Dot"            => '+'
 		"Dot-L"          => ','
-	};
-	
-	var bitmaps = {
-		"Line-Top"    => "012345",
-		"Line-Bottom" => "6789AB",
-		"Line-Right"  => 'C',
+
+	Bitmaps:
+		"Line-Top"    => "012345"
+		"Line-Bottom" => "6789AB"
+		"Line-Right"  => 'C'
 		"Line-Left"   => 'G'
-	};
+*/
 	
 	function init() {
 		iconsFont = WatchUi.loadResource(Rez.Fonts.Icons);
 		bitmapsFont = WatchUi.loadResource(Rez.Fonts.Bitmaps);
 	}
 	
+	// TODO: If you need dimensions of the icons than the .fnt file needs to be updated with the correct values
 	class Texture {
 		var text;
-		
-		protected var name;
-		protected var dimensions;
+
 		protected var char;
-		
 		private var color;
 		private var backgroundColor;
 
@@ -1285,12 +1281,8 @@ module Textures {
 			return text;
 		}
 		
-		function getName() {
-			return name;
-		}
-		
-		function getDimensions() {
-			return dimensions;
+		function getChar() {
+			return char;
 		}
 		
 		function draw() {
@@ -1299,7 +1291,7 @@ module Textures {
 	}
 
 	class Icon extends Texture {
-		function initialize(name) {
+		function initialize(char) {
 			text = new WatchUi.Text({
 	            :font => iconsFont,
 	            :locX => 0,
@@ -1307,25 +1299,23 @@ module Textures {
         	});
         	Textures.Texture.initialize();
 
-        	setIcon(name);
+        	setIcon(char);
 
         	return self;
 		}
 		
-		function setIcon(name) {
-			if(name != self.name) {
-				self.name = name;
-				char = Textures.icons[name].toString();
+		function setIcon(char) {
+			if(char != self.char) {
+				self.char = char;
 				
-				text.setText(char);
-				dimensions = MainController.dc.getTextDimensions(char, iconsFont);
+				text.setText(char.toString());
 			}
 			return text;
 		}
 	}
 	
 	class Bitmap extends Texture {
-		function initialize(name) {
+		function initialize(char) {
 			text = new WatchUi.Text({
 	            :font => bitmapsFont,
 	            :locX => 0,
@@ -1333,18 +1323,16 @@ module Textures {
         	});
         	Textures.Texture.initialize();
 
-        	setBitmap(name);
+        	setBitmap(char);
         	
         	return self;
 		}
 
-		function setBitmap(name) {
-			if(name != self.name) {
-				self.name = name;
-				char = Textures.bitmaps[name].toString();
-				
-				text.setText(char);
-				dimensions = MainController.dc.getTextDimensions(char, bitmapsFont);
+		function setBitmap(char) {
+			if(char != self.char) {
+				self.char = char;
+
+				text.setText(char.toString());
 			}
 			return text;
 		}
@@ -1495,14 +1483,14 @@ module Environment {
 // TODO: All heart rate related functions need to be checked if they have heart rate monitor
 module Utils {
 	var moonPhases = { 
-		0  => { "name" => "New Moon",             "angle" => 0,   "icon" => "Moon-0" },
-		1  => { "name" => "Waxing Crescent Moon", "angle" => 45,  "icon" => "Moon-1" },
-		2  => { "name" => "First Quarter Moon",   "angle" => 90,  "icon" => "Moon-2" },
-		3  => { "name" => "Waxing Gibbous Moon",  "angle" => 135, "icon" => "Moon-3" },
-		4  => { "name" => "Full Moon",            "angle" => 180, "icon" => "Moon-4" },
-		5  => { "name" => "Waning Gibbous Moon",  "angle" => 225, "icon" => "Moon-5" },
-		6  => { "name" => "Third Quarter Moon",   "angle" => 270, "icon" => "Moon-6" },
-		7  => { "name" => "Waning Crescent Moon", "angle" => 315, "icon" => "Moon-7" }
+		0  => { 'n' => "New Moon",             'a' => 0,   'i' => 'm' },
+		1  => { 'n' => "Waxing Crescent Moon", 'a' => 45,  'i' => 'n' },
+		2  => { 'n' => "First Quarter Moon",   'a' => 90,  'i' => 'o' },
+		3  => { 'n' => "Waxing Gibbous Moon",  'a' => 135, 'i' => 'p' },
+		4  => { 'n' => "Full Moon",            'a' => 180, 'i' => 'q' },
+		5  => { 'n' => "Waning Gibbous Moon",  'a' => 225, 'i' => 'r' },
+		6  => { 'n' => "Third Quarter Moon",   'a' => 270, 'i' => 's' },
+		7  => { 'n' => "Waning Crescent Moon", 'a' => 315, 'i' => 't' }
 	};
 	
 	function getDayWithMondayStarting(daySundayStarting) {
