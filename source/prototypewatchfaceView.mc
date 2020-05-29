@@ -342,7 +342,7 @@ module UiElements {
 	    
 	    function setClockPosition() {
 	    	var shouldDisplaySeconds = shouldDisplaySeconds();
-			System.println(shouldDisplaySeconds + " " + wereSecondsDisplayed);
+
 	    	if(shouldDisplaySeconds != wereSecondsDisplayed) {
 	    		if(shouldDisplaySeconds) {
 		    		for(var i = 0; i < clockElements.size(); ++i) {
@@ -370,24 +370,33 @@ module UiElements {
 		protected var batteryIcon;
 		protected var notificationIcon;
 		protected var alarmIcon;
+		protected var batteryRectX;
+		protected var batteryRectY;
+		protected var batteryRectWidth;
+		protected var batteryRectHeight;
 		
 		function draw() {
 			var batteryLvl = Math.round(MainController.environmentInfo.battery);
 
 			batteryText.setText(Lang.format("$1$%", [ (batteryLvl + 0.5).format( "%d" ) ]));
 			batteryText.draw();
-			
-			//setBatteryIcon(batteryLvl, batteryIcons);
+
+			var color = Graphics.COLOR_WHITE;
 			
 			if(!MainController.environmentInfo.charging) { // 3.0.0
-				batteryIcon.setColor(batteryLvl <= 20 ? Graphics.COLOR_RED : Graphics.COLOR_WHITE);
+				if(batteryLvl <= 20) {
+					color = Graphics.COLOR_RED;
+				}
 			} else {
 				if(batteryLvl < 99.5) {
-					batteryIcon.setColor(Graphics.COLOR_BLUE);
+					color = Graphics.COLOR_BLUE;
 				} else {
-					batteryIcon.setColor(Graphics.COLOR_GREEN);
+					color = Graphics.COLOR_GREEN;
 				}
 			}
+			batteryIcon.setColor(color);
+			setBatteryLevel(batteryLvl, color);
+			
 			notificationIcon.setColor(MainController.environmentInfo.notificationCount > 0 ? Graphics.COLOR_RED : Graphics.COLOR_WHITE);
 			alarmIcon.setColor(MainController.environmentInfo.alarmCount > 0 ? Graphics.COLOR_RED : Graphics.COLOR_WHITE);
 
@@ -396,20 +405,9 @@ module UiElements {
 			alarmIcon.draw();
 		}
 		
-		/*function setBatteryIcon(lvl, icons) {
-			var targetIcon = null;
-			var batteryIconsValues = icons.values();
-			
-			for(var i = 0; i < icons.size(); ++i) {
-				if(lvl > batteryIconsValues[i]['l'] && lvl <= batteryIconsValues[i]['h']) {
-					targetIcon = icons.keys()[i];
-					break;
-				}
-			}
-			if(targetIcon != null) {
-				batteryIcon.setIcon(targetIcon);
-			}
-		}*/
+		function setBatteryLevel(lvl, color) {
+			Utils.drawRectangleStartingFromLeft(batteryRectX, batteryRectY, Math.ceil(lvl / 100.0 * batteryRectWidth), batteryRectHeight, color);
+		}
 	}
 	
 	class TopIcons extends TopIconsBase {
@@ -429,6 +427,11 @@ module UiElements {
 			
 			alarmIcon = new Textures.Icon('D');
 			alarmIcon.setPosition(104, 15);
+
+			batteryRectWidth = 14;
+			batteryRectHeight = 4;
+			batteryRectX = 129 - batteryRectWidth / 2;
+			batteryRectY = 20;
 		}
 		
 		function draw() {
@@ -453,6 +456,11 @@ module UiElements {
 			
 			alarmIcon = new Textures.Icon('Y');
 			alarmIcon.setPosition(80, 55);
+
+			batteryRectWidth = 19;
+			batteryRectHeight = 6;
+			batteryRectX = 129 - batteryRectWidth / 2;
+			batteryRectY = 51;
 		}
 		
 		function draw() {
@@ -1377,7 +1385,7 @@ module Extensions {
 				self.setColor(color);
 			}
 			if(centerJustification) {
-				WatchUi.Text.setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
+				setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
 			}
 			return self;
 		}
@@ -1560,7 +1568,6 @@ module Utils {
 		
 		while(sample != null) {
 			if(sample.heartRate != ActivityMonitor.INVALID_HR_SAMPLE) {
-				System.println(sample.heartRate);
 				sum += sample.heartRate;
 				++count;
 			}
