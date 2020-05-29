@@ -126,13 +126,17 @@ module MainController {
     }
 
     function onExitSleep() {
-    	clockArea.onExitSleep();
-    	left.onExitSleep();
+    	if(!isPowerSavingModeActive()) {
+	    	clockArea.onExitSleep();
+	    	left.onExitSleep();
+    	}
     }
 
     function onEnterSleep() {
-    	clockArea.onEnterSleep();
-    	left.onEnterSleep();
+	    if(!isPowerSavingModeActive()) {
+	    	clockArea.onEnterSleep();
+	    	left.onEnterSleep();
+	    }
     }
     
     function checkForInit() {
