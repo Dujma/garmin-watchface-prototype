@@ -1068,7 +1068,7 @@ module UiElements {
 		private var dot;
 		
 		private var maxAngle = 124;
-		private var radius = 109;
+		private var radius = 107.5;
 		private var centerAngle = 152;
 		private var maxRectangleWidth = 196;
 		private var rectangleLocX = 32;
@@ -1110,9 +1110,9 @@ module UiElements {
 			lineFill.draw();
 
 			if(pointOnCircle[0] >= 89 && pointOnCircle[0] <= 170) {
-				pointOnCircle[1] = 231;
+				pointOnCircle[1] = 229;
 			}
-			if(pointOnCircle[1] != 231) {
+			if(pointOnCircle[1] != 229) {
 				if(lastX != pointOnCircle[0] && lastY != pointOnCircle[1]) {
 					dot.setPosition(pointOnCircle[0], pointOnCircle[1]);
 					
