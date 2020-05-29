@@ -6,6 +6,6 @@
 	<font id="AsapBold12" antialias="true" filename="/asap-bold-12/asap-bold-12.fnt" filter="0123456789ABCDEFGHIJKLMNOPQRSTUVWYZabcdefghijklmnopqrstuvwyz'():+- " />
 	<font id="AsapCondensedBold16" antialias="true" filename="/asap-condensed-bold-16/asap-condensed-bold-16.fnt" filter="01213456789k.°%" />
 	
-	<font id="Icons" antialias="true" filename="/icons/icons.fnt" filter="0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz~#$%&amp;()*+,-./@:;&lt;=&gt;?W[]\^" />
+	<font id="Icons" antialias="true" filename="/icons/icons.fnt" filter="0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefgh" />
 	<font id="Bitmaps" antialias="true" filename="/bitmaps/bitmaps.fnt" filter="0123456789ABCG" />
 </fonts>
