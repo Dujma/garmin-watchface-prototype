@@ -20,7 +20,7 @@ class prototypewatchfaceView extends WatchUi.WatchFace {
     }
 
     function onUpdate(dc) {
-    	MainController.onUpdate(dc);
+    	MainController.onUpdate();
     }
     
     function onShow() {
@@ -42,10 +42,10 @@ class prototypewatchfaceView extends WatchUi.WatchFace {
 
 module MainController {
 	// Watch Properties
-	var deviceSettings;
-	var systemStats;
-	var userProfile;
-	var activityMonitorInfo;
+	var environmentInfo;
+	
+	// Device Context
+	var dc;
 	
 	var mockBackground;
 	
@@ -66,6 +66,12 @@ module MainController {
 	var displayIconsOnPowerSavingMode;
 	
 	function onLayout(dc) {
+		self.dc = dc;
+		
+		environmentInfo = new Environment.Info();
+		
+		updateEnvironmentInfo();
+		
         Textures.init();
         
         mockBackground = new WatchUi.Bitmap({
@@ -73,34 +79,22 @@ module MainController {
         	:locX  => 0,
         	:locY  => 0
     	});
-    	var fntAsapCondensedBold14 = WatchUi.loadResource(Rez.Fonts.AsapCondensedBold14);
-    	var fntAsapBold12 = WatchUi.loadResource(Rez.Fonts.AsapBold12);
-    	var fntAsapCondensedBold16 = WatchUi.loadResource(Rez.Fonts.AsapCondensedBold16);
-    	
     	powerSavingMode = Application.getApp().getProperty("PowerSavingMode");
     	displayIconsOnPowerSavingMode = Application.getApp().getProperty("DisplayIconsOnPowerSavingMode");
-
-        clockArea = new UiElements.ClockArea(dc, fntAsapCondensedBold14);
-        topIcons = new UiElements.TopIcons(dc, fntAsapCondensedBold14);
-        bottomIcons = new UiElements.BottomIcons(dc);
-        top = new UiElements.Top(dc, fntAsapBold12, fntAsapCondensedBold16);
-        bottom = new UiElements.Bottom(dc, fntAsapCondensedBold16);
-        right = new UiElements.Right(dc, fntAsapCondensedBold14);
-        left = new UiElements.Left(dc, fntAsapCondensedBold14, fntAsapBold12);
-        topIconsPowerSaving = new UiElements.TopIconsLarge(dc, fntAsapCondensedBold16);
-        bottomIconsPowerSaving = new UiElements.BottomIconsLarge(dc);
-        bottomLine = new UiElements.BottomLine(dc);
+    	
+    	clockArea = new UiElements.ClockArea(WatchUi.loadResource(Rez.Fonts.AsapCondensedBold14));
+    	
+    	initElements();
     }
 
-    function onUpdate(dc) {
-    	drawBackground(dc);
+    function onUpdate() {
+    	updateEnvironmentInfo();
+    
+    	drawBackground();
 
-    	systemStats = System.getSystemStats();
-   	 	userProfile = UserProfile.getProfile();
-   	 	activityMonitorInfo = ActivityMonitor.getInfo();
-   	 	deviceSettings = System.getDeviceSettings();
-   	 	
    	 	var isPowerSavingModeActive = isPowerSavingModeActive();
+   	 	
+   	 	checkForInit();
    	 	
    	 	if(!isPowerSavingModeActive) {
    	 		bottomLine.draw();
@@ -141,35 +135,88 @@ module MainController {
     	left.onEnterSleep();
     }
     
+    function checkForInit() {
+    	if(!isPowerSavingModeActive()) {
+    		if(topIcons == null) {
+    			mainElementsInit();
+    		}
+    	} else {
+    		if(topIconsPowerSaving == null) {
+    			powerSavingModeElementsInit();
+    		}
+    	}
+    }
+    
+    function initElements() {
+    	if(!isPowerSavingModeActive()) {
+    		mainElementsInit();
+    	} else {
+    		powerSavingModeElementsInit();
+    	}
+    }
+    
+    function mainElementsInit() {
+    	var fntAsapCondensedBold14 = WatchUi.loadResource(Rez.Fonts.AsapCondensedBold14);
+    	var fntAsapBold12 = WatchUi.loadResource(Rez.Fonts.AsapBold12);
+    	var fntAsapCondensedBold16 = WatchUi.loadResource(Rez.Fonts.AsapCondensedBold16);
+    	
+        topIcons = new UiElements.TopIcons(fntAsapCondensedBold14);
+        bottomIcons = new UiElements.BottomIcons();
+        top = new UiElements.Top(fntAsapBold12, fntAsapCondensedBold16);
+        bottom = new UiElements.Bottom(fntAsapCondensedBold16);
+        right = new UiElements.Right(fntAsapCondensedBold14);
+        left = new UiElements.Left(fntAsapCondensedBold14, fntAsapBold12);
+        bottomLine = new UiElements.BottomLine();
+        
+        topIconsPowerSaving = null;
+        bottomIconsPowerSaving = null;
+    }
+    
+    function powerSavingModeElementsInit() {
+    	var fntAsapCondensedBold16 = WatchUi.loadResource(Rez.Fonts.AsapCondensedBold16);
+    
+     	topIconsPowerSaving = new UiElements.TopIconsLarge(fntAsapCondensedBold16);
+        bottomIconsPowerSaving = new UiElements.BottomIconsLarge();
+        
+        topIcons = null;
+        bottomIcons = null;
+        top = null;
+        bottom = null;
+        right = null;
+        left = null;
+        bottomLine = null;
+    }
+    
     function handleSettingUpdate() {
     	powerSavingMode = Application.getApp().getProperty("PowerSavingMode");
     	displayIconsOnPowerSavingMode = Application.getApp().getProperty("DisplayIconsOnPowerSavingMode");
+    	
+    	initElements();
     
     	clockArea.onSettingUpdate();
-    	top.onSettingUpdate();
-    	bottomLine.onSettingUpdate();
-    }
-
-    function isPowerSavingModeActive() {
-    	return powerSavingMode == 1 || (powerSavingMode == 2 && deviceSettings.doNotDisturb);
+    	
+    	if(!isPowerSavingModeActive()) {
+    		top.onSettingUpdate();
+    		bottomLine.onSettingUpdate();
+    	}
     }
     
-    function drawBackground(dc) {
+    function updateEnvironmentInfo() {
+   	 	environmentInfo.setValues(System.getDeviceSettings(), System.getSystemStats(), UserProfile.getProfile(), ActivityMonitor.getInfo());
+    }
+    
+    function isPowerSavingModeActive() {
+    	return powerSavingMode == 1 || (powerSavingMode == 2 && environmentInfo.doNotDisturb);
+    }
+    
+    function drawBackground() {
     	dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_BLACK);
         dc.clear();
     }
 }
 
 module UiElements {
-	class UiElementBase {
-		protected var dc;
-		
-		function initialize(dc) {
-			self.dc = dc;
-		}
-	}
-	
-	class ClockArea extends UiElementBase {
+	class ClockArea {
 		private var isSleep;
 		private var hoursText;
 		private var hoursFormat;
@@ -182,9 +229,7 @@ module UiElements {
 		private var displaySeconds;
 		private var wereSecondsDisplayed;
 
-	    function initialize(dc, fntAsapCondensedBold14) {
-			UiElementBase.initialize(dc);
-
+	    function initialize(fntAsapCondensedBold14) {
 			isSleep = false;
 			clockElements = new [0];
 
@@ -195,41 +240,41 @@ module UiElements {
 			hoursText = clockElements.add(new Extensions.Text({
 	            :color         => Graphics.COLOR_WHITE,
 	            :typeface      => fntAsapBold81,
-	            :locX          => 89 + (self.dc.getTextWidthInPixels("00", fntAsapBold81) / 2),
+	            :locX          => 89 + (MainController.dc.getTextWidthInPixels("00", fntAsapBold81) / 2),
 	            :locY          => 129,
 	            :justification => Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_RIGHT
-	        }, dc, false))[clockElements.size() - 1];
+	        }, false))[clockElements.size() - 1];
 	        minutesText = clockElements.add(new Extensions.Text({
 	            :color    => Graphics.COLOR_LT_GRAY,
 	            :typeface => fntAsapSemibold55,
 	            :locX     => 178,
 	            :locY     => 119
-	        }, dc, true))[clockElements.size() - 1];
+	        }, true))[clockElements.size() - 1];
 	        minutesColon = clockElements.add(new Extensions.Text({
 	            :color    => Graphics.COLOR_LT_GRAY,
 	            :typeface => fntAsapSemibold55,
 	            :locX     => 139,
 	            :locY     => 119
-	        }, dc, true))[clockElements.size() - 1];
+	        }, true))[clockElements.size() - 1];
 	        dateText = clockElements.add(new Extensions.Text({
 	            :color    => Graphics.COLOR_WHITE,
 	            :typeface => fntAsapCondensedSemiBold20,
 	            :locX     => 178,
 	            :locY     => 150
-	        }, dc, true))[clockElements.size() - 1];
+	        }, true))[clockElements.size() - 1];
 	        partOfDayText = clockElements.add(new Extensions.Text({
 	            :color    => Graphics.COLOR_WHITE,
 	            :typeface => fntAsapCondensedBold14,
 	            :locX     => 43,
 	            :locY     => 152
-	        }, dc, true))[clockElements.size() - 1];
+	        }, true))[clockElements.size() - 1];
 	        secondsText = new Extensions.Text({
 	        	:text     => "00",
+	        	:typeface => fntAsapCondensedBold14,
 	            :color    => Graphics.COLOR_LT_GRAY,
-	            :typeface => fntAsapCondensedBold14,
 	            :locX     => 215,
 	            :locY     => 106
-	        }, dc, true);
+	        }, true);
 
 	        hoursFormat = Application.getApp().getProperty("AddLeadingZero") ? "%02d" : "%d";
 	        displaySeconds = Application.getApp().getProperty("DisplaySeconds");
@@ -249,7 +294,7 @@ module UiElements {
 
 		    partOfDayText.setText(hours > 12 ? "P" : "A");
 		    
-		    if(!MainController.deviceSettings.is24Hour) {
+		    if(!MainController.environmentInfo.is24Hour) {
 				hours -= hours > 12 ? 12 : 0;
 			}
 			hoursText.setText(hours.format(hoursFormat));
@@ -257,18 +302,18 @@ module UiElements {
 			minutesColon.setText(":");
 			dateText.setText(now.day.format("%02d") + " " + now.month.toUpper());
 			
-			hoursText.draw(dc);
-			minutesText.draw(dc);
-			minutesColon.draw(dc);
-			dateText.draw(dc);
-			partOfDayText.draw(dc);
+			hoursText.draw();
+			minutesText.draw();
+			minutesColon.draw();
+			dateText.draw();
+			partOfDayText.draw();
 
 			if(shouldDisplaySeconds()) {
 				secondsText.setText(now.sec.format("%02d"));
-				secondsText.draw(dc);
+				secondsText.draw();
 			}
-			Utils.drawLine(dc, 130, 96, 185, 3, Graphics.COLOR_RED);
-			Utils.drawLine(dc, 130, 162, 185, 3, Graphics.COLOR_RED);
+			Utils.drawLine(130, 96, 185, 3, Graphics.COLOR_RED);
+			Utils.drawLine(130, 162, 185, 3, Graphics.COLOR_RED);
 	    }
 
 	    function onSettingUpdate() {
@@ -315,27 +360,21 @@ module UiElements {
 	    }
 	}
 	
-	class TopIconsBase extends UiElementBase {
+	class TopIconsBase {
 		protected var batteryText;
 		protected var batteryIcon;
 		protected var notificationIcon;
 		protected var alarmIcon;
 		
-		function initialize(dc) {
-			UiElementBase.initialize(dc);
-			
-			return self;
-		}
-		
 		function draw(batteryIcons) {
-			var batteryLvl = Math.round(MainController.systemStats.battery);
+			var batteryLvl = Math.round(MainController.environmentInfo.battery);
 
 			batteryText.setText(Lang.format("$1$%", [ (batteryLvl + 0.5).format( "%d" ) ]));
-			batteryText.draw(dc);
+			batteryText.draw();
 			
 			setBatteryIcon(batteryLvl, batteryIcons);
 			
-			if(!MainController.systemStats.charging) { // 3.0.0
+			if(!MainController.environmentInfo.charging) { // 3.0.0
 				batteryIcon.setColor(batteryLvl <= 20 ? Graphics.COLOR_RED : Graphics.COLOR_WHITE);
 			} else {
 				if(batteryLvl < 99.5) {
@@ -344,8 +383,8 @@ module UiElements {
 					batteryIcon.setColor(Graphics.COLOR_GREEN);
 				}
 			}
-			notificationIcon.setColor(MainController.deviceSettings.notificationCount > 0 ? Graphics.COLOR_RED : Graphics.COLOR_WHITE);
-			alarmIcon.setColor(MainController.deviceSettings.alarmCount > 0 ? Graphics.COLOR_RED : Graphics.COLOR_WHITE);
+			notificationIcon.setColor(MainController.environmentInfo.notificationCount > 0 ? Graphics.COLOR_RED : Graphics.COLOR_WHITE);
+			alarmIcon.setColor(MainController.environmentInfo.alarmCount > 0 ? Graphics.COLOR_RED : Graphics.COLOR_WHITE);
 
 			batteryIcon.draw();
 			notificationIcon.draw();
@@ -386,10 +425,8 @@ module UiElements {
 			"Battery-0"   => { "max" => 1,   "min" => -1 }
 		};
 
-		function initialize(dc, fntAsapCondensedBold14) {
-			TopIconsBase.initialize(dc);
-		
-			batteryIcon = new Textures.Icon("Battery-100", dc);
+		function initialize(fntAsapCondensedBold14) {
+			batteryIcon = new Textures.Icon("Battery-100");
 			batteryIcon.setPosition(130, 19);
 			
 			batteryText = new Extensions.Text({
@@ -397,12 +434,12 @@ module UiElements {
 	            :typeface => fntAsapCondensedBold14,
 	            :locX     => 130,
 	            :locY     => 8
-	        }, dc, true);
+	        }, true);
 	        
-			notificationIcon = new Textures.Icon("Notification", dc);
+			notificationIcon = new Textures.Icon("Notification");
 			notificationIcon.setPosition(154, 16);
 			
-			alarmIcon = new Textures.Icon("Alarm", dc);
+			alarmIcon = new Textures.Icon("Alarm");
 			alarmIcon.setPosition(104, 15);
 		}
 		
@@ -427,10 +464,8 @@ module UiElements {
 			"Battery-0-L"   => { "max" => 1,   "min" => -1 }
 		};
 
-		function initialize(dc, fntAsapCondensedBold16) {
-			TopIconsBase.initialize(dc);
-		
-			batteryIcon = new Textures.Icon("Battery-100-L", dc);
+		function initialize(fntAsapCondensedBold16) {
+			batteryIcon = new Textures.Icon("Battery-100-L");
 			batteryIcon.setPosition(130, 50);
 			
 			batteryText = new Extensions.Text({
@@ -438,12 +473,12 @@ module UiElements {
 	            :typeface => fntAsapCondensedBold16,
 	            :locX     => 130,
 	            :locY     => 33
-	        }, dc, true);
+	        }, true);
 
-			notificationIcon = new Textures.Icon("Notification-L", dc);
+			notificationIcon = new Textures.Icon("Notification-L");
 			notificationIcon.setPosition(180, 55);
 			
-			alarmIcon = new Textures.Icon("Alarm-L", dc);
+			alarmIcon = new Textures.Icon("Alarm-L");
 			alarmIcon.setPosition(80, 55);
 		}
 		
@@ -452,20 +487,16 @@ module UiElements {
 		}
 	}
 	
-	class BottomIconsBase extends UiElementBase {
+	class BottomIconsBase {
 		protected var moveIcon;
 		protected var dndIcon;
 		protected var btIcon;
-		
-		function initialize(dc) {
-			UiElementBase.initialize(dc);
-		}
-		
-		function draw(isLarge) {
-			var moveBarLevel = MainController.activityMonitorInfo.moveBarLevel;
 
-			dndIcon.setColor(MainController.deviceSettings.doNotDisturb ? Graphics.COLOR_RED : Graphics.COLOR_WHITE); // 2.1.0
-			btIcon.setColor(MainController.deviceSettings.phoneConnected ? Graphics.COLOR_RED : Graphics.COLOR_WHITE);
+		function draw(isLarge) {
+			var moveBarLevel = MainController.environmentInfo.moveBarLevel;
+
+			dndIcon.setColor(MainController.environmentInfo.doNotDisturb ? Graphics.COLOR_RED : Graphics.COLOR_WHITE); // 2.1.0
+			btIcon.setColor(MainController.environmentInfo.phoneConnected ? Graphics.COLOR_RED : Graphics.COLOR_WHITE);
 			setMoveIcon(moveBarLevel, isLarge);
 			
 			moveIcon.draw();
@@ -504,13 +535,13 @@ module UiElements {
 		function isInSleepTime() {
 	        var today = Time.today().value();
 	        
-	        var sleepTime = new Time.Moment(today + MainController.userProfile.sleepTime.value());
+	        var sleepTime = new Time.Moment(today + MainController.environmentInfo.sleepTime);
 	        var now = new Time.Moment(Time.now().value());
 	        
 	        if(now.value() >= sleepTime.value()) {
 	       		return true;
 	        } else {
-	         	var wakeTime = new Time.Moment(today + MainController.userProfile.wakeTime.value());
+	         	var wakeTime = new Time.Moment(today + MainController.environmentInfo.wakeTime);
 	         	
 	        	if(now.value() <= wakeTime.value()) {
 	        		return true;
@@ -522,16 +553,16 @@ module UiElements {
 	}
 	
 	class BottomIcons extends BottomIconsBase {
-		function initialize(dc) {
-			BottomIconsBase.initialize(dc);
+		function initialize() {
+			BottomIconsBase.initialize();
 			
-			moveIcon = new Textures.Icon("Move-1", dc);
+			moveIcon = new Textures.Icon("Move-1");
 			moveIcon.setPosition(104, 243);
 			
-			dndIcon = new Textures.Icon("Dnd", dc);
+			dndIcon = new Textures.Icon("Dnd");
 			dndIcon.setPosition(130, 247);
 			
-			btIcon = new Textures.Icon("Bluetooth", dc);
+			btIcon = new Textures.Icon("Bluetooth");
 			btIcon.setPosition(155, 244);
 		}
 		
@@ -541,16 +572,16 @@ module UiElements {
 	}
 	
 	class BottomIconsLarge extends BottomIconsBase {
-		function initialize(dc) {
-			BottomIconsBase.initialize(dc);
+		function initialize() {
+			BottomIconsBase.initialize();
 			
-			moveIcon = new Textures.Icon("Move-1-L", dc);
+			moveIcon = new Textures.Icon("Move-1-L");
 			moveIcon.setPosition(80, 205);
 			
-			dndIcon = new Textures.Icon("Dnd-L", dc);
+			dndIcon = new Textures.Icon("Dnd-L");
 			dndIcon.setPosition(130, 215);
 			
-			btIcon = new Textures.Icon("Bluetooth-L", dc);
+			btIcon = new Textures.Icon("Bluetooth-L");
 			btIcon.setPosition(180, 205);
 		}
 		
@@ -559,7 +590,7 @@ module UiElements {
 		}
 	}
 
-	class Top extends UiElementBase {
+	class Top {
 		private var daysText;
 		private var arrowIcon;
 		private var daysInitialY = 87;
@@ -573,22 +604,20 @@ module UiElements {
 		private var iconTextMiddle;
 		private var iconTextRight;
 
-		function initialize(dc, fntAsapBold12, fntAsapCondensedBold16) {
-			UiElementBase.initialize(dc);
-
-			arrowIcon = new Textures.Icon("Arrow-Up", dc);
+		function initialize(fntAsapBold12, fntAsapCondensedBold16) {
+			arrowIcon = new Textures.Icon("Arrow-Up");
 			arrowIcon.setColor(Graphics.COLOR_RED);
 			arrowIcon.setPosition(56, 93);
 			
-			iconLeft = new Textures.Icon("Calendar", dc);
+			iconLeft = new Textures.Icon("Calendar");
 			iconLeft.setColor(Graphics.COLOR_WHITE);
 			iconLeft.setPosition(93, 65);
 			
-			iconMiddle = new Textures.Icon("Moon-0", dc);
+			iconMiddle = new Textures.Icon("Moon-0");
 			iconMiddle.setColor(Graphics.COLOR_WHITE);
 			iconMiddle.setPosition(138, 65);
 			
-			iconRight = new Textures.Icon("Elevation", dc);
+			iconRight = new Textures.Icon("Elevation");
 			iconRight.setColor(Graphics.COLOR_WHITE);
 			iconRight.setPosition(192, 65);
 			
@@ -598,7 +627,7 @@ module UiElements {
 	            :locX          => 83,
 	            :locY          => 58,
 	            :justification => Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_RIGHT
-        	}, dc, false);
+        	}, false);
         	
         	iconTextMiddle = new Extensions.Text({
 	            :color         => Graphics.COLOR_WHITE,
@@ -606,7 +635,7 @@ module UiElements {
 	            :locX          => 133,
 	            :locY          => 58,
 	            :justification => Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_RIGHT
-        	}, dc, false);
+        	}, false);
         	
         	iconTextRight = new Extensions.Text({
 	            :color         => Graphics.COLOR_WHITE,
@@ -614,7 +643,7 @@ module UiElements {
 	            :locX          => 182,
 	            :locY          => 58,
 	            :justification => Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_RIGHT
-        	}, dc, false);
+        	}, false);
 
 			daysText = new [7];
 
@@ -624,7 +653,7 @@ module UiElements {
 		            :color    => Graphics.COLOR_WHITE,
 		            :typeface => fntAsapBold12,
 		            :locY     => daysInitialY
-	        	}, dc, true);
+	        	}, true);
 			}
 			orderDaysOfWeek(Application.getApp().getProperty("FirstDayOfWeek"));
 			
@@ -633,7 +662,7 @@ module UiElements {
 	            :typeface => fntAsapBold12,
 	            :locX     => 130,
 	            :locY     => 40
-        	}, dc, true);
+        	}, true);
 		}
 		
 		function draw() {
@@ -655,12 +684,12 @@ module UiElements {
 					}
 					daysText[i].locY = daysInitialY;
 				}
-				daysText[i].draw(dc);
+				daysText[i].draw();
 				arrowIcon.draw();
 			}
 			// infoText.setText("Week " + Utils.getCurrentWeekNumber());
 			infoText.setText(Utils.getTimeByOffset());
-			infoText.draw(dc);
+			infoText.draw();
 			
 			// TODO: Store this and update it only once a day
 			var currentMoonPhase = Utils.getCurrentMoonPhase();
@@ -675,9 +704,9 @@ module UiElements {
 			iconMiddle.draw();
 			iconRight.draw();
 			
-			iconTextLeft.draw(dc);
-			iconTextMiddle.draw(dc);
-			iconTextRight.draw(dc);
+			iconTextLeft.draw();
+			iconTextMiddle.draw();
+			iconTextRight.draw();
 		}
 		
 		function getXLocationsBasedOnFirstDayOfWeek(firstDayOfWeek) {
@@ -706,7 +735,7 @@ module UiElements {
 	    }
 	}
 	
-	class Bottom extends UiElementBase {
+	class Bottom {
 		private var moveBarLvl1;
 		private var moveBarOtherLvls;
 		
@@ -720,22 +749,20 @@ module UiElements {
 		private var textIcon3;
 		private var textIcon4;
 
-		function initialize(dc, fntAsapCondensedBold16) {
-			UiElementBase.initialize(dc);
-			
-    		moveBarLvl1 = new Textures.Icon("MoveBar-1", dc);
+		function initialize(fntAsapCondensedBold16) {
+    		moveBarLvl1 = new Textures.Icon("MoveBar-1");
     		moveBarLvl1.setPosition(101, 219);
     		
     		moveBarOtherLvls = new [4];
     		
     		for(var i = 0; i < moveBarOtherLvls.size(); ++i) {
-    			moveBarOtherLvls[i] = new Textures.Icon("MoveBar-2", dc);
+    			moveBarOtherLvls[i] = new Textures.Icon("MoveBar-2");
     			moveBarOtherLvls[i].setPosition(120 + (i * 14), 219);
     		}
-    		icon1 = new Textures.Icon("Distance", dc);
-    		icon2 = new Textures.Icon("Calories", dc);
-    		icon3 = new Textures.Icon("Stopwatch", dc);
-    		icon4 = new Textures.Icon("Stairs-Up", dc);
+    		icon1 = new Textures.Icon("Distance");
+    		icon2 = new Textures.Icon("Calories");
+    		icon3 = new Textures.Icon("Stopwatch");
+    		icon4 = new Textures.Icon("Stairs-Up");
     		
     		icon1.setColor(Graphics.COLOR_RED);
     		icon2.setColor(Graphics.COLOR_RED);
@@ -752,29 +779,29 @@ module UiElements {
 	            :typeface => fntAsapCondensedBold16,
 	            :locX     => 72,
 	            :locY     => 190
-        	}, dc, true);
+        	}, true);
         	textIcon2 = new Extensions.Text({
 	            :color    => Graphics.COLOR_WHITE,
 	            :typeface => fntAsapCondensedBold16,
 	            :locX     => 110,
 	            :locY     => 201
-        	}, dc, true);
+        	}, true);
         	textIcon3 = new Extensions.Text({
 	            :color    => Graphics.COLOR_WHITE,
 	            :typeface => fntAsapCondensedBold16,
 	            :locX     => 150,
 	            :locY     => 201
-        	}, dc, true);
+        	}, true);
         	textIcon4 = new Extensions.Text({
 	            :color    => Graphics.COLOR_WHITE,
 	            :typeface => fntAsapCondensedBold16,
 	            :locX     => 188,
 	            :locY     => 190
-        	}, dc, true);
+        	}, true);
 		}
 		
 		function draw() {
-			var moveBarLevel = MainController.activityMonitorInfo.moveBarLevel;
+			var moveBarLevel = MainController.environmentInfo.moveBarLevel;
 
 			if(moveBarLevel > 0) {
 				moveBarLvl1.setColor(Graphics.COLOR_RED);
@@ -797,12 +824,12 @@ module UiElements {
 					moveBarOtherLvls[i].draw();
 				}
 			}
-			var distance = MainController.activityMonitorInfo.distance != null ? MainController.activityMonitorInfo.distance : 0;
+			var distance = MainController.environmentInfo.distance != null ? MainController.environmentInfo.distance : 0;
 			// TODO: Change later
-			// var calories = MainController.activityMonitorInfo.calories != null ? MainController.activityMonitorInfo.calories : 0;
-			var calories = Utils.getActiveCalories(MainController.activityMonitorInfo.calories);
-			var activeMinutesWeek = MainController.activityMonitorInfo.activeMinutesWeek != null ? MainController.activityMonitorInfo.activeMinutesWeek.total : 0;
-			var floorsClimbed = MainController.activityMonitorInfo.floorsClimbed != null ? MainController.activityMonitorInfo.floorsClimbed : 0;
+			// var calories = MainController.environmentInfo.calories != null ? MainController.environmentInfo.calories : 0;
+			var calories = Utils.getActiveCalories(MainController.environmentInfo.calories);
+			var activeMinutesWeek = MainController.environmentInfo.activeMinutesWeek != null ? MainController.environmentInfo.activeMinutesWeek : 0;
+			var floorsClimbed = MainController.environmentInfo.floorsClimbed != null ? MainController.environmentInfo.floorsClimbed : 0;
 			
 			icon1.draw();
 			icon2.draw();
@@ -814,15 +841,15 @@ module UiElements {
 			textIcon3.setText(Utils.kFormatter(activeMinutesWeek, 1));
 			textIcon4.setText(Utils.kFormatter(floorsClimbed, 1));
 			
-			textIcon1.draw(dc);
-			textIcon2.draw(dc);
-			textIcon3.draw(dc);
-			textIcon4.draw(dc);
+			textIcon1.draw();
+			textIcon2.draw();
+			textIcon3.draw();
+			textIcon4.draw();
 		}
 	}
 	
 	// TODO: Think about having a base class for right and left
-	class Right extends UiElementBase {
+	class Right {
 		private var topValueText;
 		private var bottomValueText;
 		private var icon;
@@ -834,43 +861,41 @@ module UiElements {
 		private var centerAngle = 18;
 		private var lineBitmap;
 		
-		function initialize(dc, fntAsapCondensedBold14) {
-			UiElementBase.initialize(dc);
-			
+		function initialize(fntAsapCondensedBold14) {
 			topValueText = new Extensions.Text({
 	            :color    => Graphics.COLOR_WHITE,
 	            :typeface => fntAsapCondensedBold14,
 	            :locX     => initialX,
 	            :locY     => 87
-        	}, dc, true);
+        	}, true);
         	bottomValueText = new Extensions.Text({
 	            :color    => Graphics.COLOR_WHITE,
 	            :typeface => fntAsapCondensedBold14,
 	            :locX     => initialX,
 	            :locY     => 171
-        	}, dc, true);
+        	}, true);
 
-        	icon = new Textures.Icon("Steps-Side", dc);
+        	icon = new Textures.Icon("Steps-Side");
         	icon.setColor(Graphics.COLOR_WHITE);
 			icon.setPosition(251, 130);
 			
-			trophyIcon = new Textures.Icon("Trophy", dc);
+			trophyIcon = new Textures.Icon("Trophy");
 			
 			trophyIcon.setColor(Graphics.COLOR_YELLOW);
 			trophyIcon.setPosition(251, 115);
 			
-			arrowIcon = new Textures.Icon("Arrow-Right", dc);
+			arrowIcon = new Textures.Icon("Arrow-Right");
 			
 			arrowIcon.setColor(Graphics.COLOR_RED);
 			
-			lineBitmap = new Textures.Bitmap("Line-Right", dc);
+			lineBitmap = new Textures.Bitmap("Line-Right");
 			
 			lineBitmap.setPosition(241, 130);
 		}
 		
 		function draw() {
-			var topValue = MainController.activityMonitorInfo.stepGoal != null ? MainController.activityMonitorInfo.stepGoal : 0;
-			var bottomValue = MainController.activityMonitorInfo.steps != null ? MainController.activityMonitorInfo.steps : 0;
+			var topValue = MainController.environmentInfo.stepGoal != null ? MainController.environmentInfo.stepGoal : 0;
+			var bottomValue = MainController.environmentInfo.steps != null ? MainController.environmentInfo.steps : 0;
 
 			topValueText.setText(Utils.kFormatter(topValue, topValue > 99999 ? 0 : 1));
 			bottomValueText.setText(Utils.kFormatter(bottomValue, bottomValue > 99999 ? 0 : 1));
@@ -878,8 +903,8 @@ module UiElements {
 			topValueText.locX = offSetXBasedOnWidth(topValueText.getDimensions()[0]);
 			bottomValueText.locX = offSetXBasedOnWidth(bottomValueText.getDimensions()[0]);
 			
-			topValueText.draw(dc);
-			bottomValueText.draw(dc);
+			topValueText.draw();
+			bottomValueText.draw();
 			
 			if(bottomValue >= topValue) {
 				trophyIcon.draw();
@@ -894,7 +919,7 @@ module UiElements {
 			var percentage = bottomValue >= topValue ? 1.0 : bottomValue / topValue.toFloat();
 			var targetPosition = maxAngle * percentage;
 			
-			var pointOnCircle = Utils.getPointOnCircle(dc.getWidth() / 2, dc.getHeight() / 2, radius, -1 * targetPosition, centerAngle);
+			var pointOnCircle = Utils.getPointOnCircle(MainController.dc.getWidth() / 2, MainController.dc.getHeight() / 2, radius, -1 * targetPosition, centerAngle);
 			
 	   	 	var x = pointOnCircle[0];
 	   	 	var y = pointOnCircle[1];
@@ -918,7 +943,7 @@ module UiElements {
 		}
 	}
 	
-	class Left extends UiElementBase {
+	class Left {
 		private var topValueText;
 		private var bottomValueText;
 		private var icon;
@@ -934,9 +959,7 @@ module UiElements {
 		var isSleep;
 		var heartFilled;
 		
-		function initialize(dc, fntAsapCondensedBold14, fntAsapBold12) {
-			UiElementBase.initialize(dc);
-			
+		function initialize(fntAsapCondensedBold14, fntAsapBold12) {
 			isSleep = false;
 			heartFilled = true;
 			
@@ -945,37 +968,37 @@ module UiElements {
 	            :typeface => fntAsapCondensedBold14,
 	            :locX     => initialX,
 	            :locY     => 87
-        	}, dc, true);
+        	}, true);
         	bottomValueText = new Extensions.Text({
 	            :color    => Graphics.COLOR_WHITE,
 	            :typeface => fntAsapCondensedBold14,
 	            :locX     => initialX,
 	            :locY     => 171
-        	}, dc, true);
+        	}, true);
         	heartRateText = new Extensions.Text({
         		:text     => "--",
 	            :color    => Graphics.COLOR_WHITE,
 	            :typeface => fntAsapBold12,
 	            :locX     => 9,
 	            :locY     => 118
-        	}, dc, true);
+        	}, true);
 
-        	icon = new Textures.Icon("Heart-1", dc);
+        	icon = new Textures.Icon("Heart-1");
         	icon.setColor(Graphics.COLOR_RED);
 			icon.setPosition(9, 130);
 			
-			arrowIcon = new Textures.Icon("Arrow-Left", dc);
+			arrowIcon = new Textures.Icon("Arrow-Left");
 			
 			arrowIcon.setColor(Graphics.COLOR_RED);
 			
-			lineBitmap = new Textures.Bitmap("Line-Left", dc);
+			lineBitmap = new Textures.Bitmap("Line-Left");
 			
 			lineBitmap.setPosition(19, 130);
 		}
 		
 		function draw() {
 			var topValue = Utils.getMaxHeartRate();
-			var bottomValue = MainController.userProfile.restingHeartRate;
+			var bottomValue = MainController.environmentInfo.restingHeartRate;
 
 			topValueText.setText(Utils.kFormatter(topValue, topValue > 99999 ? 0 : 1));
 			bottomValueText.setText(Utils.kFormatter(bottomValue, bottomValue > 99999 ? 0 : 1));
@@ -983,8 +1006,8 @@ module UiElements {
 			topValueText.locX = offSetXBasedOnWidth(topValueText.getDimensions()[0]);
 			bottomValueText.locX = offSetXBasedOnWidth(bottomValueText.getDimensions()[0]);
 
-			topValueText.draw(dc);
-			bottomValueText.draw(dc);
+			topValueText.draw();
+			bottomValueText.draw();
 
 			icon.draw();
 			
@@ -1009,14 +1032,14 @@ module UiElements {
 				icon.setIcon("Heart-1");
 				heartRateText.setColor(Graphics.COLOR_TRANSPARENT);
 			}
-			heartRateText.draw(dc);
+			heartRateText.draw();
 		}
 		
 		function drawArrow(topValue, bottomValue) {
 			var percentage = bottomValue >= topValue ? 1.0 : bottomValue / topValue.toFloat();
 			var targetPosition = maxAngle * percentage;
 			
-			var pointOnCircle = Utils.getPointOnCircle(dc.getWidth() / 2, dc.getHeight() / 2, radius, targetPosition, centerAngle);
+			var pointOnCircle = Utils.getPointOnCircle(MainController.dc.getWidth() / 2, MainController.dc.getHeight() / 2, radius, targetPosition, centerAngle);
 			
 	   	 	var x = pointOnCircle[0];
 	   	 	var y = pointOnCircle[1];
@@ -1056,7 +1079,7 @@ module UiElements {
 		}
 	}
 	
-	class BottomLine extends UiElementBase {
+	class BottomLine {
 		private var caloriesGoal;
 
 		private var line;		
@@ -1074,12 +1097,10 @@ module UiElements {
 		private var lastX;
 		private var lastY;
 
-		function initialize(dc) {
-			UiElementBase.initialize(dc);
-
-			line = new Textures.Bitmap("Line-Bottom", dc);
-        	lineFill = new Textures.Bitmap("Line-Bottom", dc);
-        	dot = new Textures.Icon("Dot", dc);
+		function initialize() {
+			line = new Textures.Bitmap("Line-Bottom");
+        	lineFill = new Textures.Bitmap("Line-Bottom");
+        	dot = new Textures.Icon("Dot");
 
         	lineFill.setColor(Graphics.Graphics.COLOR_TRANSPARENT);
         	lineFill.setBackgroundColor(Graphics.COLOR_BLACK);
@@ -1093,17 +1114,17 @@ module UiElements {
 		}
 
 		function draw() {
-			var leftValue = Utils.getActiveCalories(MainController.activityMonitorInfo.calories);
+			var leftValue = Utils.getActiveCalories(MainController.environmentInfo.calories);
 			var rightValue = caloriesGoal;
 			
 			var percentage = leftValue >= rightValue ? 1.0 : leftValue / rightValue.toFloat();
 			var targetPosition = maxAngle * percentage;
 			
-			var pointOnCircle = Utils.getPointOnCircle(dc.getWidth() / 2, dc.getHeight() / 2, radius, -1 * targetPosition, centerAngle);
+			var pointOnCircle = Utils.getPointOnCircle(MainController.dc.getWidth() / 2, MainController.dc.getHeight() / 2, radius, -1 * targetPosition, centerAngle);
 			
 			line.draw();
 			
-			Utils.drawRectangleStartingFromLeft(dc, rectangleLocX, rectangleLocY, pointOnCircle[0] - rectangleLocX, rectangleHeight, Graphics.COLOR_RED);
+			Utils.drawRectangleStartingFromLeft(rectangleLocX, rectangleLocY, pointOnCircle[0] - rectangleLocX, rectangleHeight, Graphics.COLOR_RED);
 			
 			lineFill.draw();
 
@@ -1137,78 +1158,78 @@ module Textures {
 	var bitmapsFont;
 	
 	var icons = {
-		"Battery-100"    => "B",
-		"Battery-90"     => "A",
-		"Battery-80"     => "9",
-		"Battery-70"     => "8",
-		"Battery-60"     => "7",
-		"Battery-50"     => "6",
-		"Battery-40"     => "5",
-		"Battery-30"     => "4",
-		"Battery-20"     => "3",
-		"Battery-10"     => "2",
-		"Battery-5"      => "1",
-		"Battery-0"      => "0",
-		"Notification"   => "C",
-		"Alarm"          => "D",
-		"Move-1"         => "E",
-		"Move-5"         => "F",
-		"Dnd"            => "G",
-		"Bluetooth"      => "H",
-		"Arrow-Up"       => "I",
-		"MoveBar-1"      => "J",
-		"MoveBar-2"      => "K",
-		"Move-0"         => "L",
-		"Sleep"          => "M",
-		"Heart-1"        => "N",
-		"Heart-2"        => "O",
-		"Steps-Side"     => "P",
-		"Distance"       => "Q",
-		"Calories"       => "R",
-		"Stopwatch"      => "S",
-		"Stairs-Up"      => "T",
-		"Trophy"         => "U",
-		"Arrow-Left"     => "V",
-		"Arrow-Right"    => "X",
-		"Battery-100-L"  => "j",
-		"Battery-90-L"   => "i",
-		"Battery-80-L"   => "h",
-		"Battery-70-L"   => "g",
-		"Battery-60-L"   => "f",
-		"Battery-50-L"   => "e",
-		"Battery-40-L"   => "d",
-		"Battery-30-L"   => "c",
-		"Battery-20-L"   => "b",
-		"Battery-10-L"   => "a",
-		"Battery-5-L"    => "Z",
-		"Battery-0-L"    => "Y",
-		"Elevation"      => "k",
-		"Calendar"       => "l",
-		"Moon-0"         => "m", // New Moon
-		"Moon-1"         => "n", // Waxing Crescent
-		"Moon-2"         => "o", // First Quarter
-		"Moon-3"         => "p", // Waxing Gibbous
-		"Moon-4"         => "q", // Full Moon
-		"Moon-5"         => "r", // Waning Gibbous
-		"Moon-6"         => "s", // Third Quarter
-		"Moon-7"         => "t", // Waning Crescent
-		"Alarm-L"        => "u",
-		"Notification-L" => "#",
-		"Dnd-L"          => "$",
-		"Bluetooth-L"    => "%",
-		"Move-1-L"       => "(",
-		"Move-5-L"       => "&",
-		"Move-0-L"       => ")",
-		"Sleep-L"        => "*",
-		"Dot"            => "+",
-		"Dot-L"          => ",",
+		"Battery-100"    => 'B',
+		"Battery-90"     => 'A',
+		"Battery-80"     => '9',
+		"Battery-70"     => '8',
+		"Battery-60"     => '7',
+		"Battery-50"     => '6',
+		"Battery-40"     => '5',
+		"Battery-30"     => '4',
+		"Battery-20"     => '3',
+		"Battery-10"     => '2',
+		"Battery-5"      => '1',
+		"Battery-0"      => '0',
+		"Notification"   => 'C',
+		"Alarm"          => 'D',
+		"Move-1"         => 'E',
+		"Move-5"         => 'F',
+		"Dnd"            => 'G',
+		"Bluetooth"      => 'H',
+		"Arrow-Up"       => 'I',
+		"MoveBar-1"      => 'J',
+		"MoveBar-2"      => 'K',
+		"Move-0"         => 'L',
+		"Sleep"          => 'M',
+		"Heart-1"        => 'N',
+		"Heart-2"        => 'O',
+		"Steps-Side"     => 'P',
+		"Distance"       => 'Q',
+		"Calories"       => 'R',
+		"Stopwatch"      => 'S',
+		"Stairs-Up"      => 'T',
+		"Trophy"         => 'U',
+		"Arrow-Left"     => 'V',
+		"Arrow-Right"    => 'X',
+		"Battery-100-L"  => 'j',
+		"Battery-90-L"   => 'i',
+		"Battery-80-L"   => 'h',
+		"Battery-70-L"   => 'g',
+		"Battery-60-L"   => 'f',
+		"Battery-50-L"   => 'e',
+		"Battery-40-L"   => 'd',
+		"Battery-30-L"   => 'c',
+		"Battery-20-L"   => 'b',
+		"Battery-10-L"   => 'a',
+		"Battery-5-L"    => 'Z',
+		"Battery-0-L"    => 'Y',
+		"Elevation"      => 'k',
+		"Calendar"       => 'l',
+		"Moon-0"         => 'm', // New Moon
+		"Moon-1"         => 'n', // Waxing Crescent
+		"Moon-2"         => 'o', // First Quarter
+		"Moon-3"         => 'p', // Waxing Gibbous
+		"Moon-4"         => 'q', // Full Moon
+		"Moon-5"         => 'r', // Waning Gibbous
+		"Moon-6"         => 's', // Third Quarter
+		"Moon-7"         => 't', // Waning Crescent
+		"Alarm-L"        => 'u',
+		"Notification-L" => '#',
+		"Dnd-L"          => '$',
+		"Bluetooth-L"    => '%',
+		"Move-1-L"       => '(',
+		"Move-5-L"       => '&',
+		"Move-0-L"       => ')',
+		"Sleep-L"        => '*',
+		"Dot"            => '+',
+		"Dot-L"          => ','
 	};
 	
 	var bitmaps = {
 		"Line-Top"    => "012345",
 		"Line-Bottom" => "6789AB",
-		"Line-Right"  => "C",
-		"Line-Left"   => "G"
+		"Line-Right"  => 'C',
+		"Line-Left"   => 'G'
 	};
 	
 	function init() {
@@ -1221,20 +1242,17 @@ module Textures {
 		
 		protected var name;
 		protected var dimensions;
-		protected var dc;
 		protected var char;
 		
 		private var color;
 		private var backgroundColor;
 
-		function initialize(dc) {
+		function initialize() {
         	text.setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
         	
         	setColor(Graphics.COLOR_WHITE);
         	setBackgroundColor(Graphics.COLOR_TRANSPARENT);
-        	
-        	self.dc = dc;
-        	
+
         	return self;
 		}
 		
@@ -1272,18 +1290,18 @@ module Textures {
 		}
 		
 		function draw() {
-			text.draw(dc);
+			text.draw(MainController.dc);
 		}
 	}
 
 	class Icon extends Texture {
-		function initialize(name, dc) {
+		function initialize(name) {
 			text = new WatchUi.Text({
-	            :font  => iconsFont,
-	            :locX  => 0,
-	            :locY  => 0
+	            :font => iconsFont,
+	            :locX => 0,
+	            :locY => 0
         	});
-        	Textures.Texture.initialize(dc);
+        	Textures.Texture.initialize();
 
         	setIcon(name);
 
@@ -1293,23 +1311,23 @@ module Textures {
 		function setIcon(name) {
 			if(name != self.name) {
 				self.name = name;
-				char = Textures.icons[name];
+				char = Textures.icons[name].toString();
 				
 				text.setText(char);
-				dimensions = dc.getTextDimensions(char, iconsFont);
+				dimensions = MainController.dc.getTextDimensions(char, iconsFont);
 			}
 			return text;
 		}
 	}
 	
 	class Bitmap extends Texture {
-		function initialize(name, dc) {
+		function initialize(name) {
 			text = new WatchUi.Text({
-	            :font  => bitmapsFont,
-	            :locX  => 0,
-	            :locY  => 0
+	            :font => bitmapsFont,
+	            :locX => 0,
+	            :locY => 0
         	});
-        	Textures.Texture.initialize(dc);
+        	Textures.Texture.initialize();
 
         	setBitmap(name);
         	
@@ -1319,10 +1337,10 @@ module Textures {
 		function setBitmap(name) {
 			if(name != self.name) {
 				self.name = name;
-				char = Textures.bitmaps[name];
+				char = Textures.bitmaps[name].toString();
 				
 				text.setText(char);
-				dimensions = dc.getTextDimensions(char, bitmapsFont);
+				dimensions = MainController.dc.getTextDimensions(char, bitmapsFont);
 			}
 			return text;
 		}
@@ -1333,13 +1351,10 @@ module Extensions {
 	class Text extends WatchUi.Text {
 		private var text;
 		private var color;
-		private var dc;
 		private var typeface;
 		
-		function initialize(settings, dc, centerJustification) {
+		function initialize(settings, centerJustification) {
 			WatchUi.Text.initialize(settings);
-			
-			self.dc = dc;
 			
 			var typeface = settings.get(:typeface);
 			var text = settings.get(:text);
@@ -1357,6 +1372,10 @@ module Extensions {
 				WatchUi.Text.setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
 			}
 			return self;
+		}
+		
+		function draw() {
+			WatchUi.Text.draw(MainController.dc);
 		}
 		
 		function setText(text) {
@@ -1407,9 +1426,64 @@ module Extensions {
 		
 		function getDimensions() {
 			if(text != null) {
-				return dc.getTextDimensions(text, typeface);
+				return MainController.dc.getTextDimensions(text, typeface);
 			}
 			return [ 0, 0 ];
+		}
+	}
+}
+
+module Environment {
+	class Info {
+		var 
+			doNotDisturb,
+			is24Hour,
+			notificationCount,
+			alarmCount,
+			phoneConnected,
+			battery,
+			charging,
+			sleepTime,
+			wakeTime,
+			restingHeartRate,
+			birthYear,
+			gender,
+			weight,
+			height,
+			moveBarLevel,
+			distance,
+			calories,
+			activeMinutesWeek,
+			floorsClimbed,
+			stepGoal,
+			steps;
+			
+		function initialize() {
+			return self;
+		}
+		
+		function setValues(deviceSettings, systemStats, userProfile, activityMonitorInfo) {
+			doNotDisturb = deviceSettings.doNotDisturb;
+			is24Hour = deviceSettings.is24Hour;
+			notificationCount = deviceSettings.notificationCount;
+			alarmCount = deviceSettings.alarmCount;
+			phoneConnected = deviceSettings.phoneConnected;
+			battery = systemStats.battery;
+			charging = systemStats.charging;
+			sleepTime = userProfile.sleepTime.value();
+			wakeTime = userProfile.wakeTime.value();
+			restingHeartRate = userProfile.restingHeartRate;
+			birthYear = userProfile.birthYear;
+			gender = userProfile.gender;
+			weight = userProfile.weight;
+			height = userProfile.height;
+			moveBarLevel = activityMonitorInfo.moveBarLevel;
+			distance = activityMonitorInfo.distance;
+			calories = activityMonitorInfo.calories;
+			activeMinutesWeek = activityMonitorInfo.activeMinutesWeek.total;
+			floorsClimbed = activityMonitorInfo.floorsClimbed;
+			stepGoal = activityMonitorInfo.stepGoal;
+			steps = activityMonitorInfo.steps;
 		}
 	}
 }
@@ -1567,30 +1641,29 @@ module Utils {
 		return Lang.format("$1$:$2$ (GMT$3$$4$)", [ info.hour.format(Application.getApp().getProperty("AddLeadingZero") ? "%02d" : "%d"), info.min.format("%02d"), offset >= 0 ? "+" : "-", offset.abs() ]);
 	}
 	
-	function drawLine(dc, x, y, width, height, color) {
-		dc.setColor(color, Graphics.COLOR_TRANSPARENT);
+	function drawLine(x, y, width, height, color) {
+		MainController.dc.setColor(color, Graphics.COLOR_TRANSPARENT);
 
-		dc.fillRectangle((x - width / 2).abs(), (y - height / 2).abs(), width, height);
+		MainController.dc.fillRectangle((x - width / 2).abs(), (y - height / 2).abs(), width, height);
 	}
 	
-	function drawRectangleStartingFromLeft(dc, x, y, width, height, color) {
-		dc.setColor(color, Graphics.COLOR_TRANSPARENT);
+	function drawRectangleStartingFromLeft(x, y, width, height, color) {
+		MainController.dc.setColor(color, Graphics.COLOR_TRANSPARENT);
 
-		dc.fillRectangle(x, (y - height / 2).abs(), width, height);
+		MainController.dc.fillRectangle(x, (y - height / 2).abs(), width, height);
 	}
 	
-	function drawRectangleStartingFromMiddle(dc, x, y, width, height, color) {
-		dc.setColor(color, Graphics.COLOR_TRANSPARENT);
+	function drawRectangleStartingFromMiddle(x, y, width, height, color) {
+		MainController.dc.setColor(color, Graphics.COLOR_TRANSPARENT);
 
-		dc.fillRectangle((x - width / 2).abs(), (y - height / 2).abs(), width, height);
+		MainController.dc.fillRectangle((x - width / 2).abs(), (y - height / 2).abs(), width, height);
 	}
 	
 	function getActiveCalories(calories) {
 		var today = Gregorian.info(Time.now(), Time.FORMAT_SHORT);		
-		var profile = MainController.userProfile;
-		var age = today.year - profile.birthYear;
-		var weight = profile.weight / 1000.0;
-		var restCalories = (profile.gender == UserProfile.GENDER_MALE ? 5.2 : -197.6) - 6.116 * age + 7.628 * profile.height + 12.2 * weight;
+		var age = today.year - MainController.environmentInfo.birthYear;
+		var weight = MainController.environmentInfo.weight / 1000.0;
+		var restCalories = (MainController.environmentInfo.gender == UserProfile.GENDER_MALE ? 5.2 : -197.6) - 6.116 * age + 7.628 * MainController.environmentInfo.height + 12.2 * weight;
 
 		restCalories = Math.round((today.hour * 60 + today.min) / 1440.0 * restCalories).toNumber();
 		
