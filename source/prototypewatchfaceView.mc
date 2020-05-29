@@ -1068,11 +1068,11 @@ module UiElements {
 		private var dot;
 		
 		private var maxAngle = 124;
-		private var radius = 109.5;
+		private var radius = 109;
 		private var centerAngle = 152;
 		private var maxRectangleWidth = 196;
 		private var rectangleLocX = 32;
-		private var rectangleLocY = 208;
+		private var rectangleLocY = 206;
 		private var rectangleHeight = 51;
 		
 		private var lastX;
@@ -1088,8 +1088,8 @@ module UiElements {
         	
         	line.setColor(Graphics.COLOR_DK_GRAY);
 			
-			line.setPosition(130, 208);
-        	lineFill.setPosition(130, 208);
+			line.setPosition(130, 206);
+        	lineFill.setPosition(130, 206);
         	
         	caloriesGoal = Application.getApp().getProperty("ActiveCaloriesGoal");
 		}
@@ -1672,6 +1672,15 @@ module Utils {
 		MainController.dc.setColor(color, Graphics.COLOR_TRANSPARENT);
 
 		MainController.dc.fillRectangle((x - width / 2).abs(), (y - height / 2).abs(), width, height);
+	}
+
+	function getPixelPointsOnCircle(cx, cy, radius, numPoints) {
+		var points = { };
+		
+		for(var i = 0; i < numPoints; ++i) {
+			points[i] = { "x" => cx + radius * Math.cos((i * 2 * Math.PI) / numPoints), "y" => cy + radius * Math.sin((i * 2 * Math.PI) / numPoints) };
+		}
+		return points;
 	}
 	
 	function getActiveCalories(calories) {
