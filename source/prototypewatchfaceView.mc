@@ -74,11 +74,11 @@ module MainController {
 		
         Textures.init();
         
-        /*mockBackground = new WatchUi.Bitmap({
+        mockBackground = new WatchUi.Bitmap({
         	:rezId => Rez.Drawables.MockBackground,
         	:locX  => 0,
         	:locY  => 0
-    	});*/
+    	});
     	powerSavingMode = Application.getApp().getProperty("PowerSavingMode");
     	displayIconsOnPowerSavingMode = Application.getApp().getProperty("DisplayIconsOnPowerSavingMode");
     	
@@ -98,7 +98,7 @@ module MainController {
    	 	
    	 	if(!isPowerSavingModeActive) {
    	 		bottomLine.draw();
-   	 		//mockBackground.draw(dc);
+   	 		mockBackground.draw(dc);
    	 	}
 		clockArea.draw();
 
