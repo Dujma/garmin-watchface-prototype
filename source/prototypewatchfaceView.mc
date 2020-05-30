@@ -837,9 +837,9 @@ module UiElements {
 		private var trophyIcon;
 		private var initialX = 242;
 		private var arrowIcon;
-		private var maxAngle = 37;
+		private var startAngle = 108;
+		private var endAngle = 71;
 		private var radius = 104;
-		private var centerAngle = 18;
 		private var lineBitmap;
 		
 		function initialize(fntAsapCondensedBold14) {
@@ -898,9 +898,9 @@ module UiElements {
 		
 		function drawArrow(topValue, bottomValue) {
 			var percentage = bottomValue >= topValue ? 1.0 : bottomValue / topValue.toFloat();
-			var targetPosition = maxAngle * percentage;
+			var targetAngle = (endAngle - startAngle) * percentage;
 			
-			var pointOnCircle = Utils.getPointOnCircle(MainController.dc.getWidth() / 2, MainController.dc.getHeight() / 2, radius, -1 * targetPosition, centerAngle);
+			var pointOnCircle = Utils.getPointOnCircle(MainController.dc.getWidth() / 2, MainController.dc.getHeight() / 2, radius, startAngle + targetAngle);
 			
 	   	 	var x = pointOnCircle[0];
 	   	 	var y = pointOnCircle[1];
@@ -930,9 +930,9 @@ module UiElements {
 		private var icon;
 		private var initialX = 18;
 		private var arrowIcon;
-		private var maxAngle = 37;
 		private var radius = 104;
-		private var centerAngle = 162; // Reference to "Right". 180 - 18 = 162
+		private var startAngle = 252; // Reference to "Right". 180 - 18 = 162
+		private var endAngle = 289;
 		private var lineBitmap;
 		
 		// Feature only when heart rate is shown
@@ -1018,9 +1018,9 @@ module UiElements {
 		
 		function drawArrow(topValue, bottomValue) {
 			var percentage = bottomValue >= topValue ? 1.0 : bottomValue / topValue.toFloat();
-			var targetPosition = maxAngle * percentage;
+			var targetAngle = (endAngle - startAngle) * percentage;
 			
-			var pointOnCircle = Utils.getPointOnCircle(MainController.dc.getWidth() / 2, MainController.dc.getHeight() / 2, radius, targetPosition, centerAngle);
+			var pointOnCircle = Utils.getPointOnCircle(MainController.dc.getWidth() / 2, MainController.dc.getHeight() / 2, radius, startAngle + targetAngle);
 			
 	   	 	var x = pointOnCircle[0];
 	   	 	var y = pointOnCircle[1];
@@ -1066,14 +1066,13 @@ module UiElements {
 		private var line;		
 		private var lineFill;
 		private var dot;
-		
-		private var maxAngle = 124;
-		private var radius = 107.5;
-		private var centerAngle = 152;
-		private var maxRectangleWidth = 196;
 		private var rectangleLocX = 32;
 		private var rectangleLocY = 206;
 		private var rectangleHeight = 51;
+		private var maxRectangleWidth = 196;
+		private var startAngle = 242;
+		private var endAngle = 118;
+		private var radius = 107.5;
 		
 		private var lastX;
 		private var lastY;
@@ -1099,9 +1098,12 @@ module UiElements {
 			var rightValue = caloriesGoal;
 			
 			var percentage = leftValue >= rightValue ? 1.0 : leftValue / rightValue.toFloat();
-			var targetPosition = maxAngle * percentage;
+			var targetAngle = (endAngle - startAngle) * percentage;
 			
-			var pointOnCircle = Utils.getPointOnCircle(MainController.dc.getWidth() / 2, MainController.dc.getHeight() / 2, radius, -1 * targetPosition, centerAngle);
+			var cx = MainController.dc.getWidth() / 2;
+			var cy = MainController.dc.getHeight() / 2;
+			
+			var pointOnCircle = Utils.getPointOnCircle(cx, cy, radius, startAngle + targetAngle);
 			
 			line.draw();
 			
@@ -1600,9 +1602,10 @@ module Utils {
 	    return null;
 	}
 	
-	function getPointOnCircle(cx, cy, radius, angle, startAngleOffset) {
-		var x = Math.round(cx + radius * Math.cos(Math.toRadians(angle + startAngleOffset)));
-   	 	var y = Math.round(cy + radius * Math.sin(Math.toRadians(angle + startAngleOffset)));
+	// 0 = 12 o'clock, 90 = 3 o'clock, 180 = 6 o'clock, 270 = 9 o'clock
+	function getPointOnCircle(cx, cy, radius, angle) {
+		var x = Math.round(cx + radius * Math.cos(Math.toRadians(angle - 90))); // -90 so that it starts at 12 o'clock
+   	 	var y = Math.round(cy + radius * Math.sin(Math.toRadians(angle - 90)));
    	 	
    	 	return [ x, y ];
 	}
@@ -1672,6 +1675,13 @@ module Utils {
 		MainController.dc.setColor(color, Graphics.COLOR_TRANSPARENT);
 
 		MainController.dc.fillRectangle((x - width / 2).abs(), (y - height / 2).abs(), width, height);
+	}
+	
+	function drawArc(cx, cy, radius, startAngle, endAngle, thickness, color) {
+		MainController.dc.setColor(color, Graphics.COLOR_TRANSPARENT);
+		MainController.dc.setPenWidth(thickness);
+		
+		MainController.dc.drawArc(cx, cy, radius, Graphics.ARC_CLOCKWISE, 360 - startAngle + 90, 360 - endAngle + 90);
 	}
 
 	function getPixelPointsOnCircle(cx, cy, radius, numPoints) {
