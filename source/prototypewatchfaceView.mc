@@ -806,9 +806,7 @@ module UiElements {
 				}
 			}
 			var distance = MainController.environmentInfo.distance != null ? MainController.environmentInfo.distance : 0;
-			// TODO: Change later
-			// var calories = MainController.environmentInfo.calories != null ? MainController.environmentInfo.calories : 0;
-			var calories = Utils.getActiveCalories(MainController.environmentInfo.calories);
+			var calories = MainController.environmentInfo.calories != null ? MainController.environmentInfo.calories : 0;
 			var activeMinutesWeek = MainController.environmentInfo.activeMinutesWeek != null ? MainController.environmentInfo.activeMinutesWeek : 0;
 			var floorsClimbed = MainController.environmentInfo.floorsClimbed != null ? MainController.environmentInfo.floorsClimbed : 0;
 			
