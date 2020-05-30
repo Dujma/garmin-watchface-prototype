@@ -1675,11 +1675,15 @@ module Utils {
 		MainController.dc.fillRectangle((x - width / 2).abs(), (y - height / 2).abs(), width, height);
 	}
 	
-	function drawArc(cx, cy, radius, startAngle, endAngle, thickness, color) {
+	function drawArc(cx, cy, radius, startAngle, endAngle, thickness, color, clockwise) {
 		MainController.dc.setColor(color, Graphics.COLOR_TRANSPARENT);
 		MainController.dc.setPenWidth(thickness);
 		
-		MainController.dc.drawArc(cx, cy, radius, Graphics.ARC_CLOCKWISE, 360 - startAngle + 90, 360 - endAngle + 90);
+		if(clockwise) {
+			MainController.dc.drawArc(cx, cy, radius, Graphics.ARC_CLOCKWISE, 360 - startAngle + 90, 360 - endAngle + 90);
+		} else {
+			MainController.dc.drawArc(cx, cy, radius, Graphics.ARC_COUNTER_CLOCKWISE, startAngle + 90, endAngle + 90);
+		}
 	}
 
 	function getPixelPointsOnCircle(cx, cy, radius, numPoints) {
