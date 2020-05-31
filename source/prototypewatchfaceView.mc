@@ -1705,4 +1705,29 @@ module Utils {
 		
 		return calories > restCalories ? calories - restCalories : 0;
 	}
+	
+	function drawSplitText(x, y, font, text, justification, color) {
+		if(text.length() > 0) {
+			x += MainController.dc.getTextWidthInPixels(text.substring(0, 1), font) / 2;
+			
+			if(justification != Graphics.TEXT_JUSTIFY_LEFT) {
+				var textWidth = MainController.dc.getTextWidthInPixels(text, font) / 2;
+				
+				if(justification == Graphics.TEXT_JUSTIFY_CENTER) {
+					x -= textWidth;
+				}
+				else if(justification == Graphics.TEXT_JUSTIFY_RIGHT) {
+					x -= textWidth * 2;
+				}
+			}
+			for (var i = 0; i < text.length(); ++i) {
+				var char = text.substring(i, i + 1);
+				
+				MainController.dc.setColor(color, Graphics.COLOR_TRANSPARENT);
+				MainController.dc.drawText(x, y, font, char, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
+				
+				x += MainController.dc.getTextWidthInPixels(char, font);
+			}
+		}
+	}
 }
