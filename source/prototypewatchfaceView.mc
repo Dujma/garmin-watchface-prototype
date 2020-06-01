@@ -64,6 +64,7 @@ module MainController {
 	// Settings
 	var powerSavingMode;
 	var displayIconsOnPowerSavingMode;
+	var oldDndState;
 	
 	function onLayout(dc) {
 		self.dc = dc;
@@ -71,6 +72,8 @@ module MainController {
 		environmentInfo = new Environment.Info();
 		
 		updateEnvironmentInfo();
+		
+		oldDndState = environmentInfo.doNotDisturb;
 		
         Textures.init();
         
@@ -81,7 +84,7 @@ module MainController {
     	});
     	powerSavingMode = Application.getApp().getProperty("PowerSavingMode");
     	displayIconsOnPowerSavingMode = Application.getApp().getProperty("DisplayIconsOnPowerSavingMode");
-    	
+
     	clockArea = new UiElements.ClockArea(WatchUi.loadResource(Rez.Fonts.AsapCondensedBold14));
     	
     	initElements();
@@ -89,7 +92,12 @@ module MainController {
 
     function onUpdate() {
     	updateEnvironmentInfo();
-    
+    	
+    	if(environmentInfo.doNotDisturb != oldDndState) {
+			onDndChanged(environmentInfo.doNotDisturb);
+			
+			oldDndState = environmentInfo.doNotDisturb;
+    	}
     	drawBackground();
 
    	 	var isPowerSavingModeActive = isPowerSavingModeActive();
@@ -137,6 +145,10 @@ module MainController {
 	    	clockArea.onEnterSleep();
 	    	left.onEnterSleep();
 	    }
+    }
+    
+    function onDndChanged(newState) {
+    	clockArea.onDndChanged();
     }
     
     function checkForInit() {
@@ -338,6 +350,10 @@ module UiElements {
 	    	isSleep = false;
 	    	
 	    	secondsText.setColor(Graphics.COLOR_LT_GRAY);
+	    }
+	    
+	    function onDndChanged() {
+	    	setClockPosition();
 	    }
 	    
 	    function setClockPosition() {
