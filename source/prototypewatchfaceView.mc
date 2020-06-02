@@ -1711,7 +1711,7 @@ module Utils {
     		var pointOnCircle = Utils.getPointOnCircle(MainController.dc.getWidth() / 2, MainController.dc.getHeight() / 2, radius, angle);
     		
     		MainController.dc.setColor(color, Graphics.COLOR_TRANSPARENT);
-    		MainController.dc.drawText(pointOnCircle[0], pointOnCircle[1], Graphics.FONT_MEDIUM, text.substring(i, i + 1), Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
+    		MainController.dc.drawText(pointOnCircle[0], pointOnCircle[1], font, text.substring(i, i + 1), Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
 
     		offset += charWidths[i];
     	}
