@@ -1701,9 +1701,9 @@ module Utils {
 		}
 	}
 	
-	function drawTextOnCircle(startAngle, radius, font, text, clockwise, color) {
+	function drawTextOnCircle(startAngle, radius, font, baseFont, text, clockwise, color) {
     	var circumference = Utils.getCircleCircumference(radius);
-    	var charWidths = Utils.getWidthOfEachChar(font, text);
+    	var charWidths = Utils.getWidthOfEachChar(baseFont, text);
     	var offset = 0;
  
     	for(var i = 0; i < charWidths.size(); ++i) {
@@ -1748,8 +1748,8 @@ module Utils {
 	
 	// 0 = 12 o'clock, 90 = 3 o'clock, 180 = 6 o'clock, 270 = 9 o'clock
 	function getPointOnCircle(cx, cy, radius, angle) {
-		var x = Math.round(cx + radius * Math.cos(Math.toRadians(angle - 90))); // -90 so that it starts at 12 o'clock
-   	 	var y = Math.round(cy + radius * Math.sin(Math.toRadians(angle - 90)));
+		var x = cx + radius * Math.cos(Math.toRadians(angle - 90)); // -90 so that it starts at 12 o'clock
+   	 	var y = cy + radius * Math.sin(Math.toRadians(angle - 90));
    	 	
    	 	return [ x, y ];
 	}
@@ -1779,7 +1779,7 @@ module Utils {
 		return null;
 	}
 	
-	function getAngleForChar(charLength, circumference, offset, clockwise) {
-		return Math.toDegrees((charLength / 2 + offset) / circumference * 2 * Math.PI) * (clockwise ? 1 : -1);
+	function getAngleForChar(charWidth, circumference, offset, clockwise) {
+		return Math.toDegrees((charWidth / 2 + offset) / circumference * 2 * Math.PI) * (clockwise ? 1 : -1);
 	}
 }
