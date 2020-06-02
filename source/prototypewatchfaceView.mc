@@ -1616,14 +1616,6 @@ module Utils {
 	    return null;
 	}
 	
-	// 0 = 12 o'clock, 90 = 3 o'clock, 180 = 6 o'clock, 270 = 9 o'clock
-	function getPointOnCircle(cx, cy, radius, angle) {
-		var x = Math.round(cx + radius * Math.cos(Math.toRadians(angle - 90))); // -90 so that it starts at 12 o'clock
-   	 	var y = Math.round(cy + radius * Math.sin(Math.toRadians(angle - 90)));
-   	 	
-   	 	return [ x, y ];
-	}
-	
 	function getCurrentMoonPhase() {
 		var now = Gregorian.info(Time.now(), Time.FORMAT_SHORT);
 		
@@ -1672,45 +1664,7 @@ module Utils {
 
 		return Lang.format("$1$:$2$ (GMT$3$$4$)", [ info.hour.format(Application.getApp().getProperty("AddLeadingZero") ? "%02d" : "%d"), info.min.format("%02d"), offset >= 0 ? "+" : "-", offset.abs() ]);
 	}
-	
-	function drawLine(x, y, width, height, color) {
-		MainController.dc.setColor(color, Graphics.COLOR_TRANSPARENT);
 
-		MainController.dc.fillRectangle((x - width / 2).abs(), (y - height / 2).abs(), width, height);
-	}
-	
-	function drawRectangleStartingFromLeft(x, y, width, height, color) {
-		MainController.dc.setColor(color, Graphics.COLOR_TRANSPARENT);
-
-		MainController.dc.fillRectangle(x, (y - height / 2).abs(), width, height);
-	}
-	
-	function drawRectangleStartingFromMiddle(x, y, width, height, color) {
-		MainController.dc.setColor(color, Graphics.COLOR_TRANSPARENT);
-
-		MainController.dc.fillRectangle((x - width / 2).abs(), (y - height / 2).abs(), width, height);
-	}
-	
-	function drawArc(cx, cy, radius, startAngle, endAngle, thickness, color, clockwise) {
-		MainController.dc.setColor(color, Graphics.COLOR_TRANSPARENT);
-		MainController.dc.setPenWidth(thickness);
-		
-		if(clockwise) {
-			MainController.dc.drawArc(cx, cy, radius, Graphics.ARC_CLOCKWISE, 360 - startAngle + 90, 360 - endAngle + 90);
-		} else {
-			MainController.dc.drawArc(cx, cy, radius, Graphics.ARC_COUNTER_CLOCKWISE, startAngle + 90, endAngle + 90);
-		}
-	}
-
-	function getPixelPointsOnCircle(cx, cy, radius, numPoints) {
-		var points = { };
-		
-		for(var i = 0; i < numPoints; ++i) {
-			points[i] = { "x" => cx + radius * Math.cos((i * 2 * Math.PI) / numPoints), "y" => cy + radius * Math.sin((i * 2 * Math.PI) / numPoints) };
-		}
-		return points;
-	}
-	
 	function getActiveCalories(calories) {
 		var today = Gregorian.info(Time.now(), Time.FORMAT_SHORT);		
 		var age = today.year - MainController.environmentInfo.birthYear;
@@ -1745,5 +1699,87 @@ module Utils {
 				x += MainController.dc.getTextWidthInPixels(char, font);
 			}
 		}
+	}
+	
+	function drawTextOnCircle(startAngle, radius, font, text, clockwise, color) {
+    	var circumference = Utils.getCircleCircumference(radius);
+    	var charWidths = Utils.getWidthOfEachChar(font, text);
+    	var offset = 0;
+ 
+    	for(var i = 0; i < charWidths.size(); ++i) {
+    		var angle = Utils.getAngleForChar(charWidths[i], circumference, offset, clockwise) + startAngle;
+    		var pointOnCircle = Utils.getPointOnCircle(MainController.dc.getWidth() / 2, MainController.dc.getHeight() / 2, radius, angle);
+    		
+    		MainController.dc.setColor(color, Graphics.COLOR_TRANSPARENT);
+    		MainController.dc.drawText(pointOnCircle[0], pointOnCircle[1], Graphics.FONT_MEDIUM, text.substring(i, i + 1), Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
+
+    		offset += charWidths[i];
+    	}
+	}
+	
+	function drawLine(x, y, width, height, color) {
+		MainController.dc.setColor(color, Graphics.COLOR_TRANSPARENT);
+
+		MainController.dc.fillRectangle((x - width / 2).abs(), (y - height / 2).abs(), width, height);
+	}
+	
+	function drawRectangleStartingFromLeft(x, y, width, height, color) {
+		MainController.dc.setColor(color, Graphics.COLOR_TRANSPARENT);
+
+		MainController.dc.fillRectangle(x, (y - height / 2).abs(), width, height);
+	}
+	
+	function drawRectangleStartingFromMiddle(x, y, width, height, color) {
+		MainController.dc.setColor(color, Graphics.COLOR_TRANSPARENT);
+
+		MainController.dc.fillRectangle((x - width / 2).abs(), (y - height / 2).abs(), width, height);
+	}
+	
+	function drawArc(cx, cy, radius, startAngle, endAngle, thickness, color, clockwise) {
+		MainController.dc.setColor(color, Graphics.COLOR_TRANSPARENT);
+		MainController.dc.setPenWidth(thickness);
+		
+		if(clockwise) {
+			MainController.dc.drawArc(cx, cy, radius, Graphics.ARC_CLOCKWISE, 360 - startAngle + 90, 360 - endAngle + 90);
+		} else {
+			MainController.dc.drawArc(cx, cy, radius, Graphics.ARC_COUNTER_CLOCKWISE, startAngle + 90, endAngle + 90);
+		}
+	}
+	
+	// 0 = 12 o'clock, 90 = 3 o'clock, 180 = 6 o'clock, 270 = 9 o'clock
+	function getPointOnCircle(cx, cy, radius, angle) {
+		var x = Math.round(cx + radius * Math.cos(Math.toRadians(angle - 90))); // -90 so that it starts at 12 o'clock
+   	 	var y = Math.round(cy + radius * Math.sin(Math.toRadians(angle - 90)));
+   	 	
+   	 	return [ x, y ];
+	}
+
+	function getPixelPointsOnCircle(cx, cy, radius, numPoints) {
+		var points = { };
+		
+		for(var i = 0; i < numPoints; ++i) {
+			points[i] = { "x" => cx + radius * Math.cos((i * 2 * Math.PI) / numPoints), "y" => cy + radius * Math.sin((i * 2 * Math.PI) / numPoints) };
+		}
+		return points;
+	}
+	
+	function getCircleCircumference(radius) {
+		return 2 * Math.PI * radius;
+	}
+	
+	function getWidthOfEachChar(font, text) {
+		if(text.length() > 0) {
+			var result = new [text.length()];
+			
+			for(var i = 0; i < text.length(); ++i) {
+				result[i] = MainController.dc.getTextWidthInPixels(text.substring(i, i + 1), font);
+			}
+			return result;
+		}
+		return null;
+	}
+	
+	function getAngleForChar(charLength, circumference, offset, clockwise) {
+		return Math.toDegrees((charLength / 2 + offset) / circumference * 2 * Math.PI) * (clockwise ? 1 : -1);
 	}
 }
