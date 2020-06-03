@@ -1703,17 +1703,17 @@ module Utils {
 	
 	function drawTextOnCircle(startAngle, radius, font, baseFont, text, clockwise, color) {
     	var circumference = Utils.getCircleCircumference(radius);
-    	var charWidths = Utils.getWidthOfEachChar(baseFont, text);
+    	var charBaseWidths = Utils.getWidthOfEachChar(baseFont, text);
     	var offset = 0;
  
-    	for(var i = 0; i < charWidths.size(); ++i) {
-    		var angle = Utils.getAngleForChar(charWidths[i], circumference, offset, clockwise) + startAngle;
+    	for(var i = 0; i < charBaseWidths.size(); ++i) {
+    		var angle = Utils.getAngleForChar(charBaseWidths[i], circumference, offset, clockwise) + startAngle;
     		var pointOnCircle = Utils.getPointOnCircle(MainController.dc.getWidth() / 2, MainController.dc.getHeight() / 2, radius, angle);
     		
     		MainController.dc.setColor(color, Graphics.COLOR_TRANSPARENT);
     		MainController.dc.drawText(pointOnCircle[0], pointOnCircle[1], font, text.substring(i, i + 1), Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
 
-    		offset += charWidths[i];
+    		offset += charBaseWidths[i];
     	}
 	}
 	
