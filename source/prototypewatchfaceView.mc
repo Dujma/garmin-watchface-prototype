@@ -1305,10 +1305,10 @@ module Textures {
 		}
 		
 		function setBackgroundColor(color) {
-			if(color != self.color) {
-				backgroundColor = color;
-				
+			if(color != self.backgroundColor) {
 				text.setBackgroundColor(color);
+				
+				backgroundColor = color;
 			}
 			return text;
 		}
@@ -1390,6 +1390,7 @@ module Extensions {
 	class Text extends WatchUi.Text {
 		private var text;
 		private var color;
+		private var backgroundColor;
 		private var typeface;
 		
 		function initialize(settings, centerJustification) {
@@ -1442,6 +1443,15 @@ module Extensions {
 				self.color = color;
 			}
 			return self;
+		}
+		
+		function setBackgroundColor(color) {
+			if(color != self.backgroundColor) {
+				WatchUi.Text.setBackgroundColor(color);
+				
+				backgroundColor = color;
+			}
+			return text;
 		}
 		
 		function getFont() {
