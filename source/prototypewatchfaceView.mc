@@ -231,7 +231,6 @@ module MainController {
     }
 }
 
-// TODO: Implement onDnd callback and setClockPosition on it
 module UiElements {
 	class ClockArea {
 		private var isSleep;
@@ -1331,6 +1330,8 @@ module Textures {
 	}
 
 	class Icon extends Texture {
+		private var dimensions;
+		
 		function initialize(char) {
 			text = new WatchUi.Text({
 	            :font => iconsFont,
@@ -1349,8 +1350,14 @@ module Textures {
 				self.char = char;
 				
 				text.setText(char.toString());
+				
+				dimensions = MainController.dc.getTextDimensions(char.toString(), iconsFont);
 			}
 			return text;
+		}
+
+		function getDimensions() {
+			return dimensions;
 		}
 	}
 	
@@ -1703,17 +1710,17 @@ module Utils {
 	
 	function drawTextOnCircle(startAngle, radius, font, baseFont, text, clockwise, color) {
     	var circumference = Utils.getCircleCircumference(radius);
-    	var charBaseWidths = Utils.getWidthOfEachChar(baseFont, text);
+    	var charBaseDimensions = Utils.getDimensionsOfEachChar(baseFont, text);
     	var offset = 0;
  
-    	for(var i = 0; i < charBaseWidths.size(); ++i) {
-    		var angle = Utils.getAngleForChar(charBaseWidths[i], circumference, offset, clockwise) + startAngle;
+    	for(var i = 0; i < charBaseDimensions.size(); ++i) {
+    		var angle = Utils.getAngleForChar(charBaseDimensions[i]["x"], circumference, offset, clockwise) + startAngle;
     		var pointOnCircle = Utils.getPointOnCircle(MainController.dc.getWidth() / 2, MainController.dc.getHeight() / 2, radius, angle);
-    		
-    		MainController.dc.setColor(color, Graphics.COLOR_TRANSPARENT);
-    		MainController.dc.drawText(pointOnCircle[0], pointOnCircle[1], font, text.substring(i, i + 1), Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
 
-    		offset += charBaseWidths[i];
+    		MainController.dc.setColor(color, Graphics.COLOR_TRANSPARENT);
+    		MainController.dc.drawText(pointOnCircle[0], pointOnCircle[1] - charBaseDimensions[i]["y"], font, text.substring(i, i + 1), Graphics.TEXT_JUSTIFY_CENTER);
+
+    		offset += charBaseDimensions[i]["x"];
     	}
 	}
 	
@@ -1767,12 +1774,14 @@ module Utils {
 		return 2 * Math.PI * radius;
 	}
 	
-	function getWidthOfEachChar(font, text) {
+	function getDimensionsOfEachChar(font, text) {
 		if(text.length() > 0) {
-			var result = new [text.length()];
-			
+			var result = { };
+
 			for(var i = 0; i < text.length(); ++i) {
-				result[i] = MainController.dc.getTextWidthInPixels(text.substring(i, i + 1), font);
+				var dimensions = MainController.dc.getTextDimensions(text.substring(i, i + 1), font);
+				
+				result[i] = { "x" => dimensions[0], "y" => dimensions[1] };
 			}
 			return result;
 		}
