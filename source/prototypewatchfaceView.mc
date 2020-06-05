@@ -149,6 +149,8 @@ module MainController {
     
     function onDndChanged(newState) {
     	clockArea.onDndChanged();
+    	
+    	WatchUi.requestUpdate();
     }
     
     function checkForInit() {
@@ -257,7 +259,7 @@ module UiElements {
 	            :color         => Graphics.COLOR_WHITE,
 	            :typeface      => fntAsapBold81,
 	            :locX          => 89 + (MainController.dc.getTextWidthInPixels("00", fntAsapBold81) / 2),
-	            :locY          => 129,
+	            :locY          => 127,
 	            :justification => Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_RIGHT
 	        }, false))[clockElements.size() - 1];
 	        minutesText = clockElements.add(new Extensions.Text({
@@ -276,20 +278,20 @@ module UiElements {
 	            :color    => Graphics.COLOR_WHITE,
 	            :typeface => fntAsapCondensedSemiBold20,
 	            :locX     => 178,
-	            :locY     => 150
+	            :locY     => 149
 	        }, true))[clockElements.size() - 1];
 	        partOfDayText = clockElements.add(new Extensions.Text({
 	            :color    => Graphics.COLOR_WHITE,
 	            :typeface => fntAsapCondensedBold14,
 	            :locX     => 43,
-	            :locY     => 152
+	            :locY     => 151
 	        }, true))[clockElements.size() - 1];
 	        secondsText = new Extensions.Text({
 	        	:text     => "00",
 	        	:typeface => fntAsapCondensedBold14,
 	            :color    => Graphics.COLOR_LT_GRAY,
 	            :locX     => 215,
-	            :locY     => 106
+	            :locY     => 105
 	        }, true);
 
 	        hoursFormat = Application.getApp().getProperty("AddLeadingZero") ? "%02d" : "%d";
@@ -434,7 +436,7 @@ module UiElements {
 	            :color    => Graphics.COLOR_WHITE,
 	            :typeface => fntAsapCondensedBold14,
 	            :locX     => 130,
-	            :locY     => 8
+	            :locY     => 7
 	        }, true);
 	        
 			notificationIcon = new Textures.Icon('C');
@@ -589,7 +591,7 @@ module UiElements {
 	class Top {
 		private var daysText;
 		private var arrowIcon;
-		private var daysInitialY = 87;
+		private var daysInitialY = 88;
 		private var daysYOffset = 3;
 		private var dayNames = [ "SU", "MO", "TU", "WE", "TH", "FR", "SA" ];
 		private var infoText;
@@ -607,15 +609,15 @@ module UiElements {
 			
 			iconLeft = new Textures.Icon('X');
 			iconLeft.setColor(Graphics.COLOR_WHITE);
-			iconLeft.setPosition(93, 65);
+			iconLeft.setPosition(94, 65);
 			
 			iconMiddle = new Textures.Icon('O');
 			iconMiddle.setColor(Graphics.COLOR_WHITE);
-			iconMiddle.setPosition(138, 65);
+			iconMiddle.setPosition(140, 65);
 			
 			iconRight = new Textures.Icon('9');
 			iconRight.setColor(Graphics.COLOR_WHITE);
-			iconRight.setPosition(192, 65);
+			iconRight.setPosition(193, 65);
 			
 			iconTextLeft = new Extensions.Text({
 	            :color         => Graphics.COLOR_WHITE,
@@ -657,7 +659,7 @@ module UiElements {
 	            :color    => Graphics.COLOR_WHITE,
 	            :typeface => fntAsapBold12,
 	            :locX     => 130,
-	            :locY     => 40
+	            :locY     => 41
         	}, true);
 		}
 		
@@ -773,25 +775,25 @@ module UiElements {
     		textIcon1 = new Extensions.Text({
 	            :color    => Graphics.COLOR_WHITE,
 	            :typeface => fntAsapCondensedBold16,
-	            :locX     => 72,
+	            :locX     => 71,
 	            :locY     => 190
         	}, true);
         	textIcon2 = new Extensions.Text({
 	            :color    => Graphics.COLOR_WHITE,
 	            :typeface => fntAsapCondensedBold16,
-	            :locX     => 110,
+	            :locX     => 109,
 	            :locY     => 201
         	}, true);
         	textIcon3 = new Extensions.Text({
 	            :color    => Graphics.COLOR_WHITE,
 	            :typeface => fntAsapCondensedBold16,
-	            :locX     => 150,
+	            :locX     => 149,
 	            :locY     => 201
         	}, true);
         	textIcon4 = new Extensions.Text({
 	            :color    => Graphics.COLOR_WHITE,
 	            :typeface => fntAsapCondensedBold16,
-	            :locX     => 188,
+	            :locX     => 187,
 	            :locY     => 190
         	}, true);
 		}
@@ -860,13 +862,13 @@ module UiElements {
 	            :color    => Graphics.COLOR_WHITE,
 	            :typeface => fntAsapCondensedBold14,
 	            :locX     => initialX,
-	            :locY     => 87
+	            :locY     => 86
         	}, true);
         	bottomValueText = new Extensions.Text({
 	            :color    => Graphics.COLOR_WHITE,
 	            :typeface => fntAsapCondensedBold14,
 	            :locX     => initialX,
-	            :locY     => 171
+	            :locY     => 170
         	}, true);
 
         	icon = new Textures.Icon('1');
@@ -961,13 +963,13 @@ module UiElements {
 	            :color    => Graphics.COLOR_WHITE,
 	            :typeface => fntAsapCondensedBold14,
 	            :locX     => initialX,
-	            :locY     => 87
+	            :locY     => 86
         	}, true);
         	bottomValueText = new Extensions.Text({
 	            :color    => Graphics.COLOR_WHITE,
 	            :typeface => fntAsapCondensedBold14,
 	            :locX     => initialX,
-	            :locY     => 171
+	            :locY     => 170
         	}, true);
         	heartRateText = new Extensions.Text({
         		:text     => "--",
