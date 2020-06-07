@@ -616,7 +616,7 @@ module UiElements {
 			
 			iconMiddle = new Textures.Icon('O');
 			iconMiddle.setColor(Graphics.COLOR_WHITE);
-			iconMiddle.setPosition(140, 66);
+			iconMiddle.setPosition(143, 66);
 			
 			iconRight = new Textures.Icon('9');
 			iconRight.setColor(Graphics.COLOR_WHITE);
@@ -633,7 +633,7 @@ module UiElements {
         	iconTextMiddle = new Extensions.Text({
 	            :color         => Graphics.COLOR_WHITE,
 	            :typeface      => fntGobold13,
-	            :locX          => 133,
+	            :locX          => 136,
 	            :locY          => 60,
 	            :justification => Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_RIGHT
         	}, false);
