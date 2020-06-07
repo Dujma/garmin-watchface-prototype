@@ -255,7 +255,7 @@ module UiElements {
 
 			var fntGoboldBold76 = WatchUi.loadResource(Rez.Fonts.GoboldBold76);
 	        var fntGoboldBold55 = WatchUi.loadResource(Rez.Fonts.GoboldBold55);
-	        var fntGoboldBold17 = WatchUi.loadResource(Rez.Fonts.GoboldBold17);
+	        var fntGobold18 = WatchUi.loadResource(Rez.Fonts.Gobold18);
 
 			hoursText = clockElements.add(new Extensions.Text({
 			    :text => "00",
@@ -279,7 +279,7 @@ module UiElements {
 	        }, true))[clockElements.size() - 1];
 	        dateText = clockElements.add(new Extensions.Text({
 	            :color    => Graphics.COLOR_WHITE,
-	            :typeface => fntGoboldBold17,
+	            :typeface => fntGobold18,
 	            :locX     => 174,
 	            :locY     => 150
 	        }, true))[clockElements.size() - 1];
