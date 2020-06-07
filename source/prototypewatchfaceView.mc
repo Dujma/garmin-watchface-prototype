@@ -185,7 +185,7 @@ module MainController {
         top = new UiElements.Top(fntRobotoBold12, fntGobold13);
         bottom = new UiElements.Bottom(fntGobold13);
         right = new UiElements.Right(fntGobold13Shrinked);
-        left = new UiElements.Left(fntGobold13Shrinked, fntRobotoBold12);
+        left = new UiElements.Left(fntGobold13Shrinked, WatchUi.loadResource(Rez.Fonts.RobotoCondensedBold12));
         bottomLine = new UiElements.BottomLine(fntGobold13Rotated1, fntGobold13Rotated2, fntGobold13);
         
         topIconsPowerSaving = null;
@@ -253,22 +253,22 @@ module UiElements {
 			isSleep = false;
 			clockElements = new [0];
 
-			var fntGoboldBold76 = WatchUi.loadResource(Rez.Fonts.GoboldBold76);
+			var fntGoboldBold78 = WatchUi.loadResource(Rez.Fonts.GoboldBold78);
 	        var fntGoboldBold55 = WatchUi.loadResource(Rez.Fonts.GoboldBold55);
 	        var fntGobold18 = WatchUi.loadResource(Rez.Fonts.Gobold18);
 
 			hoursText = clockElements.add(new Extensions.Text({
 			    :text => "00",
 	            :color         => Graphics.COLOR_WHITE,
-	            :typeface      => fntGoboldBold76,
-	            :locX          => 90 + (MainController.dc.getTextWidthInPixels("00", fntGoboldBold76) / 2),
-	            :locY          => 128,
+	            :typeface      => fntGoboldBold78,
+	            :locX          => 88 + (MainController.dc.getTextWidthInPixels("00", fntGoboldBold78) / 2),
+	            :locY          => 129,
 	            :justification => Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_RIGHT
 	        }, false))[clockElements.size() - 1];
 	        minutesText = clockElements.add(new Extensions.Text({
 	            :color    => Graphics.COLOR_LT_GRAY,
 	            :typeface => fntGoboldBold55,
-	            :locX     => 174,
+	            :locX     => 177,
 	            :locY     => 121
 	        }, true))[clockElements.size() - 1];
 	        minutesColon = clockElements.add(new Extensions.Text({
@@ -280,20 +280,20 @@ module UiElements {
 	        dateText = clockElements.add(new Extensions.Text({
 	            :color    => Graphics.COLOR_WHITE,
 	            :typeface => fntGobold18,
-	            :locX     => 174,
-	            :locY     => 150
+	            :locX     => 177,
+	            :locY     => 151
 	        }, true))[clockElements.size() - 1];
 	        partOfDayText = clockElements.add(new Extensions.Text({
 	            :color    => Graphics.COLOR_WHITE,
 	            :typeface => fntGobold14,
-	            :locX     => 46,
-	            :locY     => 151
+	            :locX     => 44,
+	            :locY     => 152
 	        }, true))[clockElements.size() - 1];
 	        secondsText = new Extensions.Text({
 	        	:text     => "00",
 	        	:typeface => fntGobold14,
 	            :color    => Graphics.COLOR_LT_GRAY,
-	            :locX     => 211,
+	            :locX     => 213,
 	            :locY     => 106
 	        }, true);
 
@@ -871,7 +871,7 @@ module UiElements {
 	            :color    => Graphics.COLOR_WHITE,
 	            :typeface => fntGobold13Shrinked,
 	            :locX     => initialX,
-	            :locY     => 170
+	            :locY     => 171
         	}, true);
 
         	icon = new Textures.Icon('1');
@@ -958,7 +958,7 @@ module UiElements {
 		var isSleep;
 		var heartFilled;
 		
-		function initialize(fntGobold13Shrinked, fntRobotoBold12) {
+		function initialize(fntGobold13Shrinked, fntRobotoCondensedBold12) {
 			isSleep = false;
 			heartFilled = true;
 			
@@ -972,12 +972,12 @@ module UiElements {
 	            :color    => Graphics.COLOR_WHITE,
 	            :typeface => fntGobold13Shrinked,
 	            :locX     => initialX,
-	            :locY     => 170
+	            :locY     => 171
         	}, true);
         	heartRateText = new Extensions.Text({
         		:text     => "--",
 	            :color    => Graphics.COLOR_WHITE,
-	            :typeface => fntRobotoBold12,
+	            :typeface => fntRobotoCondensedBold12,
 	            :locX     => 9,
 	            :locY     => 118
         	}, true);
