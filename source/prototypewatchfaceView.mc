@@ -1090,9 +1090,6 @@ module UiElements {
 		private var endAngle = 118;
 		private var radius = 107.5;
 		
-		private var lastX;
-		private var lastY;
-		
 		private var fntGobold13Rotated1;
 		private var fntGobold13Rotated2;
 		private var fntGobold13RotatedBase;
@@ -1123,11 +1120,8 @@ module UiElements {
 			
 			var percentage = leftValue >= rightValue ? 1.0 : leftValue / rightValue.toFloat();
 			var targetAngle = (endAngle - startAngle) * percentage;
-			
-			var cx = MainController.dc.getWidth() / 2;
-			var cy = MainController.dc.getHeight() / 2;
-			
-			var pointOnCircle = Utils.getPointOnCircle(cx, cy, radius, startAngle + targetAngle);
+
+			var pointOnCircle = Utils.getPointOnCircle(MainController.dc.getWidth() / 2, MainController.dc.getHeight() / 2, radius, startAngle + targetAngle);
 			
 			line.draw();
 			
@@ -1138,19 +1132,7 @@ module UiElements {
 			if(pointOnCircle[0] >= 89 && pointOnCircle[0] <= 170) {
 				pointOnCircle[1] = 229;
 			}
-			if(pointOnCircle[1] != 229) {
-				if(lastX != pointOnCircle[0] && lastY != pointOnCircle[1]) {
-					dot.setPosition(pointOnCircle[0], pointOnCircle[1]);
-					
-					lastX = pointOnCircle[0];
-					lastY = pointOnCircle[1];
-				}
-			} else {
-				dot.setPosition(pointOnCircle[0], pointOnCircle[1]);
-					
-				lastX = pointOnCircle[0];
-				lastY = pointOnCircle[1];
-			}
+			dot.setPosition(pointOnCircle[0], pointOnCircle[1]);
 			dot.draw();
 			
 			Utils.drawTextOnCircle(-146, 129, fntGobold13Rotated1, fntGobold13RotatedBase, Utils.kFormatter(leftValue, 1), false, Graphics.COLOR_WHITE);
@@ -1779,8 +1761,8 @@ module Utils {
 	
 	// 0 = 12 o'clock, 90 = 3 o'clock, 180 = 6 o'clock, 270 = 9 o'clock
 	function getPointOnCircle(cx, cy, radius, angle) {
-		var x = cx + radius * Math.cos(Math.toRadians(angle - 90)); // -90 so that it starts at 12 o'clock
-   	 	var y = cy + radius * Math.sin(Math.toRadians(angle - 90));
+		var x = cx + radius * Math.cos(((angle - 90) * 2 * Math.PI) / 360); // -90 so that it starts at 12 o'clock
+		var y = cy + radius * Math.sin(((angle - 90) * 2 * Math.PI) / 360);
    	 	
    	 	return [ x, y ];
 	}
