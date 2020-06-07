@@ -85,8 +85,8 @@ module MainController {
     	powerSavingMode = Application.getApp().getProperty("PowerSavingMode");
     	displayIconsOnPowerSavingMode = Application.getApp().getProperty("DisplayIconsOnPowerSavingMode");
 
-    	clockArea = new UiElements.ClockArea(WatchUi.loadResource(Rez.Fonts.AsapCondensedBold14));
-    	
+    	clockArea = new UiElements.ClockArea(WatchUi.loadResource(Rez.Fonts.Gobold14));
+
     	initElements();
     }
 
@@ -174,26 +174,28 @@ module MainController {
     }
     
     function mainElementsInit() {
-    	var fntAsapCondensedBold14 = WatchUi.loadResource(Rez.Fonts.AsapCondensedBold14);
-    	var fntAsapBold12 = WatchUi.loadResource(Rez.Fonts.AsapBold12);
-    	var fntAsapCondensedBold16 = WatchUi.loadResource(Rez.Fonts.AsapCondensedBold16);
+    	var fntGobold13Shrinked = WatchUi.loadResource(Rez.Fonts.Gobold13Shrinked);
+    	var fntRobotoBold12 = WatchUi.loadResource(Rez.Fonts.RobotoBold12);
+    	var fntGobold13 = WatchUi.loadResource(Rez.Fonts.Gobold13);
+    	var fntGobold13Rotated1 = WatchUi.loadResource(Rez.Fonts.Gobold13Rotated1);
+    	var fntGobold13Rotated2 = WatchUi.loadResource(Rez.Fonts.Gobold13Rotated2);
     	
-        topIcons = new UiElements.TopIcons(fntAsapCondensedBold14);
+        topIcons = new UiElements.TopIcons(fntGobold13Shrinked);
         bottomIcons = new UiElements.BottomIcons();
-        top = new UiElements.Top(fntAsapBold12, fntAsapCondensedBold16);
-        bottom = new UiElements.Bottom(fntAsapCondensedBold16);
-        right = new UiElements.Right(fntAsapCondensedBold14);
-        left = new UiElements.Left(fntAsapCondensedBold14, fntAsapBold12);
-        bottomLine = new UiElements.BottomLine();
+        top = new UiElements.Top(fntRobotoBold12, fntGobold13);
+        bottom = new UiElements.Bottom(fntGobold13);
+        right = new UiElements.Right(fntGobold13Shrinked);
+        left = new UiElements.Left(fntGobold13Shrinked, fntRobotoBold12);
+        bottomLine = new UiElements.BottomLine(fntGobold13Rotated1, fntGobold13Rotated2, fntGobold13);
         
         topIconsPowerSaving = null;
         bottomIconsPowerSaving = null;
     }
     
     function powerSavingModeElementsInit() {
-    	var fntAsapCondensedBold16 = WatchUi.loadResource(Rez.Fonts.AsapCondensedBold16);
+    	var fntGobold13 = WatchUi.loadResource(Rez.Fonts.Gobold13);
     
-     	topIconsPowerSaving = new UiElements.TopIconsLarge(fntAsapCondensedBold16);
+     	topIconsPowerSaving = new UiElements.TopIconsLarge(fntGobold13);
         bottomIconsPowerSaving = new UiElements.BottomIconsLarge();
         
         topIcons = null;
@@ -247,51 +249,52 @@ module UiElements {
 		private var displaySeconds;
 		private var wereSecondsDisplayed;
 
-	    function initialize(fntAsapCondensedBold14) {
+	    function initialize(fntGobold14) {
 			isSleep = false;
 			clockElements = new [0];
 
-			var fntAsapBold81 = WatchUi.loadResource(Rez.Fonts.AsapBold81);
-	        var fntAsapSemibold55 = WatchUi.loadResource(Rez.Fonts.AsapSemibold55);
-	        var fntAsapCondensedSemiBold20 = WatchUi.loadResource(Rez.Fonts.AsapCondensedSemiBold20);
+			var fntGoboldBold76 = WatchUi.loadResource(Rez.Fonts.GoboldBold76);
+	        var fntGoboldBold55 = WatchUi.loadResource(Rez.Fonts.GoboldBold55);
+	        var fntGoboldBold17 = WatchUi.loadResource(Rez.Fonts.GoboldBold17);
 
 			hoursText = clockElements.add(new Extensions.Text({
+			    :text => "00",
 	            :color         => Graphics.COLOR_WHITE,
-	            :typeface      => fntAsapBold81,
-	            :locX          => 89 + (MainController.dc.getTextWidthInPixels("00", fntAsapBold81) / 2),
-	            :locY          => 127,
+	            :typeface      => fntGoboldBold76,
+	            :locX          => 90 + (MainController.dc.getTextWidthInPixels("00", fntGoboldBold76) / 2),
+	            :locY          => 128,
 	            :justification => Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_RIGHT
 	        }, false))[clockElements.size() - 1];
 	        minutesText = clockElements.add(new Extensions.Text({
 	            :color    => Graphics.COLOR_LT_GRAY,
-	            :typeface => fntAsapSemibold55,
-	            :locX     => 178,
-	            :locY     => 119
+	            :typeface => fntGoboldBold55,
+	            :locX     => 174,
+	            :locY     => 121
 	        }, true))[clockElements.size() - 1];
 	        minutesColon = clockElements.add(new Extensions.Text({
 	            :color    => Graphics.COLOR_LT_GRAY,
-	            :typeface => fntAsapSemibold55,
-	            :locX     => 139,
-	            :locY     => 119
+	            :typeface => fntGoboldBold55,
+	            :locX     => 137,
+	            :locY     => 121
 	        }, true))[clockElements.size() - 1];
 	        dateText = clockElements.add(new Extensions.Text({
 	            :color    => Graphics.COLOR_WHITE,
-	            :typeface => fntAsapCondensedSemiBold20,
-	            :locX     => 178,
-	            :locY     => 149
+	            :typeface => fntGoboldBold17,
+	            :locX     => 174,
+	            :locY     => 150
 	        }, true))[clockElements.size() - 1];
 	        partOfDayText = clockElements.add(new Extensions.Text({
 	            :color    => Graphics.COLOR_WHITE,
-	            :typeface => fntAsapCondensedBold14,
-	            :locX     => 43,
+	            :typeface => fntGobold14,
+	            :locX     => 46,
 	            :locY     => 151
 	        }, true))[clockElements.size() - 1];
 	        secondsText = new Extensions.Text({
 	        	:text     => "00",
-	        	:typeface => fntAsapCondensedBold14,
+	        	:typeface => fntGobold14,
 	            :color    => Graphics.COLOR_LT_GRAY,
-	            :locX     => 215,
-	            :locY     => 105
+	            :locX     => 211,
+	            :locY     => 106
 	        }, true);
 
 	        hoursFormat = Application.getApp().getProperty("AddLeadingZero") ? "%02d" : "%d";
@@ -428,13 +431,13 @@ module UiElements {
 	}
 	
 	class TopIcons extends TopIconsBase {
-		function initialize(fntAsapCondensedBold14) {
+		function initialize(fntGobold13Shrinked) {
 			batteryIcon = new Textures.Icon('B');
 			batteryIcon.setPosition(130, 19);
 			
 			batteryText = new Extensions.Text({
 	            :color    => Graphics.COLOR_WHITE,
-	            :typeface => fntAsapCondensedBold14,
+	            :typeface => fntGobold13Shrinked,
 	            :locX     => 130,
 	            :locY     => 7
 	        }, true);
@@ -457,13 +460,13 @@ module UiElements {
 	}
 	
 	class TopIconsLarge extends TopIconsBase {
-		function initialize(fntAsapCondensedBold16) {
+		function initialize(fntGobold13) {
 			batteryIcon = new Textures.Icon('A');
 			batteryIcon.setPosition(130, 50);
 			
 			batteryText = new Extensions.Text({
 	            :color    => Graphics.COLOR_WHITE,
-	            :typeface => fntAsapCondensedBold16,
+	            :typeface => fntGobold13,
 	            :locX     => 130,
 	            :locY     => 33
 	        }, true);
@@ -602,44 +605,44 @@ module UiElements {
 		private var iconTextMiddle;
 		private var iconTextRight;
 
-		function initialize(fntAsapBold12, fntAsapCondensedBold16) {
+		function initialize(fntRobotoBold12, fntGobold13) {
 			arrowIcon = new Textures.Icon('I');
 			arrowIcon.setColor(Graphics.COLOR_RED);
 			arrowIcon.setPosition(56, 93);
 			
 			iconLeft = new Textures.Icon('X');
 			iconLeft.setColor(Graphics.COLOR_WHITE);
-			iconLeft.setPosition(94, 65);
+			iconLeft.setPosition(94, 66);
 			
 			iconMiddle = new Textures.Icon('O');
 			iconMiddle.setColor(Graphics.COLOR_WHITE);
-			iconMiddle.setPosition(140, 65);
+			iconMiddle.setPosition(140, 66);
 			
 			iconRight = new Textures.Icon('9');
 			iconRight.setColor(Graphics.COLOR_WHITE);
-			iconRight.setPosition(193, 65);
+			iconRight.setPosition(193, 66);
 			
 			iconTextLeft = new Extensions.Text({
 	            :color         => Graphics.COLOR_WHITE,
-	            :typeface      => fntAsapCondensedBold16,
+	            :typeface      => fntGobold13,
 	            :locX          => 83,
-	            :locY          => 58,
+	            :locY          => 60,
 	            :justification => Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_RIGHT
         	}, false);
         	
         	iconTextMiddle = new Extensions.Text({
 	            :color         => Graphics.COLOR_WHITE,
-	            :typeface      => fntAsapCondensedBold16,
+	            :typeface      => fntGobold13,
 	            :locX          => 133,
-	            :locY          => 58,
+	            :locY          => 60,
 	            :justification => Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_RIGHT
         	}, false);
         	
         	iconTextRight = new Extensions.Text({
 	            :color         => Graphics.COLOR_WHITE,
-	            :typeface      => fntAsapCondensedBold16,
+	            :typeface      => fntGobold13,
 	            :locX          => 182,
-	            :locY          => 58,
+	            :locY          => 60,
 	            :justification => Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_RIGHT
         	}, false);
 
@@ -649,7 +652,7 @@ module UiElements {
 				daysText[i] = new Extensions.Text({
 					:text     => dayNames[i],
 		            :color    => Graphics.COLOR_WHITE,
-		            :typeface => fntAsapBold12,
+		            :typeface => fntRobotoBold12,
 		            :locY     => daysInitialY
 	        	}, true);
 			}
@@ -657,7 +660,7 @@ module UiElements {
 			
 			infoText = new Extensions.Text({
 	            :color    => Graphics.COLOR_WHITE,
-	            :typeface => fntAsapBold12,
+	            :typeface => fntRobotoBold12,
 	            :locX     => 130,
 	            :locY     => 41
         	}, true);
@@ -747,7 +750,7 @@ module UiElements {
 		private var textIcon3;
 		private var textIcon4;
 
-		function initialize(fntAsapCondensedBold16) {
+		function initialize(fntGobold13) {
     		moveBarLvl1 = new Textures.Icon('J');
     		moveBarLvl1.setPosition(101, 219);
     		
@@ -768,31 +771,31 @@ module UiElements {
     		icon4.setColor(Graphics.COLOR_RED);
     		
     		icon1.setPosition(72, 174);
-    		icon2.setPosition(110, 185);
-    		icon3.setPosition(150, 185);
+    		icon2.setPosition(110, 183);
+    		icon3.setPosition(150, 183);
     		icon4.setPosition(188, 175);
     		
     		textIcon1 = new Extensions.Text({
 	            :color    => Graphics.COLOR_WHITE,
-	            :typeface => fntAsapCondensedBold16,
+	            :typeface => fntGobold13,
 	            :locX     => 71,
 	            :locY     => 190
         	}, true);
         	textIcon2 = new Extensions.Text({
 	            :color    => Graphics.COLOR_WHITE,
-	            :typeface => fntAsapCondensedBold16,
+	            :typeface => fntGobold13,
 	            :locX     => 109,
-	            :locY     => 201
+	            :locY     => 199
         	}, true);
         	textIcon3 = new Extensions.Text({
 	            :color    => Graphics.COLOR_WHITE,
-	            :typeface => fntAsapCondensedBold16,
+	            :typeface => fntGobold13,
 	            :locX     => 149,
-	            :locY     => 201
+	            :locY     => 199
         	}, true);
         	textIcon4 = new Extensions.Text({
 	            :color    => Graphics.COLOR_WHITE,
-	            :typeface => fntAsapCondensedBold16,
+	            :typeface => fntGobold13,
 	            :locX     => 187,
 	            :locY     => 190
         	}, true);
@@ -857,16 +860,16 @@ module UiElements {
 		private var radius = 104;
 		private var lineBitmap;
 		
-		function initialize(fntAsapCondensedBold14) {
+		function initialize(fntGobold13Shrinked) {
 			topValueText = new Extensions.Text({
 	            :color    => Graphics.COLOR_WHITE,
-	            :typeface => fntAsapCondensedBold14,
+	            :typeface => fntGobold13Shrinked,
 	            :locX     => initialX,
-	            :locY     => 86
+	            :locY     => 87
         	}, true);
         	bottomValueText = new Extensions.Text({
 	            :color    => Graphics.COLOR_WHITE,
-	            :typeface => fntAsapCondensedBold14,
+	            :typeface => fntGobold13Shrinked,
 	            :locX     => initialX,
 	            :locY     => 170
         	}, true);
@@ -955,26 +958,26 @@ module UiElements {
 		var isSleep;
 		var heartFilled;
 		
-		function initialize(fntAsapCondensedBold14, fntAsapBold12) {
+		function initialize(fntGobold13Shrinked, fntRobotoBold12) {
 			isSleep = false;
 			heartFilled = true;
 			
 			topValueText = new Extensions.Text({
 	            :color    => Graphics.COLOR_WHITE,
-	            :typeface => fntAsapCondensedBold14,
+	            :typeface => fntGobold13Shrinked,
 	            :locX     => initialX,
-	            :locY     => 86
+	            :locY     => 87
         	}, true);
         	bottomValueText = new Extensions.Text({
 	            :color    => Graphics.COLOR_WHITE,
-	            :typeface => fntAsapCondensedBold14,
+	            :typeface => fntGobold13Shrinked,
 	            :locX     => initialX,
 	            :locY     => 170
         	}, true);
         	heartRateText = new Extensions.Text({
         		:text     => "--",
 	            :color    => Graphics.COLOR_WHITE,
-	            :typeface => fntAsapBold12,
+	            :typeface => fntRobotoBold12,
 	            :locX     => 9,
 	            :locY     => 118
         	}, true);
@@ -1091,8 +1094,12 @@ module UiElements {
 		
 		private var lastX;
 		private var lastY;
+		
+		private var fntGobold13Rotated1;
+		private var fntGobold13Rotated2;
+		private var fntGobold13RotatedBase;
 
-		function initialize() {
+		function initialize(fntGobold13Rotated1, fntGobold13Rotated2, fntGobold13RotatedBase) {
 			line = new Textures.Bitmap("6789AB");
         	lineFill = new Textures.Bitmap("6789AB");
         	dot = new Textures.Icon('g');
@@ -1106,6 +1113,10 @@ module UiElements {
         	lineFill.setPosition(130, 206);
         	
         	caloriesGoal = Application.getApp().getProperty("ActiveCaloriesGoal");
+        	
+        	self.fntGobold13Rotated1 = fntGobold13Rotated1;
+        	self.fntGobold13Rotated2 = fntGobold13Rotated2;
+        	self.fntGobold13RotatedBase = fntGobold13RotatedBase;
 		}
 
 		function draw() {
@@ -1143,6 +1154,9 @@ module UiElements {
 				lastY = pointOnCircle[1];
 			}
 			dot.draw();
+			
+			Utils.drawTextOnCircle(-146, 129, fntGobold13Rotated1, fntGobold13RotatedBase, Utils.kFormatter(leftValue, 1), false, Graphics.COLOR_WHITE);
+			Utils.drawTextOnCircle(-223, 122, fntGobold13Rotated2, fntGobold13RotatedBase, Utils.kFormatter(rightValue, 1), false, Graphics.COLOR_WHITE);
 		}
 		
 		function onSettingUpdate() {
@@ -1730,7 +1744,7 @@ module Utils {
     		var pointOnCircle = Utils.getPointOnCircle(MainController.dc.getWidth() / 2, MainController.dc.getHeight() / 2, radius, angle);
 
     		MainController.dc.setColor(color, Graphics.COLOR_TRANSPARENT);
-    		MainController.dc.drawText(pointOnCircle[0], pointOnCircle[1] - charBaseDimensions[i]["y"], font, text.substring(i, i + 1), Graphics.TEXT_JUSTIFY_CENTER);
+    		MainController.dc.drawText(pointOnCircle[0], pointOnCircle[1] - charBaseDimensions[i]["y"], font, text.substring(i, i + 1), Graphics.TEXT_JUSTIFY_LEFT);
 
     		offset += charBaseDimensions[i]["x"];
     	}

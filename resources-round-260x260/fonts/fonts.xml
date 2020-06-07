@@ -1,11 +1,15 @@
 <fonts>
-	<font id="AsapBold81" antialias="true" filename="/asap-bold-81/asap-bold-81.fnt" filter="0123456789" />
-	<font id="AsapSemibold55" antialias="true" filename="/asap-semibold-55/asap-semibold-55.fnt" filter="0123456789:" />
-	<font id="AsapCondensedSemiBold20" antialias="true" filename="/asap-condensed-semibold-20/asap-condensed-semibold-20.fnt" filter="0123456789AJNEUMRPOCFBYLGSTVD " />
-	<font id="AsapCondensedBold14" antialias="true" filename="/asap-condensed-bold-14/asap-condensed-bold-14.fnt" filter="0123456789APk:.%" />
-	<font id="AsapBold12" antialias="true" filename="/asap-bold-12/asap-bold-12.fnt" filter="0123456789ABCDEFGHIJKLMNOPQRSTUVWYZabcdefghijklmnopqrstuvwyz'():+- " />
-	<font id="AsapCondensedBold16" antialias="true" filename="/asap-condensed-bold-16/asap-condensed-bold-16.fnt" filter="01213456789k.°%" />
+	<font id="GoboldBold76" antialias="true" filename="/gobold-bold-76/gobold-bold-76.fnt" filter="0123456789" />
+	<font id="GoboldBold55" antialias="true" filename="/gobold-bold-55/gobold-bold-55.fnt" filter="0123456789:" />
+	<font id="GoboldBold17" antialias="true" filename="/gobold-bold-17/gobold-bold-17.fnt" filter="0123456789AJNEUMRPOCFBYLGSTVD " />
+	<font id="Gobold14" antialias="true" filename="/gobold-14/gobold-14.fnt" filter="0123456789AP" />
+	<font id="Gobold13" antialias="true" filename="/gobold-13/gobold-13.fnt" filter="01213456789k.°" />
+	<font id="Gobold13Shrinked" antialias="true" filename="/gobold-13-shrinked/gobold-13-shrinked.fnt" filter="0123456789k.%" />
+	<font id="RobotoBold12" antialias="true" filename="/roboto-bold-12/roboto-bold-12.fnt" filter="0123456789ABCDEFGHIJKLMNOPQRSTUVWYZabcdefghijklmnopqrstuvwyz'():+- " />
 	
+	<font id="Gobold13Rotated1" antialias="true" filename="/gobold-13-rotated-1/gobold-13-rotated-1.fnt" filter="0123456789k:." />
+	<font id="Gobold13Rotated2" antialias="true" filename="/gobold-13-rotated-2/gobold-13-rotated-2.fnt" filter="0123456789k:." />
+
 	<font id="Icons" antialias="true" filename="/icons/icons.fnt" filter="0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefgh" />
 	<font id="Bitmaps" antialias="true" filename="/bitmaps/bitmaps.fnt" filter="0123456789ABCG" />
 </fonts>
