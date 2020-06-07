@@ -65,6 +65,7 @@ module MainController {
 	var powerSavingMode;
 	var displayIconsOnPowerSavingMode;
 	var oldDndState;
+	var isSleep = false;
 	
 	function onLayout(dc) {
 		self.dc = dc;
@@ -134,6 +135,8 @@ module MainController {
     }
 
     function onExitSleep() {
+    	isSleep = false;
+    	
     	if(!isPowerSavingModeActive()) {
 	    	clockArea.onExitSleep();
 	    	left.onExitSleep();
@@ -141,6 +144,8 @@ module MainController {
     }
 
     function onEnterSleep() {
+    	isSleep = true;
+    	
 	    if(!isPowerSavingModeActive()) {
 	    	clockArea.onEnterSleep();
 	    	left.onEnterSleep();
@@ -149,8 +154,6 @@ module MainController {
     
     function onDndChanged(newState) {
     	clockArea.onDndChanged();
-    	
-    	WatchUi.requestUpdate();
     }
     
     function checkForInit() {
@@ -237,7 +240,6 @@ module MainController {
 
 module UiElements {
 	class ClockArea {
-		private var isSleep;
 		private var hoursText;
 		private var hoursFormat;
 		private var minutesText;
@@ -250,7 +252,6 @@ module UiElements {
 		private var wereSecondsDisplayed;
 
 	    function initialize(fntGobold14) {
-			isSleep = false;
 			clockElements = new [0];
 
 			var fntGoboldBold78 = WatchUi.loadResource(Rez.Fonts.GoboldBold78);
@@ -345,15 +346,13 @@ module UiElements {
 	    }
 	    
 	    function onEnterSleep() {
-	        isSleep = true;
-	        
 	    	secondsText.setColor(Graphics.COLOR_TRANSPARENT);
 	    }
 	    
 	    function onExitSleep() {
-	    	isSleep = false;
-	    	
 	    	secondsText.setColor(Graphics.COLOR_LT_GRAY);
+	    	
+	    	setClockPosition();
 	    }
 	    
 	    function onDndChanged() {
@@ -379,7 +378,10 @@ module UiElements {
 	    
 	    function shouldDisplaySeconds() {
 	    	if(!MainController.isPowerSavingModeActive()) {
-	    		return (displaySeconds == 0 && !isSleep) || displaySeconds == 1 ? true : false;
+	    		if(displaySeconds == 2) {
+	    			return false;
+	    		}
+	    		return (displaySeconds == 0 && !MainController.isSleep) || displaySeconds == 1;
 	    	}
 	    	return false;
 	    }
@@ -955,11 +957,9 @@ module UiElements {
 		
 		// Feature only when heart rate is shown
 		var heartRateText;
-		var isSleep;
 		var heartFilled;
 		
 		function initialize(fntGobold13Shrinked, fntRobotoCondensedBold12) {
-			isSleep = false;
 			heartFilled = true;
 			
 			topValueText = new Extensions.Text({
@@ -1017,7 +1017,7 @@ module UiElements {
 		}
 		
 		function drawHeartRate() {
-			if(!isSleep) {
+			if(!MainController.isSleep) {
 				var currentHeartRate = Utils.getCurrentHeartRate();
 				
 				heartRateText.setText(currentHeartRate.toString());
@@ -1048,7 +1048,6 @@ module UiElements {
 		}
 		
 		function onEnterSleep() {
-			isSleep = true;
 			heartFilled = true;
 			
 			icon.setIcon('N');
@@ -1056,7 +1055,6 @@ module UiElements {
 	    }
 	    
 	    function onExitSleep() {
-			isSleep = false;
 			heartFilled = false;
 			
 			icon.setIcon('0');
