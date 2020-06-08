@@ -1128,8 +1128,8 @@ module UiElements {
 			// Previous way using rectangle
 			// Utils.drawRectangleStartingFromLeft(rectangleLocX, rectangleLocY, pointOnCircle[0] - rectangleLocX, rectangleHeight, Graphics.COLOR_RED);
 
-			var arcStartAngle = 360 - startAngle; 
-			var arcTargetAngle = arcStartAngle - targetAngle; 
+			var arcStartAngle = 360 - startAngle - 2; // -2 offset because of the arc curvature (so that the line is at the beginning is filled)
+			var arcTargetAngle = arcStartAngle - targetAngle + 2; // +2 offset because of the arc curvature (so that the line is at the end is filled)
 
 			if(arcTargetAngle > arcStartAngle) {
 				Utils.drawArc(MainController.dc.getWidth() / 2, MainController.dc.getHeight() / 2, radius, arcStartAngle, arcTargetAngle, 20, Graphics.COLOR_RED, false);
