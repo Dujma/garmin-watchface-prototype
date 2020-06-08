@@ -1125,8 +1125,15 @@ module UiElements {
 			
 			line.draw();
 			
-			Utils.drawRectangleStartingFromLeft(rectangleLocX, rectangleLocY, pointOnCircle[0] - rectangleLocX, rectangleHeight, Graphics.COLOR_RED);
-			
+			// Previous way using rectangle
+			// Utils.drawRectangleStartingFromLeft(rectangleLocX, rectangleLocY, pointOnCircle[0] - rectangleLocX, rectangleHeight, Graphics.COLOR_RED);
+
+			var arcStartAngle = 360 - startAngle; 
+			var arcTargetAngle = arcStartAngle - targetAngle; 
+
+			if(arcTargetAngle > arcStartAngle) {
+				Utils.drawArc(MainController.dc.getWidth() / 2, MainController.dc.getHeight() / 2, radius, arcStartAngle, arcTargetAngle, 20, Graphics.COLOR_RED, false);
+			}
 			lineFill.draw();
 
 			if(pointOnCircle[0] >= 89 && pointOnCircle[0] <= 170) {
@@ -1135,8 +1142,8 @@ module UiElements {
 			dot.setPosition(pointOnCircle[0], pointOnCircle[1]);
 			dot.draw();
 			
-			Utils.drawTextOnCircle(-146, 129, fntGobold13Rotated1, fntGobold13RotatedBase, Utils.kFormatter(leftValue, 1), false, Graphics.COLOR_WHITE);
-			Utils.drawTextOnCircle(-223, 122, fntGobold13Rotated2, fntGobold13RotatedBase, Utils.kFormatter(rightValue, 1), false, Graphics.COLOR_WHITE);
+			Utils.drawTextOnCircle(146, 129, fntGobold13Rotated1, fntGobold13RotatedBase, Utils.kFormatter(leftValue, 1), false, Graphics.COLOR_WHITE);
+			Utils.drawTextOnCircle(223, 122, fntGobold13Rotated2, fntGobold13RotatedBase, Utils.kFormatter(rightValue, 1), false, Graphics.COLOR_WHITE);
 		}
 		
 		function onSettingUpdate() {
@@ -1715,6 +1722,9 @@ module Utils {
 	}
 	
 	function drawTextOnCircle(startAngle, radius, font, baseFont, text, clockwise, color) {
+		if(!clockwise) {
+			startAngle *= -1;
+		}
     	var circumference = Utils.getCircleCircumference(radius);
     	var charBaseDimensions = Utils.getDimensionsOfEachChar(baseFont, text);
     	var offset = 0;
