@@ -1,4 +1,4 @@
-using Toybox.WatchUi;
+using Toybox.WatchUi as Ui;
 using Toybox.Graphics as Gfx;
 using Toybox.System as Sys;
 using Toybox.Lang;
@@ -10,7 +10,7 @@ using Toybox.ActivityMonitor;
 using Toybox.Activity;
 using Toybox.UserProfile;
 
-class prototypewatchfaceView extends WatchUi.WatchFace {
+class prototypewatchfaceView extends Ui.WatchFace {
     function initialize() {
         WatchFace.initialize();
     }
@@ -82,7 +82,7 @@ module MainController {
 		
         Textures.init();
         
-        mockBackground = new WatchUi.Bitmap({
+        mockBackground = new Ui.Bitmap({
         	:rezId => Rez.Drawables.MockBackground,
         	:locX  => 0,
         	:locY  => 0
@@ -90,7 +90,7 @@ module MainController {
     	powerSavingMode = App.getApp().getProperty("PowerSavingMode");
     	displayIconsOnPowerSavingMode = App.getApp().getProperty("DisplayIconsOnPowerSavingMode");
 
-    	clockArea = new UiElements.ClockArea(WatchUi.loadResource(Rez.Fonts.Gobold14));
+    	clockArea = new UiElements.ClockArea(Ui.loadResource(Rez.Fonts.Gobold14));
 
     	initElements();
     }
@@ -181,18 +181,18 @@ module MainController {
     }
     
     function mainElementsInit() {
-    	var fntGobold13Shrinked = WatchUi.loadResource(Rez.Fonts.Gobold13Shrinked),
-    		fntRobotoBold12 = WatchUi.loadResource(Rez.Fonts.RobotoBold12),
-    		fntGobold13 = WatchUi.loadResource(Rez.Fonts.Gobold13),
-    		fntGobold13Rotated1 = WatchUi.loadResource(Rez.Fonts.Gobold13Rotated1),
-    		fntGobold13Rotated2 = WatchUi.loadResource(Rez.Fonts.Gobold13Rotated2);
+    	var fntGobold13Shrinked = Ui.loadResource(Rez.Fonts.Gobold13Shrinked),
+    		fntRobotoBold12 = Ui.loadResource(Rez.Fonts.RobotoBold12),
+    		fntGobold13 = Ui.loadResource(Rez.Fonts.Gobold13),
+    		fntGobold13Rotated1 = Ui.loadResource(Rez.Fonts.Gobold13Rotated1),
+    		fntGobold13Rotated2 = Ui.loadResource(Rez.Fonts.Gobold13Rotated2);
     	
         topIcons = new UiElements.TopIcons(fntGobold13Shrinked);
         bottomIcons = new UiElements.BottomIcons();
         top = new UiElements.Top(fntRobotoBold12, fntGobold13);
         bottom = new UiElements.Bottom(fntGobold13);
         right = new UiElements.Right(fntGobold13Shrinked);
-        left = new UiElements.Left(fntGobold13Shrinked, WatchUi.loadResource(Rez.Fonts.RobotoCondensedBold12));
+        left = new UiElements.Left(fntGobold13Shrinked, Ui.loadResource(Rez.Fonts.RobotoCondensedBold12));
         bottomLine = new UiElements.BottomLine(fntGobold13Rotated1, fntGobold13Rotated2, fntGobold13);
         
         topIconsPowerSaving = null;
@@ -200,7 +200,7 @@ module MainController {
     }
     
     function powerSavingModeElementsInit() {
-    	var fntGobold13 = WatchUi.loadResource(Rez.Fonts.Gobold13);
+    	var fntGobold13 = Ui.loadResource(Rez.Fonts.Gobold13);
     
      	topIconsPowerSaving = new UiElements.TopIconsLarge(fntGobold13);
         bottomIconsPowerSaving = new UiElements.BottomIconsLarge();
@@ -258,8 +258,8 @@ module UiElements {
 	    function initialize(fntGobold14) {
 			clockElements = new [0];
 
-			var fntGoboldBold78 = WatchUi.loadResource(Rez.Fonts.GoboldBold78),
-	        	fntGoboldBold55 = WatchUi.loadResource(Rez.Fonts.GoboldBold55);
+			var fntGoboldBold78 = Ui.loadResource(Rez.Fonts.GoboldBold78),
+	        	fntGoboldBold55 = Ui.loadResource(Rez.Fonts.GoboldBold55);
 
 			hoursTxt = clockElements.add(new Extensions.Text({
 			    :text => "00",
@@ -283,7 +283,7 @@ module UiElements {
 	        }, true))[clockElements.size() - 1];
 	        dateTxt = clockElements.add(new Extensions.Text({
 	            :color    => Gfx.COLOR_WHITE,
-	            :typeface => WatchUi.loadResource(Rez.Fonts.Gobold18),
+	            :typeface => Ui.loadResource(Rez.Fonts.Gobold18),
 	            :locX     => 177,
 	            :locY     => 151
 	        }, true))[clockElements.size() - 1];
@@ -1241,8 +1241,8 @@ module Textures {
 */
 	
 	function init() {
-		iconsFont = WatchUi.loadResource(Rez.Fonts.Icons);
-		bitmapsFont = WatchUi.loadResource(Rez.Fonts.Bitmaps);
+		iconsFont = Ui.loadResource(Rez.Fonts.Icons);
+		bitmapsFont = Ui.loadResource(Rez.Fonts.Bitmaps);
 	}
 	
 	// TODO: If you need dimensions of the icons than the .fnt file needs to be updated with the correct values
@@ -1301,7 +1301,7 @@ module Textures {
 		private var dimensions;
 		
 		function initialize(char) {
-			text = new WatchUi.Text({
+			text = new Ui.Text({
 	            :font => iconsFont,
 	            :locX => 0,
 	            :locY => 0
@@ -1331,7 +1331,7 @@ module Textures {
 	
 	class Bitmap extends Texture {
 		function initialize(char) {
-			text = new WatchUi.Text({
+			text = new Ui.Text({
 	            :font => bitmapsFont,
 	            :locX => 0,
 	            :locY => 0
@@ -1355,14 +1355,14 @@ module Textures {
 }
 
 module Extensions {
-	class Text extends WatchUi.Text {
+	class Text extends Ui.Text {
 		private var text,
 					color,
 					backgroundColor,
 					typeface;
 		
 		function initialize(settings, centerJustification) {
-			WatchUi.Text.initialize(settings);
+			Ui.Text.initialize(settings);
 			
 			var typeface = settings.get(:typeface);
 			var text = settings.get(:text);
@@ -1383,12 +1383,12 @@ module Extensions {
 		}
 		
 		function draw() {
-			WatchUi.Text.draw(MainController.dc);
+			Ui.Text.draw(MainController.dc);
 		}
 		
 		function setText(text) {
 			if(text != self.text) {
-				WatchUi.Text.setText(text);
+				Ui.Text.setText(text);
 				
 				self.text = text;
 			}
@@ -1397,7 +1397,7 @@ module Extensions {
 		
 		function setFont(font) {
 			if(font != typeface) {
-				WatchUi.Text.setFont(font);
+				Ui.Text.setFont(font);
 				
 				typeface = font;
 			}
@@ -1406,7 +1406,7 @@ module Extensions {
 		
 		function setColor(color) {
 			if(color != self.color) {
-				WatchUi.Text.setColor(color);
+				Ui.Text.setColor(color);
 				
 				self.color = color;
 			}
@@ -1415,7 +1415,7 @@ module Extensions {
 		
 		function setBackgroundColor(color) {
 			if(color != self.backgroundColor) {
-				WatchUi.Text.setBackgroundColor(color);
+				Ui.Text.setBackgroundColor(color);
 				
 				backgroundColor = color;
 			}
