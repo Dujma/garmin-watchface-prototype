@@ -1,8 +1,8 @@
 using Toybox.WatchUi;
-using Toybox.Graphics;
-using Toybox.System;
+using Toybox.Graphics as Gfx;
+using Toybox.System as Sys;
 using Toybox.Lang;
-using Toybox.Application;
+using Toybox.Application as App;
 using Toybox.Time;
 using Toybox.Time.Gregorian;
 using Toybox.Math;
@@ -42,7 +42,7 @@ class prototypewatchfaceView extends WatchUi.WatchFace {
 
 module MainController {
 	// Watch Properties
-	var environmentInfo,
+	var envInfo,
 		width,
 		height;
 	
@@ -74,11 +74,11 @@ module MainController {
 		width = dc.getWidth();
 		height = dc.getHeight();
 		
-		environmentInfo = new Environment.Info();
+		envInfo = new Environment.Info();
 		
 		updateEnvironmentInfo();
 		
-		oldDndState = environmentInfo.doNotDisturb;
+		oldDndState = envInfo.doNotDisturb;
 		
         Textures.init();
         
@@ -87,8 +87,8 @@ module MainController {
         	:locX  => 0,
         	:locY  => 0
     	});
-    	powerSavingMode = Application.getApp().getProperty("PowerSavingMode");
-    	displayIconsOnPowerSavingMode = Application.getApp().getProperty("DisplayIconsOnPowerSavingMode");
+    	powerSavingMode = App.getApp().getProperty("PowerSavingMode");
+    	displayIconsOnPowerSavingMode = App.getApp().getProperty("DisplayIconsOnPowerSavingMode");
 
     	clockArea = new UiElements.ClockArea(WatchUi.loadResource(Rez.Fonts.Gobold14));
 
@@ -98,10 +98,10 @@ module MainController {
     function onUpdate() {
     	updateEnvironmentInfo();
     	
-    	if(environmentInfo.doNotDisturb != oldDndState) {
-			onDndChanged(environmentInfo.doNotDisturb);
+    	if(envInfo.doNotDisturb != oldDndState) {
+			onDndChanged(envInfo.doNotDisturb);
 			
-			oldDndState = environmentInfo.doNotDisturb;
+			oldDndState = envInfo.doNotDisturb;
     	}
     	drawBackground();
 
@@ -215,8 +215,8 @@ module MainController {
     }
     
     function handleSettingUpdate() {
-    	powerSavingMode = Application.getApp().getProperty("PowerSavingMode");
-    	displayIconsOnPowerSavingMode = Application.getApp().getProperty("DisplayIconsOnPowerSavingMode");
+    	powerSavingMode = App.getApp().getProperty("PowerSavingMode");
+    	displayIconsOnPowerSavingMode = App.getApp().getProperty("DisplayIconsOnPowerSavingMode");
     	
     	initElements();
     
@@ -229,28 +229,28 @@ module MainController {
     }
     
     function updateEnvironmentInfo() {
-   	 	environmentInfo.setValues(System.getDeviceSettings(), System.getSystemStats(), UserProfile.getProfile(), ActivityMonitor.getInfo());
+   	 	envInfo.setValues(Sys.getDeviceSettings(), Sys.getSystemStats(), UserProfile.getProfile(), ActivityMonitor.getInfo());
     }
     
     function isPowerSavingModeActive() {
-    	return powerSavingMode == 1 || (powerSavingMode == 2 && environmentInfo.doNotDisturb);
+    	return powerSavingMode == 1 || (powerSavingMode == 2 && envInfo.doNotDisturb);
     }
     
     function drawBackground() {
-    	dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_BLACK);
+    	dc.setColor(Gfx.COLOR_BLACK, Gfx.COLOR_BLACK);
         dc.clear();
     }
 }
 
 module UiElements {
 	class ClockArea {
-		private var hoursText,
+		private var hoursTxt,
 					hoursFormat,
-					minutesText,
+					minutesTxt,
 					minutesColon,
-					secondsText,
-					dateText,
-					partOfDayText,
+					secondsTxt,
+					dateTxt,
+					partOfDayTxt,
 					clockElements,
 					displaySeconds,
 					wereSecondsDisplayed;
@@ -261,48 +261,48 @@ module UiElements {
 			var fntGoboldBold78 = WatchUi.loadResource(Rez.Fonts.GoboldBold78),
 	        	fntGoboldBold55 = WatchUi.loadResource(Rez.Fonts.GoboldBold55);
 
-			hoursText = clockElements.add(new Extensions.Text({
+			hoursTxt = clockElements.add(new Extensions.Text({
 			    :text => "00",
-	            :color         => Graphics.COLOR_WHITE,
+	            :color         => Gfx.COLOR_WHITE,
 	            :typeface      => fntGoboldBold78,
 	            :locX          => 88 + (MainController.dc.getTextWidthInPixels("00", fntGoboldBold78) / 2),
 	            :locY          => 129,
-	            :justification => Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_RIGHT
+	            :justification => Gfx.TEXT_JUSTIFY_VCENTER | Gfx.TEXT_JUSTIFY_RIGHT
 	        }, false))[clockElements.size() - 1];
-	        minutesText = clockElements.add(new Extensions.Text({
-	            :color    => Graphics.COLOR_LT_GRAY,
+	        minutesTxt = clockElements.add(new Extensions.Text({
+	            :color    => Gfx.COLOR_LT_GRAY,
 	            :typeface => fntGoboldBold55,
 	            :locX     => 177,
 	            :locY     => 121
 	        }, true))[clockElements.size() - 1];
 	        minutesColon = clockElements.add(new Extensions.Text({
-	            :color    => Graphics.COLOR_LT_GRAY,
+	            :color    => Gfx.COLOR_LT_GRAY,
 	            :typeface => fntGoboldBold55,
 	            :locX     => 137,
 	            :locY     => 121
 	        }, true))[clockElements.size() - 1];
-	        dateText = clockElements.add(new Extensions.Text({
-	            :color    => Graphics.COLOR_WHITE,
+	        dateTxt = clockElements.add(new Extensions.Text({
+	            :color    => Gfx.COLOR_WHITE,
 	            :typeface => WatchUi.loadResource(Rez.Fonts.Gobold18),
 	            :locX     => 177,
 	            :locY     => 151
 	        }, true))[clockElements.size() - 1];
-	        partOfDayText = clockElements.add(new Extensions.Text({
-	            :color    => Graphics.COLOR_WHITE,
+	        partOfDayTxt = clockElements.add(new Extensions.Text({
+	            :color    => Gfx.COLOR_WHITE,
 	            :typeface => fntGobold14,
 	            :locX     => 44,
 	            :locY     => 152
 	        }, true))[clockElements.size() - 1];
-	        secondsText = new Extensions.Text({
+	        secondsTxt = new Extensions.Text({
 	        	:text     => "00",
 	        	:typeface => fntGobold14,
-	            :color    => Graphics.COLOR_LT_GRAY,
+	            :color    => Gfx.COLOR_LT_GRAY,
 	            :locX     => 213,
 	            :locY     => 106
 	        }, true);
 
-	        hoursFormat = Application.getApp().getProperty("AddLeadingZero") ? "%02d" : "%d";
-	        displaySeconds = Application.getApp().getProperty("DisplaySeconds");
+	        hoursFormat = App.getApp().getProperty("AddLeadingZero") ? "%02d" : "%d";
+	        displaySeconds = App.getApp().getProperty("DisplaySeconds");
 	        
 	        var shouldDisplaySeconds = shouldDisplaySeconds();
 
@@ -317,43 +317,43 @@ module UiElements {
 	    	var now = Gregorian.info(Time.now(), Time.FORMAT_MEDIUM),
 	    		hours = now.hour;
 
-		    partOfDayText.setText(hours > 12 ? "P" : "A");
+		    partOfDayTxt.setText(hours > 12 ? "P" : "A");
 		    
-		    if(!MainController.environmentInfo.is24Hour) {
+		    if(!MainController.envInfo.is24Hour) {
 				hours -= hours > 12 ? 12 : 0;
 			}
-			hoursText.setText(hours.format(hoursFormat));
-			minutesText.setText(now.min.format("%02d"));
+			hoursTxt.setText(hours.format(hoursFormat));
+			minutesTxt.setText(now.min.format("%02d"));
 			minutesColon.setText(":");
-			dateText.setText(now.day.format("%02d") + " " + now.month.toUpper());
+			dateTxt.setText(now.day.format("%02d") + " " + now.month.toUpper());
 			
-			hoursText.draw();
-			minutesText.draw();
+			hoursTxt.draw();
+			minutesTxt.draw();
 			minutesColon.draw();
-			dateText.draw();
-			partOfDayText.draw();
+			dateTxt.draw();
+			partOfDayTxt.draw();
 
 			if(shouldDisplaySeconds()) {
-				secondsText.setText(now.sec.format("%02d"));
-				secondsText.draw();
+				secondsTxt.setText(now.sec.format("%02d"));
+				secondsTxt.draw();
 			}
-			Utils.drawLine(130, 96, 185, 3, Graphics.COLOR_RED);
-			Utils.drawLine(130, 162, 185, 3, Graphics.COLOR_RED);
+			Utils.drawLine(130, 96, 185, 3, Gfx.COLOR_RED);
+			Utils.drawLine(130, 162, 185, 3, Gfx.COLOR_RED);
 	    }
 
 	    function onSettingUpdate() {
-	    	hoursFormat = Application.getApp().getProperty("AddLeadingZero") ? "%02d" : "%d";
-	    	displaySeconds = Application.getApp().getProperty("DisplaySeconds");
+	    	hoursFormat = App.getApp().getProperty("AddLeadingZero") ? "%02d" : "%d";
+	    	displaySeconds = App.getApp().getProperty("DisplaySeconds");
 	    	
 	    	setClockPosition();
 	    }
 	    
 	    function onEnterSleep() {
-	    	secondsText.setColor(Graphics.COLOR_TRANSPARENT);
+	    	secondsTxt.setColor(Gfx.COLOR_TRANSPARENT);
 	    }
 	    
 	    function onExitSleep() {
-	    	secondsText.setColor(Graphics.COLOR_LT_GRAY);
+	    	secondsTxt.setColor(Gfx.COLOR_LT_GRAY);
 	    	
 	    	setClockPosition();
 	    }
@@ -368,11 +368,11 @@ module UiElements {
 	    	if(shouldDisplaySeconds != wereSecondsDisplayed) {
 	    		if(shouldDisplaySeconds) {
 		    		for(var i = 0; i < clockElements.size(); ++i) {
-			    		clockElements[i].locX -= secondsText.getDimensions()[0] / 2;
+			    		clockElements[i].locX -= secondsTxt.getDimensions()[0] / 2;
 			    	}
 	    		} else {
 	    			for(var i = 0; i < clockElements.size(); ++i) {
-			    		clockElements[i].locX += secondsText.getDimensions()[0] / 2;
+			    		clockElements[i].locX += secondsTxt.getDimensions()[0] / 2;
 			    	}
 	    		}
 		    	wereSecondsDisplayed = shouldDisplaySeconds;
@@ -391,57 +391,57 @@ module UiElements {
 	}
 	
 	class TopIconsBase {
-		protected var batteryText,
-				      batteryIcon,
+		protected var battTxt,
+				      battIcon,
 					  notificationIcon,
 					  alarmIcon,
-					  batteryRectX,
-					  batteryRectY,
-					  batteryRectWidth,
-					  batteryRectHeight;
+					  battRectX,
+					  battRectY,
+					  battRectWidth,
+					  battRectHeight;
 		
 		function draw() {
-			var batteryLvl = Math.round(MainController.environmentInfo.battery);
+			var battLvl = Math.round(MainController.envInfo.battery);
 
-			batteryText.setText(Lang.format("$1$%", [ (batteryLvl + 0.5).format( "%d" ) ]));
-			batteryText.draw();
+			battTxt.setText(Lang.format("$1$%", [ (battLvl + 0.5).format( "%d" ) ]));
+			battTxt.draw();
 
-			var color = Graphics.COLOR_WHITE;
+			var color = Gfx.COLOR_WHITE;
 			
-			if(!MainController.environmentInfo.charging) { // 3.0.0
-				if(batteryLvl <= 20) {
-					color = Graphics.COLOR_RED;
+			if(!MainController.envInfo.charging) { // 3.0.0
+				if(battLvl <= 20) {
+					color = Gfx.COLOR_RED;
 				}
 			} else {
-				if(batteryLvl < 99.5) {
-					color = Graphics.COLOR_BLUE;
+				if(battLvl < 99.5) {
+					color = Gfx.COLOR_BLUE;
 				} else {
-					color = Graphics.COLOR_GREEN;
+					color = Gfx.COLOR_GREEN;
 				}
 			}
-			batteryIcon.setColor(color);
-			setBatteryLevel(batteryLvl, color);
+			battIcon.setColor(color);
+			setBatteryLevel(battLvl, color);
 			
-			notificationIcon.setColor(MainController.environmentInfo.notificationCount > 0 ? Graphics.COLOR_RED : Graphics.COLOR_WHITE);
-			alarmIcon.setColor(MainController.environmentInfo.alarmCount > 0 ? Graphics.COLOR_RED : Graphics.COLOR_WHITE);
+			notificationIcon.setColor(MainController.envInfo.notificationCount > 0 ? Gfx.COLOR_RED : Gfx.COLOR_WHITE);
+			alarmIcon.setColor(MainController.envInfo.alarmCount > 0 ? Gfx.COLOR_RED : Gfx.COLOR_WHITE);
 
-			batteryIcon.draw();
+			battIcon.draw();
 			notificationIcon.draw();
 			alarmIcon.draw();
 		}
 		
 		function setBatteryLevel(lvl, color) {
-			Utils.drawRectangleStartingFromLeft(batteryRectX, batteryRectY, Math.ceil(lvl / 100.0 * batteryRectWidth), batteryRectHeight, color);
+			Utils.drawRectangleStartingFromLeft(battRectX, battRectY, Math.ceil(lvl / 100.0 * battRectWidth), battRectHeight, color);
 		}
 	}
 	
 	class TopIcons extends TopIconsBase {
 		function initialize(fntGobold13Shrinked) {
-			batteryIcon = new Textures.Icon('B');
-			batteryIcon.setPosition(130, 19);
+			battIcon = new Textures.Icon('B');
+			battIcon.setPosition(130, 19);
 			
-			batteryText = new Extensions.Text({
-	            :color    => Graphics.COLOR_WHITE,
+			battTxt = new Extensions.Text({
+	            :color    => Gfx.COLOR_WHITE,
 	            :typeface => fntGobold13Shrinked,
 	            :locX     => 130,
 	            :locY     => 7
@@ -453,10 +453,10 @@ module UiElements {
 			alarmIcon = new Textures.Icon('D');
 			alarmIcon.setPosition(104, 15);
 
-			batteryRectWidth = 14;
-			batteryRectHeight = 4;
-			batteryRectX = 129 - batteryRectWidth / 2;
-			batteryRectY = 20;
+			battRectWidth = 14;
+			battRectHeight = 4;
+			battRectX = 129 - battRectWidth / 2;
+			battRectY = 20;
 		}
 		
 		function draw() {
@@ -466,11 +466,11 @@ module UiElements {
 	
 	class TopIconsLarge extends TopIconsBase {
 		function initialize(fntGobold13) {
-			batteryIcon = new Textures.Icon('A');
-			batteryIcon.setPosition(130, 50);
+			battIcon = new Textures.Icon('A');
+			battIcon.setPosition(130, 50);
 			
-			batteryText = new Extensions.Text({
-	            :color    => Graphics.COLOR_WHITE,
+			battTxt = new Extensions.Text({
+	            :color    => Gfx.COLOR_WHITE,
 	            :typeface => fntGobold13,
 	            :locX     => 130,
 	            :locY     => 33
@@ -482,10 +482,10 @@ module UiElements {
 			alarmIcon = new Textures.Icon('Y');
 			alarmIcon.setPosition(80, 55);
 
-			batteryRectWidth = 19;
-			batteryRectHeight = 6;
-			batteryRectX = 129 - batteryRectWidth / 2;
-			batteryRectY = 51;
+			battRectWidth = 19;
+			battRectHeight = 6;
+			battRectX = 129 - battRectWidth / 2;
+			battRectY = 51;
 		}
 		
 		function draw() {
@@ -499,10 +499,10 @@ module UiElements {
 					  btIcon;
 
 		function draw(isLarge) {
-			var moveBarLevel = MainController.environmentInfo.moveBarLevel;
+			var moveBarLevel = MainController.envInfo.moveBarLevel;
 
-			dndIcon.setColor(MainController.environmentInfo.doNotDisturb ? Graphics.COLOR_RED : Graphics.COLOR_WHITE); // 2.1.0
-			btIcon.setColor(MainController.environmentInfo.phoneConnected ? Graphics.COLOR_RED : Graphics.COLOR_WHITE);
+			dndIcon.setColor(MainController.envInfo.doNotDisturb ? Gfx.COLOR_RED : Gfx.COLOR_WHITE); // 2.1.0
+			btIcon.setColor(MainController.envInfo.phoneConnected ? Gfx.COLOR_RED : Gfx.COLOR_WHITE);
 			setMoveIcon(moveBarLevel, isLarge);
 			
 			moveIcon.draw();
@@ -529,24 +529,24 @@ module UiElements {
 			
 			if(!isInSleeptTime) {
 				if(lvl >= 1) {
-					moveIcon.setColor(Graphics.COLOR_RED);
+					moveIcon.setColor(Gfx.COLOR_RED);
 				} else {
-					moveIcon.setColor(Graphics.COLOR_WHITE);
+					moveIcon.setColor(Gfx.COLOR_WHITE);
 				}
 			} else {
-				moveIcon.setColor(Graphics.COLOR_RED);
+				moveIcon.setColor(Gfx.COLOR_RED);
 			}
 		}
 		
 		function isInSleepTime() {
 	        var today = Time.today().value(),
-        		sleepTime = new Time.Moment(today + MainController.environmentInfo.sleepTime),
+        		sleepTime = new Time.Moment(today + MainController.envInfo.sleepTime),
 	        	now = new Time.Moment(Time.now().value());
 	        
 	        if(now.value() >= sleepTime.value()) {
 	       		return true;
 	        } else {
-	         	var wakeTime = new Time.Moment(today + MainController.environmentInfo.wakeTime);
+	         	var wakeTime = new Time.Moment(today + MainController.envInfo.wakeTime);
 	         	
 	        	if(now.value() <= wakeTime.value()) {
 	        		return true;
@@ -596,74 +596,74 @@ module UiElements {
 	}
 
 	class Top {
-		private var daysText,
+		private var daysTxt,
 					arrowIcon,
 					daysInitialY = 88,
 					daysYOffset = 3,
 					dayNames = [ "SU", "MO", "TU", "WE", "TH", "FR", "SA" ],
-					infoText,
+					infoTxt,
 					iconLeft,
 					iconMiddle,
 					iconRight,
-					iconTextLeft,
-					iconTextMiddle,
-					iconTextRight;
+					iconTxtLeft,
+					iconTxtMiddle,
+					iconTxtRight;
 
 		function initialize(fntRobotoBold12, fntGobold13) {
 			arrowIcon = new Textures.Icon('I');
-			arrowIcon.setColor(Graphics.COLOR_RED);
+			arrowIcon.setColor(Gfx.COLOR_RED);
 			arrowIcon.setPosition(56, 93);
 			
 			iconLeft = new Textures.Icon('X');
-			iconLeft.setColor(Graphics.COLOR_WHITE);
+			iconLeft.setColor(Gfx.COLOR_WHITE);
 			iconLeft.setPosition(94, 66);
 			
 			iconMiddle = new Textures.Icon('O');
-			iconMiddle.setColor(Graphics.COLOR_WHITE);
+			iconMiddle.setColor(Gfx.COLOR_WHITE);
 			iconMiddle.setPosition(143, 66);
 			
 			iconRight = new Textures.Icon('9');
-			iconRight.setColor(Graphics.COLOR_WHITE);
+			iconRight.setColor(Gfx.COLOR_WHITE);
 			iconRight.setPosition(193, 66);
 			
-			iconTextLeft = new Extensions.Text({
-	            :color         => Graphics.COLOR_WHITE,
+			iconTxtLeft = new Extensions.Text({
+	            :color         => Gfx.COLOR_WHITE,
 	            :typeface      => fntGobold13,
 	            :locX          => 83,
 	            :locY          => 60,
-	            :justification => Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_RIGHT
+	            :justification => Gfx.TEXT_JUSTIFY_VCENTER | Gfx.TEXT_JUSTIFY_RIGHT
         	}, false);
         	
-        	iconTextMiddle = new Extensions.Text({
-	            :color         => Graphics.COLOR_WHITE,
+        	iconTxtMiddle = new Extensions.Text({
+	            :color         => Gfx.COLOR_WHITE,
 	            :typeface      => fntGobold13,
 	            :locX          => 136,
 	            :locY          => 60,
-	            :justification => Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_RIGHT
+	            :justification => Gfx.TEXT_JUSTIFY_VCENTER | Gfx.TEXT_JUSTIFY_RIGHT
         	}, false);
         	
-        	iconTextRight = new Extensions.Text({
-	            :color         => Graphics.COLOR_WHITE,
+        	iconTxtRight = new Extensions.Text({
+	            :color         => Gfx.COLOR_WHITE,
 	            :typeface      => fntGobold13,
 	            :locX          => 182,
 	            :locY          => 60,
-	            :justification => Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_RIGHT
+	            :justification => Gfx.TEXT_JUSTIFY_VCENTER | Gfx.TEXT_JUSTIFY_RIGHT
         	}, false);
 
-			daysText = new [7];
+			daysTxt = new [7];
 
-			for(var i = 0; i < daysText.size(); ++i) {
-				daysText[i] = new Extensions.Text({
+			for(var i = 0; i < daysTxt.size(); ++i) {
+				daysTxt[i] = new Extensions.Text({
 					:text     => dayNames[i],
-		            :color    => Graphics.COLOR_WHITE,
+		            :color    => Gfx.COLOR_WHITE,
 		            :typeface => fntRobotoBold12,
 		            :locY     => daysInitialY
 	        	}, true);
 			}
-			orderDaysOfWeek(Application.getApp().getProperty("FirstDayOfWeek"));
+			orderDaysOfWeek(App.getApp().getProperty("FirstDayOfWeek"));
 			
-			infoText = new Extensions.Text({
-	            :color    => Graphics.COLOR_WHITE,
+			infoTxt = new Extensions.Text({
+	            :color    => Gfx.COLOR_WHITE,
 	            :typeface => fntRobotoBold12,
 	            :locX     => 130,
 	            :locY     => 41
@@ -674,34 +674,34 @@ module UiElements {
 			var now = Gregorian.info(Time.now(), Time.FORMAT_SHORT),
 				dayOfWeek = now.day_of_week;
 
-			for(var i = 0; i < daysText.size(); ++i) {
+			for(var i = 0; i < daysTxt.size(); ++i) {
 				if(i == dayOfWeek - 1) {
-					daysText[i].setColor(Graphics.COLOR_RED);
+					daysTxt[i].setColor(Gfx.COLOR_RED);
 					
-					daysText[i].locY = daysInitialY - daysYOffset;
+					daysTxt[i].locY = daysInitialY - daysYOffset;
 					
-					arrowIcon.setPosition(daysText[i].locX, arrowIcon.text.locY);
+					arrowIcon.setPosition(daysTxt[i].locX, arrowIcon.text.locY);
 				} else {
 					if(dayNames[i].equals("SA") || dayNames[i].equals("SU")) {
-						daysText[i].setColor(Graphics.COLOR_LT_GRAY);
+						daysTxt[i].setColor(Gfx.COLOR_LT_GRAY);
 					} else {
-						daysText[i].setColor(Graphics.COLOR_WHITE);
+						daysTxt[i].setColor(Gfx.COLOR_WHITE);
 					}
-					daysText[i].locY = daysInitialY;
+					daysTxt[i].locY = daysInitialY;
 				}
-				daysText[i].draw();
+				daysTxt[i].draw();
 				arrowIcon.draw();
 			}
-			// infoText.setText("Week " + Utils.getCurrentWeekNumber());
-			infoText.setText(Utils.getTimeByOffset());
-			infoText.draw();
+			// infoTxt.setText("Week " + Utils.getCurrentWeekNumber());
+			infoTxt.setText(Utils.getTimeByOffset());
+			infoTxt.draw();
 			
 			// TODO: Store this and update it only once a day
 			var currentMoonPhase = Utils.getCurrentMoonPhase();
 			
-			iconTextLeft.setText(Utils.getCurrentWeekNumber().toString());
-			iconTextMiddle.setText(currentMoonPhase['a'] + "°");
-			iconTextRight.setText(Utils.kFormatter(Utils.getCurrentElevation(), 1));
+			iconTxtLeft.setText(Utils.getCurrentWeekNumber().toString());
+			iconTxtMiddle.setText(currentMoonPhase['a'] + "°");
+			iconTxtRight.setText(Utils.kFormatter(Utils.getCurrentElevation(), 1));
 			
 			iconMiddle.setIcon(currentMoonPhase['i']);
 			
@@ -709,9 +709,9 @@ module UiElements {
 			iconMiddle.draw();
 			iconRight.draw();
 			
-			iconTextLeft.draw();
-			iconTextMiddle.draw();
-			iconTextRight.draw();
+			iconTxtLeft.draw();
+			iconTxtMiddle.draw();
+			iconTxtRight.draw();
 		}
 		
 		function getXLocationsBasedOnFirstDayOfWeek(firstDayOfWeek) {
@@ -728,13 +728,13 @@ module UiElements {
 		function orderDaysOfWeek(firstDayOfWeek) {
 			var xLocations = getXLocationsBasedOnFirstDayOfWeek(firstDayOfWeek);
 			
-			for(var i = 0; i < daysText.size(); ++i) {
-				daysText[i].locX = xLocations[i];
+			for(var i = 0; i < daysTxt.size(); ++i) {
+				daysTxt[i].locX = xLocations[i];
 			}
 		}
 		
 		function onSettingUpdate() {
-	    	orderDaysOfWeek(Application.getApp().getProperty("FirstDayOfWeek"));
+	    	orderDaysOfWeek(App.getApp().getProperty("FirstDayOfWeek"));
 	    }
 	}
 	
@@ -745,10 +745,10 @@ module UiElements {
 					icon2,
 					icon3,
 					icon4,
-					textIcon1,
-					textIcon2, 
-					textIcon3,
-					textIcon4;
+					txtIcon1,
+					txtIcon2, 
+					txtIcon3,
+					txtIcon4;
 
 		function initialize(fntGobold13) {
     		moveBarLvl1 = new Textures.Icon('J');
@@ -765,36 +765,36 @@ module UiElements {
     		icon3 = new Textures.Icon('4');
     		icon4 = new Textures.Icon('5');
     		
-    		icon1.setColor(Graphics.COLOR_RED);
-    		icon2.setColor(Graphics.COLOR_RED);
-    		icon3.setColor(Graphics.COLOR_RED);
-    		icon4.setColor(Graphics.COLOR_RED);
+    		icon1.setColor(Gfx.COLOR_RED);
+    		icon2.setColor(Gfx.COLOR_RED);
+    		icon3.setColor(Gfx.COLOR_RED);
+    		icon4.setColor(Gfx.COLOR_RED);
     		
     		icon1.setPosition(72, 174);
     		icon2.setPosition(110, 183);
     		icon3.setPosition(150, 183);
     		icon4.setPosition(188, 175);
     		
-    		textIcon1 = new Extensions.Text({
-	            :color    => Graphics.COLOR_WHITE,
+    		txtIcon1 = new Extensions.Text({
+	            :color    => Gfx.COLOR_WHITE,
 	            :typeface => fntGobold13,
 	            :locX     => 71,
 	            :locY     => 190
         	}, true);
-        	textIcon2 = new Extensions.Text({
-	            :color    => Graphics.COLOR_WHITE,
+        	txtIcon2 = new Extensions.Text({
+	            :color    => Gfx.COLOR_WHITE,
 	            :typeface => fntGobold13,
 	            :locX     => 109,
 	            :locY     => 199
         	}, true);
-        	textIcon3 = new Extensions.Text({
-	            :color    => Graphics.COLOR_WHITE,
+        	txtIcon3 = new Extensions.Text({
+	            :color    => Gfx.COLOR_WHITE,
 	            :typeface => fntGobold13,
 	            :locX     => 149,
 	            :locY     => 199
         	}, true);
-        	textIcon4 = new Extensions.Text({
-	            :color    => Graphics.COLOR_WHITE,
+        	txtIcon4 = new Extensions.Text({
+	            :color    => Gfx.COLOR_WHITE,
 	            :typeface => fntGobold13,
 	            :locX     => 187,
 	            :locY     => 190
@@ -802,55 +802,55 @@ module UiElements {
 		}
 		
 		function draw() {
-			var moveBarLevel = MainController.environmentInfo.moveBarLevel;
+			var moveBarLevel = MainController.envInfo.moveBarLevel;
 
 			if(moveBarLevel > 0) {
-				moveBarLvl1.setColor(Graphics.COLOR_RED);
+				moveBarLvl1.setColor(Gfx.COLOR_RED);
 				moveBarLvl1.draw();
 				
 				for(var i = 0; i < moveBarLevel - 1; ++i) {
-					moveBarOtherLvls[i].setColor(Graphics.COLOR_RED);
+					moveBarOtherLvls[i].setColor(Gfx.COLOR_RED);
 					moveBarOtherLvls[i].draw();
 				}
 				for(var i = moveBarLevel - 1; i < moveBarOtherLvls.size(); ++i) {
-					moveBarOtherLvls[i].setColor(Graphics.COLOR_DK_GRAY);
+					moveBarOtherLvls[i].setColor(Gfx.COLOR_DK_GRAY);
 					moveBarOtherLvls[i].draw();
 				}
 			} else {
-				moveBarLvl1.setColor(Graphics.COLOR_DK_GRAY);
+				moveBarLvl1.setColor(Gfx.COLOR_DK_GRAY);
 				moveBarLvl1.draw();
 				
 				for(var i = 0; i < moveBarOtherLvls.size(); ++i) {
-					moveBarOtherLvls[i].setColor(Graphics.COLOR_DK_GRAY);
+					moveBarOtherLvls[i].setColor(Gfx.COLOR_DK_GRAY);
 					moveBarOtherLvls[i].draw();
 				}
 			}
-			var distance = MainController.environmentInfo.distance != null ? MainController.environmentInfo.distance : 0,
-				calories = MainController.environmentInfo.calories != null ? MainController.environmentInfo.calories : 0,
-				activeMinutesWeek = MainController.environmentInfo.activeMinutesWeek != null ? MainController.environmentInfo.activeMinutesWeek : 0,
-				floorsClimbed = MainController.environmentInfo.floorsClimbed != null ? MainController.environmentInfo.floorsClimbed : 0;
+			var distance = MainController.envInfo.distance != null ? MainController.envInfo.distance : 0,
+				calories = MainController.envInfo.calories != null ? MainController.envInfo.calories : 0,
+				activeMinutesWeek = MainController.envInfo.activeMinutesWeek != null ? MainController.envInfo.activeMinutesWeek : 0,
+				floorsClimbed = MainController.envInfo.floorsClimbed != null ? MainController.envInfo.floorsClimbed : 0;
 			
 			icon1.draw();
 			icon2.draw();
 			icon3.draw();
 			icon4.draw();
 			
-			textIcon1.setText(Utils.kFormatter(distance * 0.01, 1));
-			textIcon2.setText(Utils.kFormatter(calories, 1));
-			textIcon3.setText(Utils.kFormatter(activeMinutesWeek, 1));
-			textIcon4.setText(Utils.kFormatter(floorsClimbed, 1));
+			txtIcon1.setText(Utils.kFormatter(distance * 0.01, 1));
+			txtIcon2.setText(Utils.kFormatter(calories, 1));
+			txtIcon3.setText(Utils.kFormatter(activeMinutesWeek, 1));
+			txtIcon4.setText(Utils.kFormatter(floorsClimbed, 1));
 			
-			textIcon1.draw();
-			textIcon2.draw();
-			textIcon3.draw();
-			textIcon4.draw();
+			txtIcon1.draw();
+			txtIcon2.draw();
+			txtIcon3.draw();
+			txtIcon4.draw();
 		}
 	}
 	
 	// TODO: Think about having a base class for right and left
 	class Right {
-		private var topValueText,
-					bottomValueText,
+		private var topValueTxt,
+					bottomValueTxt,
 					icon,
 					trophyIcon,
 					initialX = 242,
@@ -861,31 +861,31 @@ module UiElements {
 					lineBitmap;
 		
 		function initialize(fntGobold13Shrinked) {
-			topValueText = new Extensions.Text({
-	            :color    => Graphics.COLOR_WHITE,
+			topValueTxt = new Extensions.Text({
+	            :color    => Gfx.COLOR_WHITE,
 	            :typeface => fntGobold13Shrinked,
 	            :locX     => initialX,
 	            :locY     => 87
         	}, true);
-        	bottomValueText = new Extensions.Text({
-	            :color    => Graphics.COLOR_WHITE,
+        	bottomValueTxt = new Extensions.Text({
+	            :color    => Gfx.COLOR_WHITE,
 	            :typeface => fntGobold13Shrinked,
 	            :locX     => initialX,
 	            :locY     => 171
         	}, true);
 
         	icon = new Textures.Icon('1');
-        	icon.setColor(Graphics.COLOR_WHITE);
+        	icon.setColor(Gfx.COLOR_WHITE);
 			icon.setPosition(251, 130);
 			
 			trophyIcon = new Textures.Icon('6');
 			
-			trophyIcon.setColor(Graphics.COLOR_YELLOW);
+			trophyIcon.setColor(Gfx.COLOR_YELLOW);
 			trophyIcon.setPosition(251, 115);
 			
 			arrowIcon = new Textures.Icon('8');
 			
-			arrowIcon.setColor(Graphics.COLOR_RED);
+			arrowIcon.setColor(Gfx.COLOR_RED);
 			
 			lineBitmap = new Textures.Bitmap('C');
 			
@@ -893,17 +893,17 @@ module UiElements {
 		}
 		
 		function draw() {
-			var topValue = MainController.environmentInfo.stepGoal != null ? MainController.environmentInfo.stepGoal : 0,
-				bottomValue = MainController.environmentInfo.steps != null ? MainController.environmentInfo.steps : 0;
+			var topValue = MainController.envInfo.stepGoal != null ? MainController.envInfo.stepGoal : 0,
+				bottomValue = MainController.envInfo.steps != null ? MainController.envInfo.steps : 0;
 
-			topValueText.setText(Utils.kFormatter(topValue, topValue > 99999 ? 0 : 1));
-			bottomValueText.setText(Utils.kFormatter(bottomValue, bottomValue > 99999 ? 0 : 1));
+			topValueTxt.setText(Utils.kFormatter(topValue, topValue > 99999 ? 0 : 1));
+			bottomValueTxt.setText(Utils.kFormatter(bottomValue, bottomValue > 99999 ? 0 : 1));
 			
-			topValueText.locX = offSetXBasedOnWidth(topValueText.getDimensions()[0]);
-			bottomValueText.locX = offSetXBasedOnWidth(bottomValueText.getDimensions()[0]);
+			topValueTxt.locX = offSetXBasedOnWidth(topValueTxt.getDimensions()[0]);
+			bottomValueTxt.locX = offSetXBasedOnWidth(bottomValueTxt.getDimensions()[0]);
 			
-			topValueText.draw();
-			bottomValueText.draw();
+			topValueTxt.draw();
+			bottomValueTxt.draw();
 			
 			if(bottomValue >= topValue) {
 				trophyIcon.draw();
@@ -939,8 +939,8 @@ module UiElements {
 	}
 	
 	class Left {
-		private var topValueText,
-					bottomValueText,
+		private var topValueTxt,
+					bottomValueTxt,
 					icon,
 					initialX = 18,
 					arrowIcon,
@@ -950,39 +950,39 @@ module UiElements {
 					lineBitmap;
 		
 		// Feature only when heart rate is shown
-		private var heartRateText,
+		private var heartRateTxt,
 					heartFilled;
 		
 		function initialize(fntGobold13Shrinked, fntRobotoCondensedBold12) {
 			heartFilled = true;
 			
-			topValueText = new Extensions.Text({
-	            :color    => Graphics.COLOR_WHITE,
+			topValueTxt = new Extensions.Text({
+	            :color    => Gfx.COLOR_WHITE,
 	            :typeface => fntGobold13Shrinked,
 	            :locX     => initialX,
 	            :locY     => 87
         	}, true);
-        	bottomValueText = new Extensions.Text({
-	            :color    => Graphics.COLOR_WHITE,
+        	bottomValueTxt = new Extensions.Text({
+	            :color    => Gfx.COLOR_WHITE,
 	            :typeface => fntGobold13Shrinked,
 	            :locX     => initialX,
 	            :locY     => 171
         	}, true);
-        	heartRateText = new Extensions.Text({
+        	heartRateTxt = new Extensions.Text({
         		:text     => "--",
-	            :color    => Graphics.COLOR_WHITE,
+	            :color    => Gfx.COLOR_WHITE,
 	            :typeface => fntRobotoCondensedBold12,
 	            :locX     => 9,
 	            :locY     => 118
         	}, true);
 
         	icon = new Textures.Icon('N');
-        	icon.setColor(Graphics.COLOR_RED);
+        	icon.setColor(Gfx.COLOR_RED);
 			icon.setPosition(9, 130);
 			
 			arrowIcon = new Textures.Icon('7');
 			
-			arrowIcon.setColor(Graphics.COLOR_RED);
+			arrowIcon.setColor(Gfx.COLOR_RED);
 			
 			lineBitmap = new Textures.Bitmap('G');
 			
@@ -991,16 +991,16 @@ module UiElements {
 		
 		function draw() {
 			var topValue = Utils.getMaxHeartRate(),
-				bottomValue = MainController.environmentInfo.restingHeartRate;
+				bottomValue = MainController.envInfo.restingHeartRate;
 
-			topValueText.setText(Utils.kFormatter(topValue, topValue > 99999 ? 0 : 1));
-			bottomValueText.setText(Utils.kFormatter(bottomValue, bottomValue > 99999 ? 0 : 1));
+			topValueTxt.setText(Utils.kFormatter(topValue, topValue > 99999 ? 0 : 1));
+			bottomValueTxt.setText(Utils.kFormatter(bottomValue, bottomValue > 99999 ? 0 : 1));
 
-			topValueText.locX = offSetXBasedOnWidth(topValueText.getDimensions()[0]);
-			bottomValueText.locX = offSetXBasedOnWidth(bottomValueText.getDimensions()[0]);
+			topValueTxt.locX = offSetXBasedOnWidth(topValueTxt.getDimensions()[0]);
+			bottomValueTxt.locX = offSetXBasedOnWidth(bottomValueTxt.getDimensions()[0]);
 
-			topValueText.draw();
-			bottomValueText.draw();
+			topValueTxt.draw();
+			bottomValueTxt.draw();
 
 			icon.draw();
 			
@@ -1014,18 +1014,18 @@ module UiElements {
 			if(!MainController.isSleep) {
 				var currentHeartRate = Utils.getCurrentHeartRate();
 				
-				heartRateText.setText(currentHeartRate.toString());
+				heartRateTxt.setText(currentHeartRate.toString());
 
 				icon.setIcon(heartFilled ? 'N' : '0');
 				
 				heartFilled = !heartFilled;
 				
-				heartRateText.setColor(Graphics.COLOR_WHITE);
+				heartRateTxt.setColor(Gfx.COLOR_WHITE);
 			} else {
 				icon.setIcon('N');
-				heartRateText.setColor(Graphics.COLOR_TRANSPARENT);
+				heartRateTxt.setColor(Gfx.COLOR_TRANSPARENT);
 			}
-			heartRateText.draw();
+			heartRateTxt.draw();
 		}
 		
 		function drawArrow(topValue, bottomValue) {
@@ -1041,14 +1041,14 @@ module UiElements {
 			heartFilled = true;
 			
 			icon.setIcon('N');
-			heartRateText.setColor(Graphics.COLOR_TRANSPARENT);
+			heartRateTxt.setColor(Gfx.COLOR_TRANSPARENT);
 	    }
 	    
 	    function onExitSleep() {
 			heartFilled = false;
 			
 			icon.setIcon('0');
-			heartRateText.setColor(Graphics.COLOR_WHITE);
+			heartRateTxt.setColor(Gfx.COLOR_WHITE);
 	    }
 	    
 	    function offSetXBasedOnWidth(width) {
@@ -1087,15 +1087,15 @@ module UiElements {
         	lineFill = new Textures.Bitmap("6789AB");
         	dot = new Textures.Icon('g');
 
-        	lineFill.setColor(Graphics.Graphics.COLOR_TRANSPARENT);
-        	lineFill.setBackgroundColor(Graphics.COLOR_BLACK);
+        	lineFill.setColor(Gfx.COLOR_TRANSPARENT);
+        	lineFill.setBackgroundColor(Gfx.COLOR_BLACK);
         	
-        	line.setColor(Graphics.COLOR_DK_GRAY);
+        	line.setColor(Gfx.COLOR_DK_GRAY);
 			
 			line.setPosition(130, 206);
         	lineFill.setPosition(130, 206);
         	
-        	caloriesGoal = Application.getApp().getProperty("ActiveCaloriesGoal");
+        	caloriesGoal = App.getApp().getProperty("ActiveCaloriesGoal");
         	
         	self.fntGobold13Rotated1 = fntGobold13Rotated1;
         	self.fntGobold13Rotated2 = fntGobold13Rotated2;
@@ -1103,7 +1103,7 @@ module UiElements {
 		}
 
 		function draw() {
-			var leftValue = Utils.getActiveCalories(MainController.environmentInfo.calories),
+			var leftValue = Utils.getActiveCalories(MainController.envInfo.calories),
 				rightValue = caloriesGoal,
 				percentage = leftValue >= rightValue ? 1.0 : leftValue / rightValue.toFloat(),
 				targetAngle = (endAngle - startAngle) * percentage,
@@ -1112,13 +1112,13 @@ module UiElements {
 			line.draw();
 			
 			// Previous way using rectangle
-			// Utils.drawRectangleStartingFromLeft(rectangleLocX, rectangleLocY, pointOnCircle[0] - rectangleLocX, rectangleHeight, Graphics.COLOR_RED);
+			// Utils.drawRectangleStartingFromLeft(rectangleLocX, rectangleLocY, pointOnCircle[0] - rectangleLocX, rectangleHeight, Gfx.COLOR_RED);
 
 			var arcStartAngle = 360 - startAngle - 2, // -2 offset because of the arc curvature (so that the line is at the beginning is filled)
 				arcTargetAngle = arcStartAngle - targetAngle + 2; // +2 offset because of the arc curvature (so that the line is at the end is filled)
 
 			if(arcTargetAngle > arcStartAngle) {
-				Utils.drawArc(MainController.width / 2, MainController.height / 2, radius, arcStartAngle, arcTargetAngle, 20, Graphics.COLOR_RED, false);
+				Utils.drawArc(MainController.width / 2, MainController.height / 2, radius, arcStartAngle, arcTargetAngle, 20, Gfx.COLOR_RED, false);
 			}
 			lineFill.draw();
 
@@ -1128,12 +1128,12 @@ module UiElements {
 			dot.setPosition(pointOnCircle[0], pointOnCircle[1]);
 			dot.draw();
 			
-			Utils.drawTextOnCircle(146, 129, fntGobold13Rotated1, fntGobold13RotatedBase, Utils.kFormatter(leftValue, 1), false, Graphics.COLOR_WHITE);
-			Utils.drawTextOnCircle(223, 122, fntGobold13Rotated2, fntGobold13RotatedBase, Utils.kFormatter(rightValue, 1), false, Graphics.COLOR_WHITE);
+			Utils.drawTextOnCircle(146, 129, fntGobold13Rotated1, fntGobold13RotatedBase, Utils.kFormatter(leftValue, 1), false, Gfx.COLOR_WHITE);
+			Utils.drawTextOnCircle(223, 122, fntGobold13Rotated2, fntGobold13RotatedBase, Utils.kFormatter(rightValue, 1), false, Gfx.COLOR_WHITE);
 		}
 		
 		function onSettingUpdate() {
-	    	caloriesGoal = Application.getApp().getProperty("ActiveCaloriesGoal");
+	    	caloriesGoal = App.getApp().getProperty("ActiveCaloriesGoal");
 	    }
 	}
 }
@@ -1189,17 +1189,6 @@ module Textures {
 		"Dot-L"          => 'h'
 		
 	Icons:
-		"Battery-100"    => 'B'
-		"Battery-90"     => 'A'
-		"Battery-80"     => '9'
-		"Battery-70"     => '8'
-		"Battery-60"     => '7'
-		"Battery-50"     => '6'
-		"Battery-40"     => '5'
-		"Battery-30"     => '4'
-		"Battery-20"     => '3'
-		"Battery-10"     => '2'
-		"Battery-5"      => '1'
 		"Battery-0"      => '0'
 		"Notification"   => 'C'
 		"Alarm"          => 'D'
@@ -1222,17 +1211,6 @@ module Textures {
 		"Trophy"         => 'U'
 		"Arrow-Left"     => 'V'
 		"Arrow-Right"    => 'X'
-		"Battery-100-L"  => 'j'
-		"Battery-90-L"   => 'i'
-		"Battery-80-L"   => 'h'
-		"Battery-70-L"   => 'g'
-		"Battery-60-L"   => 'f'
-		"Battery-50-L"   => 'e'
-		"Battery-40-L"   => 'd'
-		"Battery-30-L"   => 'c'
-		"Battery-20-L"   => 'b'
-		"Battery-10-L"   => 'a'
-		"Battery-5-L"    => 'Z'
 		"Battery-0-L"    => 'Y'
 		"Elevation"      => 'k'
 		"Calendar"       => 'l'
@@ -1277,10 +1255,10 @@ module Textures {
 			        backgroundColor;
 
 		function initialize() {
-        	text.setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
+        	text.setJustification(Gfx.TEXT_JUSTIFY_VCENTER | Gfx.TEXT_JUSTIFY_CENTER);
         	
-        	setColor(Graphics.COLOR_WHITE);
-        	setBackgroundColor(Graphics.COLOR_TRANSPARENT);
+        	setColor(Gfx.COLOR_WHITE);
+        	setBackgroundColor(Gfx.COLOR_TRANSPARENT);
 
         	return self;
 		}
@@ -1399,7 +1377,7 @@ module Extensions {
 				self.setColor(color);
 			}
 			if(centerJustification) {
-				setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
+				setJustification(Gfx.TEXT_JUSTIFY_VCENTER | Gfx.TEXT_JUSTIFY_CENTER);
 			}
 			return self;
 		}
@@ -1547,7 +1525,7 @@ module Utils {
     }
     
     function getCurrentWeekNumber() {
-		var today = new Time.Moment(Time.today().value() + System.getClockTime().timeZoneOffset);
+		var today = new Time.Moment(Time.today().value() + Sys.getClockTime().timeZoneOffset);
 
 		var options = {
 		    :year   => Gregorian.info(today, Time.FORMAT_SHORT).year,
@@ -1649,18 +1627,18 @@ module Utils {
 	}
 	
 	function getTimeByOffset() {
-		var offset = Application.getApp().getProperty("AlternativeTimezone"),
+		var offset = App.getApp().getProperty("AlternativeTimezone"),
 			time = new Time.Moment(Time.now().value() + offset * 3600),
 			info = Gregorian.utcInfo(time, Time.FORMAT_SHORT);
 
-		return Lang.format("$1$:$2$ (GMT$3$$4$)", [ info.hour.format(Application.getApp().getProperty("AddLeadingZero") ? "%02d" : "%d"), info.min.format("%02d"), offset >= 0 ? "+" : "-", offset.abs() ]);
+		return Lang.format("$1$:$2$ (GMT$3$$4$)", [ info.hour.format(App.getApp().getProperty("AddLeadingZero") ? "%02d" : "%d"), info.min.format("%02d"), offset >= 0 ? "+" : "-", offset.abs() ]);
 	}
 
 	function getActiveCalories(calories) {
 		var today = Gregorian.info(Time.now(), Time.FORMAT_SHORT),	
-			age = today.year - MainController.environmentInfo.birthYear,
-			weight = MainController.environmentInfo.weight / 1000.0,
-			restCalories = (MainController.environmentInfo.gender == UserProfile.GENDER_MALE ? 5.2 : -197.6) - 6.116 * age + 7.628 * MainController.environmentInfo.height + 12.2 * weight;
+			age = today.year - MainController.envInfo.birthYear,
+			weight = MainController.envInfo.weight / 1000.0,
+			restCalories = (MainController.envInfo.gender == UserProfile.GENDER_MALE ? 5.2 : -197.6) - 6.116 * age + 7.628 * MainController.envInfo.height + 12.2 * weight;
 
 		restCalories = Math.round((today.hour * 60 + today.min) / 1440.0 * restCalories).toNumber();
 		
@@ -1671,21 +1649,21 @@ module Utils {
 		if(text.length() > 0) {
 			x += MainController.dc.getTextWidthInPixels(text.substring(0, 1), font) / 2;
 			
-			if(justification != Graphics.TEXT_JUSTIFY_LEFT) {
+			if(justification != Gfx.TEXT_JUSTIFY_LEFT) {
 				var textWidth = MainController.dc.getTextWidthInPixels(text, font) / 2;
 				
-				if(justification == Graphics.TEXT_JUSTIFY_CENTER) {
+				if(justification == Gfx.TEXT_JUSTIFY_CENTER) {
 					x -= textWidth;
 				}
-				else if(justification == Graphics.TEXT_JUSTIFY_RIGHT) {
+				else if(justification == Gfx.TEXT_JUSTIFY_RIGHT) {
 					x -= textWidth * 2;
 				}
 			}
 			for (var i = 0; i < text.length(); ++i) {
 				var char = text.substring(i, i + 1);
 				
-				MainController.dc.setColor(color, Graphics.COLOR_TRANSPARENT);
-				MainController.dc.drawText(x, y, font, char, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
+				MainController.dc.setColor(color, Gfx.COLOR_TRANSPARENT);
+				MainController.dc.drawText(x, y, font, char, Gfx.TEXT_JUSTIFY_CENTER | Gfx.TEXT_JUSTIFY_VCENTER);
 				
 				x += MainController.dc.getTextWidthInPixels(char, font);
 			}
@@ -1704,39 +1682,39 @@ module Utils {
     		var angle = Utils.getAngleForChar(charBaseDimensions[i]["x"], circumference, offset, clockwise) + startAngle;
     		var pointOnCircle = Utils.getPointOnCircle(MainController.width / 2, MainController.height / 2, radius, angle);
 
-    		MainController.dc.setColor(color, Graphics.COLOR_TRANSPARENT);
-    		MainController.dc.drawText(pointOnCircle[0], pointOnCircle[1] - charBaseDimensions[i]["y"], font, text.substring(i, i + 1), Graphics.TEXT_JUSTIFY_LEFT);
+    		MainController.dc.setColor(color, Gfx.COLOR_TRANSPARENT);
+    		MainController.dc.drawText(pointOnCircle[0], pointOnCircle[1] - charBaseDimensions[i]["y"], font, text.substring(i, i + 1), Gfx.TEXT_JUSTIFY_LEFT);
 
     		offset += charBaseDimensions[i]["x"];
     	}
 	}
 	
 	function drawLine(x, y, width, height, color) {
-		MainController.dc.setColor(color, Graphics.COLOR_TRANSPARENT);
+		MainController.dc.setColor(color, Gfx.COLOR_TRANSPARENT);
 
 		MainController.dc.fillRectangle((x - width / 2).abs(), (y - height / 2).abs(), width, height);
 	}
 	
 	function drawRectangleStartingFromLeft(x, y, width, height, color) {
-		MainController.dc.setColor(color, Graphics.COLOR_TRANSPARENT);
+		MainController.dc.setColor(color, Gfx.COLOR_TRANSPARENT);
 
 		MainController.dc.fillRectangle(x, (y - height / 2).abs(), width, height);
 	}
 	
 	function drawRectangleStartingFromMiddle(x, y, width, height, color) {
-		MainController.dc.setColor(color, Graphics.COLOR_TRANSPARENT);
+		MainController.dc.setColor(color, Gfx.COLOR_TRANSPARENT);
 
 		MainController.dc.fillRectangle((x - width / 2).abs(), (y - height / 2).abs(), width, height);
 	}
 	
 	function drawArc(cx, cy, radius, startAngle, endAngle, thickness, color, clockwise) {
-		MainController.dc.setColor(color, Graphics.COLOR_TRANSPARENT);
+		MainController.dc.setColor(color, Gfx.COLOR_TRANSPARENT);
 		MainController.dc.setPenWidth(thickness);
 		
 		if(clockwise) {
-			MainController.dc.drawArc(cx, cy, radius, Graphics.ARC_CLOCKWISE, 360 - startAngle + 90, 360 - endAngle + 90);
+			MainController.dc.drawArc(cx, cy, radius, Gfx.ARC_CLOCKWISE, 360 - startAngle + 90, 360 - endAngle + 90);
 		} else {
-			MainController.dc.drawArc(cx, cy, radius, Graphics.ARC_COUNTER_CLOCKWISE, startAngle + 90, endAngle + 90);
+			MainController.dc.drawArc(cx, cy, radius, Gfx.ARC_COUNTER_CLOCKWISE, startAngle + 90, endAngle + 90);
 		}
 	}
 	
