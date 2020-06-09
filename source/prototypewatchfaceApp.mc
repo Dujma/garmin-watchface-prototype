@@ -1,7 +1,7 @@
-using Toybox.Application;
-using Toybox.WatchUi;
+using Toybox.Application as App;
+using Toybox.WatchUi as Ui;
 
-class prototypewatchfaceApp extends Application.AppBase {
+class prototypewatchfaceApp extends App.AppBase {
     function initialize() {
         AppBase.initialize();
     }
@@ -21,6 +21,6 @@ class prototypewatchfaceApp extends Application.AppBase {
     function onSettingsChanged() {
     	MainController.handleSettingUpdate();
     
-        WatchUi.requestUpdate();
+        Ui.requestUpdate();
     }
 }
