@@ -42,7 +42,9 @@ class prototypewatchfaceView extends WatchUi.WatchFace {
 
 module MainController {
 	// Watch Properties
-	var environmentInfo;
+	var environmentInfo,
+		width,
+		height;
 	
 	// Device Context
 	var dc;
@@ -50,25 +52,27 @@ module MainController {
 	var mockBackground;
 	
 	// UiElements
-	var clockArea;
-	var topIcons;
-	var bottomIcons;
-	var top;
-	var bottom;
-	var right;
-	var left;
-	var topIconsPowerSaving;
-	var bottomIconsPowerSaving;
-	var bottomLine;
+	var clockArea,
+		topIcons,
+		bottomIcons,
+		top,
+		bottom,
+		right,
+		left,
+		topIconsPowerSaving,
+		bottomIconsPowerSaving,
+		bottomLine;
 	
 	// Settings
-	var powerSavingMode;
-	var displayIconsOnPowerSavingMode;
-	var oldDndState;
-	var isSleep = false;
+	var powerSavingMode,
+		displayIconsOnPowerSavingMode,
+		oldDndState,
+		isSleep = false;
 	
 	function onLayout(dc) {
 		self.dc = dc;
+		width = dc.getWidth();
+		height = dc.getHeight();
 		
 		environmentInfo = new Environment.Info();
 		
@@ -177,11 +181,11 @@ module MainController {
     }
     
     function mainElementsInit() {
-    	var fntGobold13Shrinked = WatchUi.loadResource(Rez.Fonts.Gobold13Shrinked);
-    	var fntRobotoBold12 = WatchUi.loadResource(Rez.Fonts.RobotoBold12);
-    	var fntGobold13 = WatchUi.loadResource(Rez.Fonts.Gobold13);
-    	var fntGobold13Rotated1 = WatchUi.loadResource(Rez.Fonts.Gobold13Rotated1);
-    	var fntGobold13Rotated2 = WatchUi.loadResource(Rez.Fonts.Gobold13Rotated2);
+    	var fntGobold13Shrinked = WatchUi.loadResource(Rez.Fonts.Gobold13Shrinked),
+    		fntRobotoBold12 = WatchUi.loadResource(Rez.Fonts.RobotoBold12),
+    		fntGobold13 = WatchUi.loadResource(Rez.Fonts.Gobold13),
+    		fntGobold13Rotated1 = WatchUi.loadResource(Rez.Fonts.Gobold13Rotated1),
+    		fntGobold13Rotated2 = WatchUi.loadResource(Rez.Fonts.Gobold13Rotated2);
     	
         topIcons = new UiElements.TopIcons(fntGobold13Shrinked);
         bottomIcons = new UiElements.BottomIcons();
@@ -240,23 +244,22 @@ module MainController {
 
 module UiElements {
 	class ClockArea {
-		private var hoursText;
-		private var hoursFormat;
-		private var minutesText;
-		private var minutesColon;
-		private var secondsText;
-		private var dateText;
-		private var partOfDayText;
-		private var clockElements;
-		private var displaySeconds;
-		private var wereSecondsDisplayed;
+		private var hoursText,
+					hoursFormat,
+					minutesText,
+					minutesColon,
+					secondsText,
+					dateText,
+					partOfDayText,
+					clockElements,
+					displaySeconds,
+					wereSecondsDisplayed;
 
 	    function initialize(fntGobold14) {
 			clockElements = new [0];
 
-			var fntGoboldBold78 = WatchUi.loadResource(Rez.Fonts.GoboldBold78);
-	        var fntGoboldBold55 = WatchUi.loadResource(Rez.Fonts.GoboldBold55);
-	        var fntGobold18 = WatchUi.loadResource(Rez.Fonts.Gobold18);
+			var fntGoboldBold78 = WatchUi.loadResource(Rez.Fonts.GoboldBold78),
+	        	fntGoboldBold55 = WatchUi.loadResource(Rez.Fonts.GoboldBold55);
 
 			hoursText = clockElements.add(new Extensions.Text({
 			    :text => "00",
@@ -280,7 +283,7 @@ module UiElements {
 	        }, true))[clockElements.size() - 1];
 	        dateText = clockElements.add(new Extensions.Text({
 	            :color    => Graphics.COLOR_WHITE,
-	            :typeface => fntGobold18,
+	            :typeface => WatchUi.loadResource(Rez.Fonts.Gobold18),
 	            :locX     => 177,
 	            :locY     => 151
 	        }, true))[clockElements.size() - 1];
@@ -311,8 +314,8 @@ module UiElements {
 	    }
 	
 	    function draw() {
-	    	var now = Gregorian.info(Time.now(), Time.FORMAT_MEDIUM);
-	    	var hours = now.hour;
+	    	var now = Gregorian.info(Time.now(), Time.FORMAT_MEDIUM),
+	    		hours = now.hour;
 
 		    partOfDayText.setText(hours > 12 ? "P" : "A");
 		    
@@ -388,14 +391,14 @@ module UiElements {
 	}
 	
 	class TopIconsBase {
-		protected var batteryText;
-		protected var batteryIcon;
-		protected var notificationIcon;
-		protected var alarmIcon;
-		protected var batteryRectX;
-		protected var batteryRectY;
-		protected var batteryRectWidth;
-		protected var batteryRectHeight;
+		protected var batteryText,
+				      batteryIcon,
+					  notificationIcon,
+					  alarmIcon,
+					  batteryRectX,
+					  batteryRectY,
+					  batteryRectWidth,
+					  batteryRectHeight;
 		
 		function draw() {
 			var batteryLvl = Math.round(MainController.environmentInfo.battery);
@@ -491,9 +494,9 @@ module UiElements {
 	}
 	
 	class BottomIconsBase {
-		protected var moveIcon;
-		protected var dndIcon;
-		protected var btIcon;
+		protected var moveIcon,
+				      dndIcon,
+					  btIcon;
 
 		function draw(isLarge) {
 			var moveBarLevel = MainController.environmentInfo.moveBarLevel;
@@ -508,8 +511,8 @@ module UiElements {
 		}
 		
 		function setMoveIcon(lvl, isLarge) {
-			var targetIcon = null;
-			var isInSleeptTime = isInSleepTime();
+			var targetIcon = null,
+				isInSleeptTime = isInSleepTime();
 			
 			if(!isInSleeptTime) {
 				if(lvl == 0) {
@@ -536,10 +539,9 @@ module UiElements {
 		}
 		
 		function isInSleepTime() {
-	        var today = Time.today().value();
-	        
-	        var sleepTime = new Time.Moment(today + MainController.environmentInfo.sleepTime);
-	        var now = new Time.Moment(Time.now().value());
+	        var today = Time.today().value(),
+        		sleepTime = new Time.Moment(today + MainController.environmentInfo.sleepTime),
+	        	now = new Time.Moment(Time.now().value());
 	        
 	        if(now.value() >= sleepTime.value()) {
 	       		return true;
@@ -594,18 +596,18 @@ module UiElements {
 	}
 
 	class Top {
-		private var daysText;
-		private var arrowIcon;
-		private var daysInitialY = 88;
-		private var daysYOffset = 3;
-		private var dayNames = [ "SU", "MO", "TU", "WE", "TH", "FR", "SA" ];
-		private var infoText;
-		private var iconLeft;
-		private var iconMiddle;
-		private var iconRight;
-		private var iconTextLeft;
-		private var iconTextMiddle;
-		private var iconTextRight;
+		private var daysText,
+					arrowIcon,
+					daysInitialY = 88,
+					daysYOffset = 3,
+					dayNames = [ "SU", "MO", "TU", "WE", "TH", "FR", "SA" ],
+					infoText,
+					iconLeft,
+					iconMiddle,
+					iconRight,
+					iconTextLeft,
+					iconTextMiddle,
+					iconTextRight;
 
 		function initialize(fntRobotoBold12, fntGobold13) {
 			arrowIcon = new Textures.Icon('I');
@@ -669,8 +671,8 @@ module UiElements {
 		}
 		
 		function draw() {
-			var now = Gregorian.info(Time.now(), Time.FORMAT_SHORT);
-			var dayOfWeek = now.day_of_week;
+			var now = Gregorian.info(Time.now(), Time.FORMAT_SHORT),
+				dayOfWeek = now.day_of_week;
 
 			for(var i = 0; i < daysText.size(); ++i) {
 				if(i == dayOfWeek - 1) {
@@ -716,9 +718,7 @@ module UiElements {
 			var xLocations = [ 55, 80, 105, 130, 155, 180, 205 ];
 
 			if(firstDayOfWeek == Gregorian.DAY_MONDAY) {
-				xLocations = [ 205, 55, 80, 105, 130, 155, 180 ];
-				
-				             
+				xLocations = [ 205, 55, 80, 105, 130, 155, 180 ];         
 			} else if(firstDayOfWeek == Gregorian.DAY_SATURDAY) {
 				xLocations = [ 80, 105, 130, 155, 180, 205, 55 ];
 			}
@@ -739,18 +739,16 @@ module UiElements {
 	}
 	
 	class Bottom {
-		private var moveBarLvl1;
-		private var moveBarOtherLvls;
-		
-		private var icon1;
-		private var icon2;
-		private var icon3;
-		private var icon4;
-		
-		private var textIcon1;
-		private var textIcon2; 
-		private var textIcon3;
-		private var textIcon4;
+		private var moveBarLvl1,
+					moveBarOtherLvls,
+					icon1,
+					icon2,
+					icon3,
+					icon4,
+					textIcon1,
+					textIcon2, 
+					textIcon3,
+					textIcon4;
 
 		function initialize(fntGobold13) {
     		moveBarLvl1 = new Textures.Icon('J');
@@ -827,10 +825,10 @@ module UiElements {
 					moveBarOtherLvls[i].draw();
 				}
 			}
-			var distance = MainController.environmentInfo.distance != null ? MainController.environmentInfo.distance : 0;
-			var calories = MainController.environmentInfo.calories != null ? MainController.environmentInfo.calories : 0;
-			var activeMinutesWeek = MainController.environmentInfo.activeMinutesWeek != null ? MainController.environmentInfo.activeMinutesWeek : 0;
-			var floorsClimbed = MainController.environmentInfo.floorsClimbed != null ? MainController.environmentInfo.floorsClimbed : 0;
+			var distance = MainController.environmentInfo.distance != null ? MainController.environmentInfo.distance : 0,
+				calories = MainController.environmentInfo.calories != null ? MainController.environmentInfo.calories : 0,
+				activeMinutesWeek = MainController.environmentInfo.activeMinutesWeek != null ? MainController.environmentInfo.activeMinutesWeek : 0,
+				floorsClimbed = MainController.environmentInfo.floorsClimbed != null ? MainController.environmentInfo.floorsClimbed : 0;
 			
 			icon1.draw();
 			icon2.draw();
@@ -851,16 +849,16 @@ module UiElements {
 	
 	// TODO: Think about having a base class for right and left
 	class Right {
-		private var topValueText;
-		private var bottomValueText;
-		private var icon;
-		private var trophyIcon;
-		private var initialX = 242;
-		private var arrowIcon;
-		private var startAngle = 108;
-		private var endAngle = 71;
-		private var radius = 104;
-		private var lineBitmap;
+		private var topValueText,
+					bottomValueText,
+					icon,
+					trophyIcon,
+					initialX = 242,
+					arrowIcon,
+					startAngle = 108,
+					endAngle = 71,
+					radius = 104,
+					lineBitmap;
 		
 		function initialize(fntGobold13Shrinked) {
 			topValueText = new Extensions.Text({
@@ -895,8 +893,8 @@ module UiElements {
 		}
 		
 		function draw() {
-			var topValue = MainController.environmentInfo.stepGoal != null ? MainController.environmentInfo.stepGoal : 0;
-			var bottomValue = MainController.environmentInfo.steps != null ? MainController.environmentInfo.steps : 0;
+			var topValue = MainController.environmentInfo.stepGoal != null ? MainController.environmentInfo.stepGoal : 0,
+				bottomValue = MainController.environmentInfo.steps != null ? MainController.environmentInfo.steps : 0;
 
 			topValueText.setText(Utils.kFormatter(topValue, topValue > 99999 ? 0 : 1));
 			bottomValueText.setText(Utils.kFormatter(bottomValue, bottomValue > 99999 ? 0 : 1));
@@ -917,15 +915,11 @@ module UiElements {
 		}
 		
 		function drawArrow(topValue, bottomValue) {
-			var percentage = bottomValue >= topValue ? 1.0 : bottomValue / topValue.toFloat();
-			var targetAngle = (endAngle - startAngle) * percentage;
-			
-			var pointOnCircle = Utils.getPointOnCircle(MainController.dc.getWidth() / 2, MainController.dc.getHeight() / 2, radius, startAngle + targetAngle);
-			
-	   	 	var x = pointOnCircle[0];
-	   	 	var y = pointOnCircle[1];
-	   	 	
-	   	 	arrowIcon.setPosition(x, y);
+			var percentage = bottomValue >= topValue ? 1.0 : bottomValue / topValue.toFloat(),
+				targetAngle = (endAngle - startAngle) * percentage,
+				pointOnCircle = Utils.getPointOnCircle(MainController.width / 2, MainController.height / 2, radius, startAngle + targetAngle);
+
+	   	 	arrowIcon.setPosition(pointOnCircle[0], pointOnCircle[1]);
 			arrowIcon.draw();
 		}
 		
@@ -945,19 +939,19 @@ module UiElements {
 	}
 	
 	class Left {
-		private var topValueText;
-		private var bottomValueText;
-		private var icon;
-		private var initialX = 18;
-		private var arrowIcon;
-		private var radius = 104;
-		private var startAngle = 252; // Reference to "Right". 180 - 18 = 162
-		private var endAngle = 289;
-		private var lineBitmap;
+		private var topValueText,
+					bottomValueText,
+					icon,
+					initialX = 18,
+					arrowIcon,
+					radius = 104,
+					startAngle = 252, // Reference to "Right". 180 - 18 = 162
+					endAngle = 289,
+					lineBitmap;
 		
 		// Feature only when heart rate is shown
-		var heartRateText;
-		var heartFilled;
+		private var heartRateText,
+					heartFilled;
 		
 		function initialize(fntGobold13Shrinked, fntRobotoCondensedBold12) {
 			heartFilled = true;
@@ -996,8 +990,8 @@ module UiElements {
 		}
 		
 		function draw() {
-			var topValue = Utils.getMaxHeartRate();
-			var bottomValue = MainController.environmentInfo.restingHeartRate;
+			var topValue = Utils.getMaxHeartRate(),
+				bottomValue = MainController.environmentInfo.restingHeartRate;
 
 			topValueText.setText(Utils.kFormatter(topValue, topValue > 99999 ? 0 : 1));
 			bottomValueText.setText(Utils.kFormatter(bottomValue, bottomValue > 99999 ? 0 : 1));
@@ -1035,15 +1029,11 @@ module UiElements {
 		}
 		
 		function drawArrow(topValue, bottomValue) {
-			var percentage = bottomValue >= topValue ? 1.0 : bottomValue / topValue.toFloat();
-			var targetAngle = (endAngle - startAngle) * percentage;
-			
-			var pointOnCircle = Utils.getPointOnCircle(MainController.dc.getWidth() / 2, MainController.dc.getHeight() / 2, radius, startAngle + targetAngle);
-			
-	   	 	var x = pointOnCircle[0];
-	   	 	var y = pointOnCircle[1];
-	   	 	
-	   	 	arrowIcon.setPosition(x, y);
+			var percentage = bottomValue >= topValue ? 1.0 : bottomValue / topValue.toFloat(),
+				targetAngle = (endAngle - startAngle) * percentage,
+				pointOnCircle = Utils.getPointOnCircle(MainController.width / 2, MainController.height / 2, radius, startAngle + targetAngle);
+
+	   	 	arrowIcon.setPosition(pointOnCircle[0], pointOnCircle[1]);
 			arrowIcon.draw();
 		}
 		
@@ -1077,22 +1067,20 @@ module UiElements {
 	}
 	
 	class BottomLine {
-		private var caloriesGoal;
-
-		private var line;		
-		private var lineFill;
-		private var dot;
-		private var rectangleLocX = 32;
-		private var rectangleLocY = 206;
-		private var rectangleHeight = 51;
-		private var maxRectangleWidth = 196;
-		private var startAngle = 242;
-		private var endAngle = 118;
-		private var radius = 107.5;
-		
-		private var fntGobold13Rotated1;
-		private var fntGobold13Rotated2;
-		private var fntGobold13RotatedBase;
+		private var caloriesGoal,
+					line,		
+					lineFill,
+					dot,
+					rectangleLocX = 32,
+					rectangleLocY = 206,
+					rectangleHeight = 51,
+					maxRectangleWidth = 196,
+					startAngle = 242,
+					endAngle = 118,
+					radius = 107.5,
+					fntGobold13Rotated1,
+					fntGobold13Rotated2,
+					fntGobold13RotatedBase;
 
 		function initialize(fntGobold13Rotated1, fntGobold13Rotated2, fntGobold13RotatedBase) {
 			line = new Textures.Bitmap("6789AB");
@@ -1115,24 +1103,22 @@ module UiElements {
 		}
 
 		function draw() {
-			var leftValue = Utils.getActiveCalories(MainController.environmentInfo.calories);
-			var rightValue = caloriesGoal;
-			
-			var percentage = leftValue >= rightValue ? 1.0 : leftValue / rightValue.toFloat();
-			var targetAngle = (endAngle - startAngle) * percentage;
-
-			var pointOnCircle = Utils.getPointOnCircle(MainController.dc.getWidth() / 2, MainController.dc.getHeight() / 2, radius, startAngle + targetAngle);
+			var leftValue = Utils.getActiveCalories(MainController.environmentInfo.calories),
+				rightValue = caloriesGoal,
+				percentage = leftValue >= rightValue ? 1.0 : leftValue / rightValue.toFloat(),
+				targetAngle = (endAngle - startAngle) * percentage,
+				pointOnCircle = Utils.getPointOnCircle(MainController.width / 2, MainController.height / 2, radius, startAngle + targetAngle);
 			
 			line.draw();
 			
 			// Previous way using rectangle
 			// Utils.drawRectangleStartingFromLeft(rectangleLocX, rectangleLocY, pointOnCircle[0] - rectangleLocX, rectangleHeight, Graphics.COLOR_RED);
 
-			var arcStartAngle = 360 - startAngle - 2; // -2 offset because of the arc curvature (so that the line is at the beginning is filled)
-			var arcTargetAngle = arcStartAngle - targetAngle + 2; // +2 offset because of the arc curvature (so that the line is at the end is filled)
+			var arcStartAngle = 360 - startAngle - 2, // -2 offset because of the arc curvature (so that the line is at the beginning is filled)
+				arcTargetAngle = arcStartAngle - targetAngle + 2; // +2 offset because of the arc curvature (so that the line is at the end is filled)
 
 			if(arcTargetAngle > arcStartAngle) {
-				Utils.drawArc(MainController.dc.getWidth() / 2, MainController.dc.getHeight() / 2, radius, arcStartAngle, arcTargetAngle, 20, Graphics.COLOR_RED, false);
+				Utils.drawArc(MainController.width / 2, MainController.height / 2, radius, arcStartAngle, arcTargetAngle, 20, Graphics.COLOR_RED, false);
 			}
 			lineFill.draw();
 
@@ -1153,8 +1139,8 @@ module UiElements {
 }
 
 module Textures {
-	var iconsFont;
-	var bitmapsFont;
+	var iconsFont,
+	    bitmapsFont;
 	
 /*
 	Icons (new):
@@ -1286,8 +1272,9 @@ module Textures {
 		var text;
 
 		protected var char;
-		private var color;
-		private var backgroundColor;
+		
+		private var color,
+			        backgroundColor;
 
 		function initialize() {
         	text.setJustification(Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER);
@@ -1391,10 +1378,10 @@ module Textures {
 
 module Extensions {
 	class Text extends WatchUi.Text {
-		private var text;
-		private var color;
-		private var backgroundColor;
-		private var typeface;
+		private var text,
+					color,
+					backgroundColor,
+					typeface;
 		
 		function initialize(settings, centerJustification) {
 			WatchUi.Text.initialize(settings);
@@ -1487,8 +1474,7 @@ module Extensions {
 
 module Environment {
 	class Info {
-		var 
-			doNotDisturb,
+		var doNotDisturb,
 			is24Hour,
 			notificationCount,
 			alarmCount,
@@ -1578,9 +1564,9 @@ module Utils {
     
     function kFormatter(num, precision) {
     	if(num != null) {
-	    	var formatted = (num / 1000.0).format("%." + precision + "f");
-	    	var rounded = Math.round(num / 1000.0);
-			var isWholeNumber = formatted.toFloat() - rounded == 0;
+	    	var formatted = (num / 1000.0).format("%." + precision + "f"),
+	    		rounded = Math.round(num / 1000.0),
+				isWholeNumber = formatted.toFloat() - rounded == 0;
 	
 	    	return num > 999 ? (!isWholeNumber ? formatted : rounded.format("%d")) + "k" : Math.round(num).toNumber() + "";
     	}
@@ -1596,9 +1582,9 @@ module Utils {
 	}
 	
 	function getAvgHeartRate() {
-		var heartRateHistory = ActivityMonitor.getHeartRateHistory(null, false);
-		var sum = 0;
-		var count = 0;
+		var heartRateHistory = ActivityMonitor.getHeartRateHistory(null, false),
+			sum = 0,
+			count = 0;
 
 		var sample = heartRateHistory.next();
 		
@@ -1637,26 +1623,12 @@ module Utils {
 	}
 	
 	function getCurrentMoonPhase() {
-		var now = Gregorian.info(Time.now(), Time.FORMAT_SHORT);
-		
-		var year = now.year;
-		var month = now.month;
-		var day = now.day;
-
-	    if(month < 3) {
-	        year--;
-	        month += 12;
-	    }
-	    ++month;
-	
-	    var julian = ((365.25 * year) + (30.6 * month) + day - 694039.09) / 29.5305882;
-	    var result = julian.toNumber();
-	
-	    julian -= result;
-	    result = Math.round(julian * 8).toNumber();
-		result = result >= 8 ? 0 : result;
-
-	    return moonPhases[result];
+		var now = Gregorian.info(Time.now(), Time.FORMAT_SHORT),
+			year = now.year,
+			month = now.month,
+			day = now.day;
+			
+		return getMoonPhaseForDate(year, month, day);
 	}
 	
 	function getMoonPhaseForDate(year, month, day) {
@@ -1666,8 +1638,8 @@ module Utils {
 	    }
 	    ++month;
 	
-	    var julian = ((365.25 * year) + (30.6 * month) + day - 694039.09) / 29.5305882;
-	    var result = julian.toNumber();
+	    var julian = ((365.25 * year) + (30.6 * month) + day - 694039.09) / 29.5305882,
+	    	result = julian.toNumber();
 	
 	    julian -= result;
 	    result = Math.round(julian * 8).toNumber();
@@ -1677,19 +1649,18 @@ module Utils {
 	}
 	
 	function getTimeByOffset() {
-		var offset = Application.getApp().getProperty("AlternativeTimezone");
-		var time = new Time.Moment(Time.now().value() + offset * 3600);
-		
-		var info = Gregorian.utcInfo(time, Time.FORMAT_SHORT);
+		var offset = Application.getApp().getProperty("AlternativeTimezone"),
+			time = new Time.Moment(Time.now().value() + offset * 3600),
+			info = Gregorian.utcInfo(time, Time.FORMAT_SHORT);
 
 		return Lang.format("$1$:$2$ (GMT$3$$4$)", [ info.hour.format(Application.getApp().getProperty("AddLeadingZero") ? "%02d" : "%d"), info.min.format("%02d"), offset >= 0 ? "+" : "-", offset.abs() ]);
 	}
 
 	function getActiveCalories(calories) {
-		var today = Gregorian.info(Time.now(), Time.FORMAT_SHORT);		
-		var age = today.year - MainController.environmentInfo.birthYear;
-		var weight = MainController.environmentInfo.weight / 1000.0;
-		var restCalories = (MainController.environmentInfo.gender == UserProfile.GENDER_MALE ? 5.2 : -197.6) - 6.116 * age + 7.628 * MainController.environmentInfo.height + 12.2 * weight;
+		var today = Gregorian.info(Time.now(), Time.FORMAT_SHORT),	
+			age = today.year - MainController.environmentInfo.birthYear,
+			weight = MainController.environmentInfo.weight / 1000.0,
+			restCalories = (MainController.environmentInfo.gender == UserProfile.GENDER_MALE ? 5.2 : -197.6) - 6.116 * age + 7.628 * MainController.environmentInfo.height + 12.2 * weight;
 
 		restCalories = Math.round((today.hour * 60 + today.min) / 1440.0 * restCalories).toNumber();
 		
@@ -1725,13 +1696,13 @@ module Utils {
 		if(!clockwise) {
 			startAngle *= -1;
 		}
-    	var circumference = Utils.getCircleCircumference(radius);
-    	var charBaseDimensions = Utils.getDimensionsOfEachChar(baseFont, text);
-    	var offset = 0;
+    	var circumference = Utils.getCircleCircumference(radius),
+    		charBaseDimensions = Utils.getDimensionsOfEachChar(baseFont, text),
+    		offset = 0;
  
     	for(var i = 0; i < charBaseDimensions.size(); ++i) {
     		var angle = Utils.getAngleForChar(charBaseDimensions[i]["x"], circumference, offset, clockwise) + startAngle;
-    		var pointOnCircle = Utils.getPointOnCircle(MainController.dc.getWidth() / 2, MainController.dc.getHeight() / 2, radius, angle);
+    		var pointOnCircle = Utils.getPointOnCircle(MainController.width / 2, MainController.height / 2, radius, angle);
 
     		MainController.dc.setColor(color, Graphics.COLOR_TRANSPARENT);
     		MainController.dc.drawText(pointOnCircle[0], pointOnCircle[1] - charBaseDimensions[i]["y"], font, text.substring(i, i + 1), Graphics.TEXT_JUSTIFY_LEFT);
@@ -1771,8 +1742,8 @@ module Utils {
 	
 	// 0 = 12 o'clock, 90 = 3 o'clock, 180 = 6 o'clock, 270 = 9 o'clock
 	function getPointOnCircle(cx, cy, radius, angle) {
-		var x = cx + radius * Math.cos(((angle - 90) * 2 * Math.PI) / 360); // -90 so that it starts at 12 o'clock
-		var y = cy + radius * Math.sin(((angle - 90) * 2 * Math.PI) / 360);
+		var x = cx + radius * Math.cos(((angle - 90) * 2 * Math.PI) / 360), // -90 so that it starts at 12 o'clock
+			y = cy + radius * Math.sin(((angle - 90) * 2 * Math.PI) / 360);
    	 	
    	 	return [ x, y ];
 	}
