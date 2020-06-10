@@ -9,7 +9,7 @@ class prototypewatchfaceServiceDelegate extends Sys.ServiceDelegate {
 	}
 	
     function onTemporalEvent() {
-    	getCurrentWeather();
+    	getCurrentWeather(method(:onWeatherReceived));
     }
     
     function onWeatherReceived(responseCode, data) {
@@ -20,13 +20,13 @@ class prototypewatchfaceServiceDelegate extends Sys.ServiceDelegate {
        	}
 	}
 
-   	function getCurrentWeather() {
+   	function getCurrentWeather(callback) {
 		var url = "https://api.openweathermap.org/data/2.5/weather",
 			currentLocation = getCurrentLocation(),
 		    params = null;
 		
 		// Test in simulator
-		// currentLocation = [43.34, 17.79];
+		currentLocation = [43.34, 17.79];
 
 		if(currentLocation != null) {
 			params = {
@@ -38,7 +38,7 @@ class prototypewatchfaceServiceDelegate extends Sys.ServiceDelegate {
    		var options = {
            	:method => Communications.HTTP_REQUEST_METHOD_GET
    		};
-       	Communications.makeWebRequest(url, params, options, method(:onWeatherReceived));
+       	Communications.makeWebRequest(url, params, options, callback);
   	}
   	
   	function getCurrentLocation() {
