@@ -3,6 +3,7 @@ using Toybox.System as Sys;
 
 (:background)
 class prototypewatchfaceServiceDelegate extends Sys.ServiceDelegate {
+	// TODO: Only initialize this if the weather is active. If not, use this from regular app to obtain the sunrise and sunset at midnight.
 	function initialize() {
 		Sys.ServiceDelegate.initialize();
 	}
