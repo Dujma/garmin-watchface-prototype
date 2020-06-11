@@ -1756,4 +1756,14 @@ module Utils {
 	function getAngleForChar(charWidth, circumference, offset, clockwise) {
 		return Math.toDegrees((charWidth / 2 + offset) / circumference * 2 * Math.PI) * (clockwise ? 1 : -1);
 	}
+
+  	(:background)
+  	function getCurrentLocation() {
+		var currentLocation = Activity.getActivityInfo().currentLocation;
+		
+		if(currentLocation != null) {
+			return currentLocation.toDegrees();
+		}
+		return currentLocation;
+	}
 }

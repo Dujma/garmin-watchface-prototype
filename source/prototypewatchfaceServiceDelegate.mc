@@ -14,19 +14,29 @@ class prototypewatchfaceServiceDelegate extends Sys.ServiceDelegate {
     
     function onWeatherReceived(responseCode, data) {
    		if(responseCode == 200) {
-   			data["updated"] = new Time.Moment(Time.now().value()).value();
-
-       		Background.exit(data);
+   			var weather = { 
+   				"updated" => new Time.Moment(Time.now().value()).value(),
+   				"sunrise" => data["sys"]["sunrise"],
+   				"sunset" => data["sys"]["sunset"],
+   				"windSpeed" => data["wind"]["speed"],
+   				"windDeg" => data["wind"]["deg"],
+   				"city" => data["name"],
+   				"weatherId" => data["weather"][0]["id"],
+   				"temp" => data["main"]["temp"],
+   				"pressure" => data["main"]["pressure"],
+   				"humidity" => data["main"]["humidity"]
+   			};
+       		Background.exit(weather);
        	}
 	}
 
-   	function getCurrentWeather(callback) {
+	function getCurrentWeather(callback) {
 		var url = "https://api.openweathermap.org/data/2.5/weather",
-			currentLocation = getCurrentLocation(),
+			currentLocation = Utils.getCurrentLocation(),
 		    params = null;
 		
 		// Test in simulator
-		currentLocation = [43.34, 17.79];
+		// currentLocation = [43.34, 17.79];
 
 		if(currentLocation != null) {
 			params = {
@@ -40,13 +50,4 @@ class prototypewatchfaceServiceDelegate extends Sys.ServiceDelegate {
    		};
        	Communications.makeWebRequest(url, params, options, callback);
   	}
-  	
-  	function getCurrentLocation() {
-		var currentLocation = Activity.getActivityInfo().currentLocation;
-		
-		if(currentLocation != null) {
-			return currentLocation.toDegrees();
-		}
-		return currentLocation;
-	}
 }
