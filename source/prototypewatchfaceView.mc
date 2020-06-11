@@ -696,7 +696,7 @@ module UiElements {
 			infoTxt.setText(Utils.getTimeByOffset());
 			infoTxt.draw();
 			
-			// TODO: Store this and update it only once a day
+			//! TODO: Store this and update it only once a day
 			var currentMoonPhase = Utils.getCurrentMoonPhase();
 			
 			iconTxtLeft.setText(Utils.getCurrentWeekNumber().toString());
@@ -847,7 +847,7 @@ module UiElements {
 		}
 	}
 	
-	// TODO: Think about having a base class for right and left
+	//! TODO: Think about having a base class for right and left
 	class Right {
 		private var topValueTxt,
 					bottomValueTxt,
@@ -1245,7 +1245,7 @@ module Textures {
 		bitmapsFont = Ui.loadResource(Rez.Fonts.Bitmaps);
 	}
 	
-	// TODO: If you need dimensions of the icons than the .fnt file needs to be updated with the correct values
+	//! TODO: If you need dimensions of the icons than the .fnt file needs to be updated with the correct values
 	class Texture {
 		var text;
 
@@ -1504,7 +1504,7 @@ module Environment {
 	}
 }
 
-// TODO: All heart rate related functions need to be checked if they have heart rate monitor
+//! TODO: All heart rate related functions need to be checked if they have heart rate monitor
 module Utils {
 	var moonPhases = { 
 		0  => { 'n' => "New Moon",             'a' => 0,   'i' => 'O' },
