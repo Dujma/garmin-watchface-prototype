@@ -16,6 +16,7 @@ class prototypewatchfaceApp extends App.AppBase {
     }
 
     function getInitialView() {
+    	// TODO: First check if weatherUpdated is null, if true, register for update in moment (5 seconds in future), delete the event and then register with duration
     	if(Toybox.System has :ServiceDelegate) {
     		Background.registerForTemporalEvent(new Time.Duration(5 * 60));
     	}
