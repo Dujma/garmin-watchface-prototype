@@ -55,8 +55,6 @@ class prototypewatchfaceApp extends App.AppBase {
 			Background.registerForTemporalEvent(new Time.Duration(App.getApp().getProperty("WeatherRefreshInterval") * 60));
     	}
     	updateWeather(data);
-        
-        Ui.requestUpdate();
     }
     
     function updateWeather(data) {
@@ -73,6 +71,8 @@ class prototypewatchfaceApp extends App.AppBase {
 	        app.setProperty("temp", data["temp"]);
 	        app.setProperty("pressure", data["pressure"]);
 	        app.setProperty("humidity", data["humidity"]);
+	        
+	        Ui.requestUpdate();
     	}
     }
 }
