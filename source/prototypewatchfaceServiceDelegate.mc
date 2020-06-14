@@ -13,8 +13,10 @@ class prototypewatchfaceServiceDelegate extends Sys.ServiceDelegate {
     }
     
     function onWeatherReceived(responseCode, data) {
+    	var weather = null;
+    	
    		if(responseCode == 200) {
-   			var weather = { 
+   			weather = { 
    				"updated" => new Time.Moment(Time.now().value()).value(),
    				"sunrise" => data["sys"]["sunrise"],
    				"sunset" => data["sys"]["sunset"],
@@ -26,8 +28,15 @@ class prototypewatchfaceServiceDelegate extends Sys.ServiceDelegate {
    				"pressure" => data["main"]["pressure"],
    				"humidity" => data["main"]["humidity"]
    			};
-       		Background.exit(weather);
+       	} else {
+       		var currentLocation = Utils.getCurrentLocation();
+       		
+       		if(currentLocation == null) {
+	       		//! TODO: Notify user that location needs to be updated...
+	       		Sys.println("Location needs to be updated");
+       		}
        	}
+       	Background.exit(weather);
 	}
 
 	function getCurrentWeather(callback) {

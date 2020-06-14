@@ -62,15 +62,17 @@ class prototypewatchfaceApp extends App.AppBase {
     function updateWeather(data) {
     	var app = App.getApp();
     	
-        app.setProperty("weatherUpdated", data["updated"]);
-        app.setProperty("sunrise", data["sunrise"]);
-        app.setProperty("sunset", data["sunset"]);
-        app.setProperty("windSpeed", data["windSpeed"]);
-        app.setProperty("windDeg", data["windDeg"]);
-        app.setProperty("city", data["city"]);
-        app.setProperty("weatherId", data["weatherId"]);
-        app.setProperty("temp", data["temp"]);
-        app.setProperty("pressure", data["pressure"]);
-        app.setProperty("humidity", data["humidity"]);
+    	if(data != null) {
+	    	app.setProperty("weatherUpdated", data["updated"]);
+	        app.setProperty("sunrise", data["sunrise"]);
+	        app.setProperty("sunset", data["sunset"]);
+	        app.setProperty("windSpeed", data["windSpeed"]);
+	        app.setProperty("windDeg", data["windDeg"]);
+	        app.setProperty("city", data["city"]);
+	        app.setProperty("weatherId", data["weatherId"]);
+	        app.setProperty("temp", data["temp"]);
+	        app.setProperty("pressure", data["pressure"]);
+	        app.setProperty("humidity", data["humidity"]);
+    	}
     }
 }
