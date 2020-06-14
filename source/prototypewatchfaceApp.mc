@@ -26,21 +26,15 @@ class prototypewatchfaceApp extends App.AppBase {
 				    var nextRunTime = lastRunTime.add(new Time.Duration(5 * 60));
 				    
 				    Background.registerForTemporalEvent(nextRunTime);
-				    
-				    Sys.println("1");
 				} else {
 				    var fiveSecondsFromNow = new Time.Moment(Time.now().value());
     			
 	    			fiveSecondsFromNow.add(new Time.Duration(5));
 	    			
 	    			Background.registerForTemporalEvent(fiveSecondsFromNow);
-	    			
-	    			Sys.println("2");
 				}
     		} else {
     			Background.registerForTemporalEvent(new Time.Duration(App.getApp().getProperty("WeatherRefreshInterval") * 60));
-    			
-    			Sys.println("3");
     		}
     	}
         return [ new prototypewatchfaceView() ];
@@ -57,8 +51,7 @@ class prototypewatchfaceApp extends App.AppBase {
     }
     
     function onBackgroundData(data) {
-    	if(App.getApp().getProperty("weatherUpdated" == null)) {
-    		Sys.println("4");
+    	if(App.getApp().getProperty("weatherUpdated") == null)) {
 			Background.registerForTemporalEvent(new Time.Duration(App.getApp().getProperty("WeatherRefreshInterval") * 60));
     	}
     	updateWeather(data);
@@ -67,7 +60,6 @@ class prototypewatchfaceApp extends App.AppBase {
     }
     
     function updateWeather(data) {
-    	Sys.println("Uslo");
     	var app = App.getApp();
     	
         app.setProperty("weatherUpdated", data["updated"]);
