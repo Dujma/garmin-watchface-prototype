@@ -693,7 +693,14 @@ module UiElements {
 				arrowIcon.draw();
 			}
 			// infoTxt.setText("Week " + Utils.getCurrentWeekNumber());
-			infoTxt.setText(Utils.getTimeByOffset());
+			// infoTxt.setText(Utils.getTimeByOffset());
+			var weatherUpdated = App.getApp().getProperty("weatherUpdated");
+			
+			if(weatherUpdated != null) {
+				infoTxt.setText(Utils.formatEpochToHumanReadable(weatherUpdated));
+			} else {
+				infoTxt.setText("--:--:--");
+			}
 			infoTxt.draw();
 			
 			//! TODO: Store this and update it only once a day
@@ -1765,5 +1772,12 @@ module Utils {
 			return currentLocation.toDegrees();
 		}
 		return currentLocation;
+	}
+	
+	function formatEpochToHumanReadable(epoch) {
+		var moment = new Time.Moment(epoch);
+		var info = Gregorian.info(moment, Time.FORMAT_SHORT);
+		
+		return Lang.format("$1$:$2$:$3$", [info.hour.format("%02d"),info.min.format("%02d"),info.sec.format("%02d")]);
 	}
 }

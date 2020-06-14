@@ -1,5 +1,6 @@
 using Toybox.Background;
 using Toybox.System as Sys;
+using Toybox.Time;
 
 (:background)
 class prototypewatchfaceServiceDelegate extends Sys.ServiceDelegate {

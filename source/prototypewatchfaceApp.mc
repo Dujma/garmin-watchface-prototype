@@ -1,7 +1,9 @@
 using Toybox.Application as App;
 using Toybox.WatchUi as Ui;
 using Toybox.System as Sys;
+using Toybox.Time;
 
+(:background)
 class prototypewatchfaceApp extends App.AppBase {
     function initialize() {
         AppBase.initialize();
@@ -16,9 +18,30 @@ class prototypewatchfaceApp extends App.AppBase {
     }
 
     function getInitialView() {
-    	//! TODO: First check if weatherUpdated is null, if true, register for update in moment (5 seconds in future), delete the event and then register with duration
     	if(Toybox.System has :ServiceDelegate) {
-    		Background.registerForTemporalEvent(new Time.Duration(5 * 60));
+    		if(App.getApp().getProperty("weatherUpdated") == null) {
+    			var lastRunTime = Background.getLastTemporalEventTime();
+    			
+				if(new Time.Moment(Time.now().value()).subtract(lastRunTime).value() < new Time.Duration(5 * 60).value()) {
+				    var nextRunTime = lastRunTime.add(new Time.Duration(5 * 60));
+				    
+				    Background.registerForTemporalEvent(nextRunTime);
+				    
+				    Sys.println("1");
+				} else {
+				    var fiveSecondsFromNow = new Time.Moment(Time.now().value());
+    			
+	    			fiveSecondsFromNow.add(new Time.Duration(5));
+	    			
+	    			Background.registerForTemporalEvent(fiveSecondsFromNow);
+	    			
+	    			Sys.println("2");
+				}
+    		} else {
+    			Background.registerForTemporalEvent(new Time.Duration(App.getApp().getProperty("WeatherRefreshInterval") * 60));
+    			
+    			Sys.println("3");
+    		}
     	}
         return [ new prototypewatchfaceView() ];
     }
@@ -34,12 +57,17 @@ class prototypewatchfaceApp extends App.AppBase {
     }
     
     function onBackgroundData(data) {
+    	if(App.getApp().getProperty("weatherUpdated" == null)) {
+    		Sys.println("4");
+			Background.registerForTemporalEvent(new Time.Duration(App.getApp().getProperty("WeatherRefreshInterval") * 60));
+    	}
     	updateWeather(data);
         
         Ui.requestUpdate();
     }
     
     function updateWeather(data) {
+    	Sys.println("Uslo");
     	var app = App.getApp();
     	
         app.setProperty("weatherUpdated", data["updated"]);

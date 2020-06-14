@@ -1,6 +1,7 @@
 <properties>
 
     <property id="BackgroundColor" type="number">0x000000</property>
+    <property id="WeatherRefreshInterval" type="number">5</property>
     <property id="PowerSavingMode" type="number">2</property>
     <property id="DisplayIconsOnPowerSavingMode" type="boolean">true</property>
     <property id="DisplaySeconds" type="number">0</property>
