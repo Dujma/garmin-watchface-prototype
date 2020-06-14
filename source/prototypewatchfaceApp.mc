@@ -51,7 +51,7 @@ class prototypewatchfaceApp extends App.AppBase {
     }
     
     function onBackgroundData(data) {
-    	if(App.getApp().getProperty("weatherUpdated") == null)) {
+    	if(App.getApp().getProperty("weatherUpdated") == null) {
 			Background.registerForTemporalEvent(new Time.Duration(App.getApp().getProperty("WeatherRefreshInterval") * 60));
     	}
     	updateWeather(data);
