@@ -28,7 +28,6 @@
     <string id="OnWake">On Wake</string>
     
     <string id="WeatherRefreshIntervalTitle">Weather refresh interval</string>
-    <string id="FiveMinutes">5 minutes</string>
     <string id="FifthteenMinutes">15 minutes</string>
     <string id="ThirtyMinutes">30 minutes</string>
     <string id="SixtyMinutes">60 minutes</string>

@@ -33,7 +33,9 @@ class prototypewatchfaceServiceDelegate extends Sys.ServiceDelegate {
        		
        		if(currentLocation == null) {
 	       		//! TODO: Notify user that location needs to be updated...
-	       		Sys.println("Location needs to be updated");
+	       		Sys.println("Location needs to be updated!");
+       		} else {
+       			Sys.println("There was a problem processing the request.");
        		}
        	}
        	Background.exit(weather);

@@ -11,7 +11,6 @@
     
     <setting propertyKey="@Properties.WeatherRefreshInterval" title="@Strings.WeatherRefreshIntervalTitle">
         <settingConfig type="list">
-        	<listEntry value="5">@Strings.FiveMinutes</listEntry>
             <listEntry value="15">@Strings.FifthteenMinutes</listEntry>
             <listEntry value="30">@Strings.ThirtyMinutes</listEntry>
             <listEntry value="60">@Strings.SixtyMinutes</listEntry>
