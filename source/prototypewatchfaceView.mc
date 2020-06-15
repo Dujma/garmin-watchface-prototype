@@ -1135,7 +1135,7 @@ module UiElements {
 			dot.setPosition(pointOnCircle[0], pointOnCircle[1]);
 			dot.draw();
 			
-			Utils.drawTextOnCircle(146, 129, fntGobold13Rotated1, fntGobold13RotatedBase, Utils.kFormatter(leftValue, 1), false, Gfx.COLOR_WHITE);
+			Utils.drawTextOnCircle(146, 130, fntGobold13Rotated1, fntGobold13RotatedBase, Utils.kFormatter(leftValue, 1), false, Gfx.COLOR_WHITE);
 			Utils.drawTextOnCircle(223, 122, fntGobold13Rotated2, fntGobold13RotatedBase, Utils.kFormatter(rightValue, 1), false, Gfx.COLOR_WHITE);
 		}
 		
