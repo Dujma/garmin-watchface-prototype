@@ -1727,8 +1727,8 @@ module Utils {
 	
 	// 0 = 12 o'clock, 90 = 3 o'clock, 180 = 6 o'clock, 270 = 9 o'clock
 	function getPointOnCircle(cx, cy, radius, angle) {
-		var x = cx + radius * Math.cos(((angle - 90) * 2 * Math.PI) / 360), // -90 so that it starts at 12 o'clock
-			y = cy + radius * Math.sin(((angle - 90) * 2 * Math.PI) / 360);
+		var x = cx + radius * Math.cos(((angle - 90) * Math.PI) / 180.0), // -90 so that it starts at 12 o'clock
+			y = cy + radius * Math.sin(((angle - 90) * Math.PI) / 180.0);
    	 	
    	 	return [ x, y ];
 	}
@@ -1775,9 +1775,8 @@ module Utils {
 	}
 	
 	function formatEpochToHumanReadable(epoch) {
-		var moment = new Time.Moment(epoch);
-		var info = Gregorian.info(moment, Time.FORMAT_SHORT);
+		var info = Gregorian.info(new Time.Moment(epoch), Time.FORMAT_SHORT);
 		
-		return Lang.format("$1$:$2$:$3$", [info.hour.format("%02d"),info.min.format("%02d"),info.sec.format("%02d")]);
+		return Lang.format("$1$:$2$:$3$", [ info.hour.format("%02d"), info.min.format("%02d"), info.sec.format("%02d") ]);
 	}
 }
