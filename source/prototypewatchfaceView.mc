@@ -1135,8 +1135,8 @@ module UiElements {
 			dot.setPosition(pointOnCircle[0], pointOnCircle[1]);
 			dot.draw();
 			
-			Utils.drawTextOnCircle(146, 130, fntGobold13Rotated1, fntGobold13RotatedBase, Utils.kFormatter(leftValue, 1), false, Gfx.COLOR_WHITE);
-			Utils.drawTextOnCircle(223, 122, fntGobold13Rotated2, fntGobold13RotatedBase, Utils.kFormatter(rightValue, 1), false, Gfx.COLOR_WHITE);
+			Utils.drawTextOnCircle(143, 123, fntGobold13Rotated1, fntGobold13RotatedBase, Utils.kFormatter(leftValue, 1), false, Gfx.COLOR_WHITE, Gfx.TEXT_JUSTIFY_LEFT);
+			Utils.drawTextOnCircle(229, 123, fntGobold13Rotated2, fntGobold13RotatedBase, Utils.kFormatter(rightValue, 1), false, Gfx.COLOR_WHITE, Gfx.TEXT_JUSTIFY_RIGHT);
 		}
 		
 		function onSettingUpdate() {
@@ -1677,22 +1677,22 @@ module Utils {
 		}
 	}
 	
-	function drawTextOnCircle(startAngle, radius, font, baseFont, text, clockwise, color) {
+	function drawTextOnCircle(startAngle, radius, font, baseFont, text, clockwise, color, justification) {
 		if(!clockwise) {
 			startAngle *= -1;
 		}
     	var circumference = Utils.getCircleCircumference(radius),
-    		charBaseDimensions = Utils.getDimensionsOfEachChar(baseFont, text),
+    		charBaseWidths = Utils.getWidthsOfEachChar(baseFont, text),
     		offset = 0;
  
-    	for(var i = 0; i < charBaseDimensions.size(); ++i) {
-    		var angle = Utils.getAngleForChar(charBaseDimensions[i]["x"], circumference, offset, clockwise) + startAngle;
+    	for(var i = 0; i < charBaseWidths.size(); ++i) {
+    		var angle = Utils.getAngleForChar(charBaseWidths[i], circumference, offset, clockwise) + startAngle;
     		var pointOnCircle = Utils.getPointOnCircle(MainController.width / 2, MainController.height / 2, radius, angle);
-
+    		
     		MainController.dc.setColor(color, Gfx.COLOR_TRANSPARENT);
-    		MainController.dc.drawText(pointOnCircle[0], pointOnCircle[1] - charBaseDimensions[i]["y"], font, text.substring(i, i + 1), Gfx.TEXT_JUSTIFY_LEFT);
+    		MainController.dc.drawText(Math.floor(pointOnCircle[0]), Math.floor(pointOnCircle[1]), font, text.substring(i, i + 1), justification | Gfx.TEXT_JUSTIFY_VCENTER);
 
-    		offset += charBaseDimensions[i]["x"];
+    		offset += charBaseWidths[i];
     	}
 	}
 	
@@ -1754,6 +1754,18 @@ module Utils {
 				var dimensions = MainController.dc.getTextDimensions(text.substring(i, i + 1), font);
 				
 				result[i] = { "x" => dimensions[0], "y" => dimensions[1] };
+			}
+			return result;
+		}
+		return null;
+	}
+	
+	function getWidthsOfEachChar(font, text) {
+		if(text.length() > 0) {
+			var result = new [text.length()];
+
+			for(var i = 0; i < text.length(); ++i) {
+				result[i] = MainController.dc.getTextWidthInPixels(text.substring(i, i + 1), font);
 			}
 			return result;
 		}
