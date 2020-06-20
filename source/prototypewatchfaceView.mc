@@ -185,7 +185,8 @@ module MainController {
     		fntRobotoBold12 = Ui.loadResource(Rez.Fonts.RobotoBold12),
     		fntGobold13 = Ui.loadResource(Rez.Fonts.Gobold13),
     		fntGobold13Rotated1 = Ui.loadResource(Rez.Fonts.Gobold13Rotated1),
-    		fntGobold13Rotated2 = Ui.loadResource(Rez.Fonts.Gobold13Rotated2);
+    		fntGobold13Rotated2 = Ui.loadResource(Rez.Fonts.Gobold13Rotated2),
+    		fntGobold13RotatedBase = Ui.loadResource(Rez.Fonts.Gobold13RotatedBase);
     	
         topIcons = new UiElements.TopIcons(fntGobold13Shrinked);
         bottomIcons = new UiElements.BottomIcons();
@@ -193,7 +194,7 @@ module MainController {
         bottom = new UiElements.Bottom(fntGobold13);
         right = new UiElements.Right(fntGobold13Shrinked);
         left = new UiElements.Left(fntGobold13Shrinked, Ui.loadResource(Rez.Fonts.RobotoCondensedBold12));
-        bottomLine = new UiElements.BottomLine(fntGobold13Rotated1, fntGobold13Rotated2, fntGobold13);
+        bottomLine = new UiElements.BottomLine(fntGobold13Rotated1, fntGobold13Rotated2, fntGobold13RotatedBase);
         
         topIconsPowerSaving = null;
         bottomIconsPowerSaving = null;
@@ -1136,7 +1137,7 @@ module UiElements {
 			dot.draw();
 			
 			Utils.drawTextOnCircle(143, 123, fntGobold13Rotated1, fntGobold13RotatedBase, Utils.kFormatter(leftValue, 1), false, Gfx.COLOR_WHITE, Gfx.TEXT_JUSTIFY_LEFT);
-			Utils.drawTextOnCircle(229, 123, fntGobold13Rotated2, fntGobold13RotatedBase, Utils.kFormatter(rightValue, 1), false, Gfx.COLOR_WHITE, Gfx.TEXT_JUSTIFY_RIGHT);
+			Utils.drawTextOnCircle(229, 124, fntGobold13Rotated2, fntGobold13RotatedBase, Utils.kFormatter(rightValue, 1), false, Gfx.COLOR_WHITE, Gfx.TEXT_JUSTIFY_RIGHT);
 		}
 		
 		function onSettingUpdate() {
@@ -1690,7 +1691,7 @@ module Utils {
     		var pointOnCircle = Utils.getPointOnCircle(MainController.width / 2, MainController.height / 2, radius, angle);
     		
     		MainController.dc.setColor(color, Gfx.COLOR_TRANSPARENT);
-    		MainController.dc.drawText(Math.floor(pointOnCircle[0]), Math.floor(pointOnCircle[1]), font, text.substring(i, i + 1), justification | Gfx.TEXT_JUSTIFY_VCENTER);
+    		MainController.dc.drawText(pointOnCircle[0], pointOnCircle[1], font, text.substring(i, i + 1), justification | Gfx.TEXT_JUSTIFY_VCENTER);
 
     		offset += charBaseWidths[i];
     	}
