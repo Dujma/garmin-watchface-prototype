@@ -61,7 +61,8 @@ module MainController {
 		left,
 		topIconsPowerSaving,
 		bottomIconsPowerSaving,
-		bottomLine;
+		bottomLine,
+		topLine;
 	
 	// Settings
 	var powerSavingMode,
@@ -111,6 +112,7 @@ module MainController {
    	 	
    	 	if(!isPowerSavingModeActive) {
    	 		bottomLine.draw();
+   	 		topLine.draw();
    	 		mockBackground.draw(dc);
    	 	}
 		clockArea.draw();
@@ -186,6 +188,8 @@ module MainController {
     		fntGobold13 = Ui.loadResource(Rez.Fonts.Gobold13),
     		fntGobold13Rotated1 = Ui.loadResource(Rez.Fonts.Gobold13Rotated1),
     		fntGobold13Rotated2 = Ui.loadResource(Rez.Fonts.Gobold13Rotated2),
+    		fntGobold13Rotated3 = Ui.loadResource(Rez.Fonts.Gobold13Rotated3),
+    		fntGobold13Rotated4 = Ui.loadResource(Rez.Fonts.Gobold13Rotated4),
     		fntGobold13RotatedBase = Ui.loadResource(Rez.Fonts.Gobold13RotatedBase);
     	
         topIcons = new UiElements.TopIcons(fntGobold13Shrinked);
@@ -195,6 +199,7 @@ module MainController {
         right = new UiElements.Right(fntGobold13Shrinked);
         left = new UiElements.Left(fntGobold13Shrinked, Ui.loadResource(Rez.Fonts.RobotoCondensedBold12));
         bottomLine = new UiElements.BottomLine(fntGobold13Rotated1, fntGobold13Rotated2, fntGobold13RotatedBase);
+        topLine = new UiElements.TopLine(fntGobold13Rotated3, fntGobold13Rotated4, fntGobold13RotatedBase);
         
         topIconsPowerSaving = null;
         bottomIconsPowerSaving = null;
@@ -438,6 +443,8 @@ module UiElements {
 	
 	class TopIcons extends TopIconsBase {
 		function initialize(fntGobold13Shrinked) {
+			TopIconsBase.initialize();
+		
 			battIcon = new Textures.Icon('B');
 			battIcon.setPosition(130, 19);
 			
@@ -467,6 +474,8 @@ module UiElements {
 	
 	class TopIconsLarge extends TopIconsBase {
 		function initialize(fntGobold13) {
+			TopIconsBase.initialize();
+			
 			battIcon = new Textures.Icon('A');
 			battIcon.setPosition(130, 50);
 			
@@ -698,7 +707,7 @@ module UiElements {
 			var weatherUpdated = App.getApp().getProperty("weatherUpdated");
 			
 			if(weatherUpdated != null) {
-				infoTxt.setText(Utils.formatEpochToHumanReadable(weatherUpdated));
+				infoTxt.setText(Utils.formatEpochToHumanReadable(weatherUpdated, true) + " (" + Utils.formatEpochToHumanReadable(App.getApp().getProperty("locationUpdated"), true) + ")");
 			} else {
 				infoTxt.setText("--:--:--");
 			}
@@ -1143,6 +1152,23 @@ module UiElements {
 		function onSettingUpdate() {
 	    	caloriesGoal = App.getApp().getProperty("ActiveCaloriesGoal");
 	    }
+	}
+	
+	class TopLine {
+		private var fntGobold13Rotated3,
+					fntGobold13Rotated4,
+					fntGobold13RotatedBase;
+
+		function initialize(fntGobold13Rotated3, fntGobold13Rotated4, fntGobold13RotatedBase) {
+        	self.fntGobold13Rotated3 = fntGobold13Rotated3;
+        	self.fntGobold13Rotated4 = fntGobold13Rotated4;
+        	self.fntGobold13RotatedBase = fntGobold13RotatedBase;
+		}
+
+		function draw() {
+			Utils.drawTextOnCircle(301, 116, fntGobold13Rotated3, fntGobold13RotatedBase, Utils.formatEpochToHumanReadable(App.getApp().getProperty("sunrise"), false), true, Gfx.COLOR_WHITE, Gfx.TEXT_JUSTIFY_RIGHT);
+			Utils.drawTextOnCircle(44, 116, fntGobold13Rotated4, fntGobold13RotatedBase, Utils.formatEpochToHumanReadable(App.getApp().getProperty("sunset"), false), true, Gfx.COLOR_WHITE, Gfx.TEXT_JUSTIFY_LEFT);
+		}
 	}
 }
 
@@ -1787,9 +1813,15 @@ module Utils {
 		return currentLocation;
 	}
 	
-	function formatEpochToHumanReadable(epoch) {
-		var info = Gregorian.info(new Time.Moment(epoch), Time.FORMAT_SHORT);
-		
-		return Lang.format("$1$:$2$:$3$", [ info.hour.format("%02d"), info.min.format("%02d"), info.sec.format("%02d") ]);
+	function formatEpochToHumanReadable(epoch, showSeconds) {
+		if(epoch != null) {
+			var info = Gregorian.info(new Time.Moment(epoch), Time.FORMAT_SHORT);
+			
+			if(showSeconds) {
+				return Lang.format("$1$:$2$:$3$", [ info.hour.format("%02d"), info.min.format("%02d"), info.sec.format("%02d") ]);
+			}
+			return Lang.format("$1$:$2$", [ info.hour.format("%02d"), info.min.format("%02d") ]);
+		}
+		return null;
 	}
 }

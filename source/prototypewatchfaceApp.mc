@@ -72,6 +72,15 @@ class prototypewatchfaceApp extends App.AppBase {
 	        app.setProperty("pressure", data["pressure"]);
 	        app.setProperty("humidity", data["humidity"]);
 	        
+	        var location = Utils.getCurrentLocation();
+
+	        if(location != null) {
+	        	app.setProperty("locationUpdated", data["updated"]);
+		        app.setProperty("lon", location[0]);
+	    		app.setProperty("lat", location[1]);
+
+	    		Sys.println("Location in cache is updated to: " + location[0] + ", " + location[1]);
+	        }
 	        Ui.requestUpdate();
     	}
     }
