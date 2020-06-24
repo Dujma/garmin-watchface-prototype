@@ -1083,10 +1083,6 @@ module UiElements {
 					line,		
 					lineFill,
 					dot,
-					rectangleLocX = 32,
-					rectangleLocY = 206,
-					rectangleHeight = 51,
-					maxRectangleWidth = 196,
 					startAngle = 242,
 					endAngle = 118,
 					radius = 107.5,
@@ -1157,10 +1153,6 @@ module UiElements {
 					dotSunset,
 					dotSunriseBg,
 					dotSunsetBg,
-					rectangleLocX = 32,
-					rectangleLocY = 53,
-					rectangleHeight = 51,
-					maxRectangleWidth = 196,
 					startAngle = 299,
 					endAngle = 61,
 					radius = 109,
@@ -1236,8 +1228,8 @@ module UiElements {
 				dotSunset.setPosition(pointOnCircleSunset[0], pointOnCircleSunset[1]);
 				dotSunset.draw();
 
-				Utils.drawTextOnCircle(301, 116, fntGobold13Rotated3, fntGobold13RotatedBase, Utils.formatEpochToHumanReadable(sunrise, false), true, Gfx.COLOR_WHITE, Gfx.TEXT_JUSTIFY_RIGHT);
-				Utils.drawTextOnCircle(44, 116, fntGobold13Rotated4, fntGobold13RotatedBase, Utils.formatEpochToHumanReadable(sunset, false), true, Gfx.COLOR_WHITE, Gfx.TEXT_JUSTIFY_LEFT);
+				Utils.drawTextOnCircle(301, 116, fntGobold13Rotated3, fntGobold13RotatedBase, Utils.formatEpochToHumanReadable(sunrise, false, true), true, Gfx.COLOR_WHITE, Gfx.TEXT_JUSTIFY_RIGHT);
+				Utils.drawTextOnCircle(44, 116, fntGobold13Rotated4, fntGobold13RotatedBase, Utils.formatEpochToHumanReadable(sunset, false, true), true, Gfx.COLOR_WHITE, Gfx.TEXT_JUSTIFY_LEFT);
 			} else {
 				//! TODO: Add "-" symbol to fonts...
 			}
@@ -1843,9 +1835,9 @@ module Utils {
 		return currentLocation;
 	}
 	
-	function formatEpochToHumanReadable(epoch, showSeconds) {
+	function formatEpochToHumanReadable(epoch, showSeconds, utc) {
 		if(epoch != null) {
-			var info = Gregorian.info(new Time.Moment(epoch), Time.FORMAT_SHORT);
+			var info = utc ? Gregorian.utcInfo(new Time.Moment(epoch), Time.FORMAT_SHORT) : Gregorian.info(new Time.Moment(epoch), Time.FORMAT_SHORT);
 			
 			if(showSeconds) {
 				return Lang.format("$1$:$2$:$3$", [ info.hour.format("%02d"), info.min.format("%02d"), info.sec.format("%02d") ]);
