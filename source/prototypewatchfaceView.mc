@@ -1196,8 +1196,10 @@ module UiElements {
 		}
 
 		function draw() {
-			var sunriseAbsolute = Utils.getTimeOfTheDayInAbsoluteValue(App.getApp().getProperty("sunrise").toNumber()),
-				sunsetAbsolute = Utils.getTimeOfTheDayInAbsoluteValue(App.getApp().getProperty("sunset").toNumber()),
+			var sunrise = App.getApp().getProperty("sunrise"),
+				sunset = App.getApp().getProperty("sunset"),
+			    sunriseAbsolute = sunrise != null ? sunrise / Gregorian.SECONDS_PER_DAY.toFloat() : 0,
+				sunsetAbsolute =  sunset != null ? sunset / Gregorian.SECONDS_PER_DAY.toFloat() : 0,
 				nowAbsolute = Utils.getTimeOfTheDayInAbsoluteValue(new Time.Moment(Time.now().value()).value()),
 				targetAngleNow = (360 - (startAngle - endAngle)) * nowAbsolute,
 				targetAngleSunrise = (360 - (startAngle - endAngle)) * sunriseAbsolute,
@@ -1208,36 +1210,39 @@ module UiElements {
 
 			line.draw();
 			
-			Utils.drawArc(MainController.width / 2, MainController.height / 2, radius, startAngle + targetAngleSunrise, startAngle + targetAngleSunset, 20, Gfx.COLOR_RED, true);
+			if(sunrise != null && sunrise != null) {
+				Utils.drawArc(MainController.width / 2, MainController.height / 2, radius, startAngle + targetAngleSunrise, startAngle + targetAngleSunset, 20, Gfx.COLOR_RED, true);
+	
+				lineFill.draw();
+				
+				if(pointOnCircleNow[0] >= 89 && pointOnCircleNow[0] <= 170) {
+					pointOnCircleNow[1] = 28;
+				}
+				if(pointOnCircleSunrise[0] >= 89 && pointOnCircleSunrise[0] <= 170) {
+					pointOnCircleSunrise[1] = 28;
+				}
+				if(pointOnCircleSunset[0] >= 89 && pointOnCircleSunset[0] <= 170) {
+					pointOnCircleSunset[1] = 28;
+				}
+				dotSunriseBg.setPosition(pointOnCircleSunrise[0], pointOnCircleSunrise[1]);
+				dotSunriseBg.draw();
+	
+				dotSunsetBg.setPosition(pointOnCircleSunset[0], pointOnCircleSunset[1]);
+				dotSunsetBg.draw();
+	
+				dotSunrise.setPosition(pointOnCircleSunrise[0], pointOnCircleSunrise[1]);
+				dotSunrise.draw();
+				
+				dotSunset.setPosition(pointOnCircleSunset[0], pointOnCircleSunset[1]);
+				dotSunset.draw();
 
-			lineFill.draw();
-			
-			if(pointOnCircleNow[0] >= 89 && pointOnCircleNow[0] <= 170) {
-				pointOnCircleNow[1] = 28;
+				Utils.drawTextOnCircle(301, 116, fntGobold13Rotated3, fntGobold13RotatedBase, Utils.formatEpochToHumanReadable(sunrise, false), true, Gfx.COLOR_WHITE, Gfx.TEXT_JUSTIFY_RIGHT);
+				Utils.drawTextOnCircle(44, 116, fntGobold13Rotated4, fntGobold13RotatedBase, Utils.formatEpochToHumanReadable(sunset, false), true, Gfx.COLOR_WHITE, Gfx.TEXT_JUSTIFY_LEFT);
+			} else {
+				//! TODO: Add "-" symbol to fonts...
 			}
-			if(pointOnCircleSunrise[0] >= 89 && pointOnCircleSunrise[0] <= 170) {
-				pointOnCircleSunrise[1] = 28;
-			}
-			if(pointOnCircleSunset[0] >= 89 && pointOnCircleSunset[0] <= 170) {
-				pointOnCircleSunset[1] = 28;
-			}
-			dotSunriseBg.setPosition(pointOnCircleSunrise[0], pointOnCircleSunrise[1]);
-			dotSunriseBg.draw();
-
-			dotSunsetBg.setPosition(pointOnCircleSunset[0], pointOnCircleSunset[1]);
-			dotSunsetBg.draw();
-
-			dotSunrise.setPosition(pointOnCircleSunrise[0], pointOnCircleSunrise[1]);
-			dotSunrise.draw();
-			
-			dotSunset.setPosition(pointOnCircleSunset[0], pointOnCircleSunset[1]);
-			dotSunset.draw();
-			
 			dotNow.setPosition(pointOnCircleNow[0], pointOnCircleNow[1]);
 			dotNow.draw();
-			
-			Utils.drawTextOnCircle(301, 116, fntGobold13Rotated3, fntGobold13RotatedBase, Utils.formatEpochToHumanReadable(App.getApp().getProperty("sunrise"), false), true, Gfx.COLOR_WHITE, Gfx.TEXT_JUSTIFY_RIGHT);
-			Utils.drawTextOnCircle(44, 116, fntGobold13Rotated4, fntGobold13RotatedBase, Utils.formatEpochToHumanReadable(App.getApp().getProperty("sunset"), false), true, Gfx.COLOR_WHITE, Gfx.TEXT_JUSTIFY_LEFT);
 		}
 	}
 }
@@ -1851,8 +1856,6 @@ module Utils {
 	}
 	
 	function getTimeOfTheDayInAbsoluteValue(value) {
-		var today = new Time.Moment(Time.today().value());
-
-		return (value - today.value()) / Gregorian.SECONDS_PER_DAY.toFloat();
+		return (value - Time.today().value()) / Gregorian.SECONDS_PER_DAY.toFloat();
 	}
 }
