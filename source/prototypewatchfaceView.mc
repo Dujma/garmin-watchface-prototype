@@ -703,14 +703,9 @@ module UiElements {
 				arrowIcon.draw();
 			}
 			// infoTxt.setText("Week " + Utils.getCurrentWeekNumber());
-			// infoTxt.setText(Utils.getTimeByOffset());
-			var weatherUpdated = App.getApp().getProperty("weatherUpdated");
 			
-			if(weatherUpdated != null) {
-				infoTxt.setText(Utils.formatEpochToHumanReadable(weatherUpdated, true) + " (" + Utils.formatEpochToHumanReadable(App.getApp().getProperty("locationUpdated"), true) + ")");
-			} else {
-				infoTxt.setText("--:--:--");
-			}
+			infoTxt.setText(Utils.getTimeByOffset());
+
 			infoTxt.draw();
 			
 			//! TODO: Store this and update it only once a day
@@ -1201,8 +1196,8 @@ module UiElements {
 		}
 
 		function draw() {
-			var sunriseAbsolute = Utils.getTimeOfTheDayInAbsoluteValue(App.getApp().getProperty("sunrise").toNumber() + Gregorian.SECONDS_PER_DAY),
-				sunsetAbsolute = Utils.getTimeOfTheDayInAbsoluteValue(App.getApp().getProperty("sunset").toNumber() + Gregorian.SECONDS_PER_DAY),
+			var sunriseAbsolute = Utils.getTimeOfTheDayInAbsoluteValue(App.getApp().getProperty("sunrise").toNumber()),
+				sunsetAbsolute = Utils.getTimeOfTheDayInAbsoluteValue(App.getApp().getProperty("sunset").toNumber()),
 				nowAbsolute = Utils.getTimeOfTheDayInAbsoluteValue(new Time.Moment(Time.now().value()).value()),
 				targetAngleNow = (360 - (startAngle - endAngle)) * nowAbsolute,
 				targetAngleSunrise = (360 - (startAngle - endAngle)) * sunriseAbsolute,
