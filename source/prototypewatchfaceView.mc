@@ -1196,8 +1196,8 @@ module UiElements {
 		}
 
 		function draw() {
-			var sunriseAbsolute = Utils.getTimeOfTheDayInAbsoluteValue(App.getApp().getProperty("sunrise").toFloat()),
-				sunsetAbsolute = Utils.getTimeOfTheDayInAbsoluteValue(App.getApp().getProperty("sunset").toFloat()),
+			var sunriseAbsolute = Utils.getTimeOfTheDayInAbsoluteValue(App.getApp().getProperty("sunrise").toNumber()),
+				sunsetAbsolute = Utils.getTimeOfTheDayInAbsoluteValue(App.getApp().getProperty("sunset").toNumber()),
 				nowAbsolute = Utils.getTimeOfTheDayInAbsoluteValue(new Time.Moment(Time.now().value()).value()),
 				targetAngleNow = (360 - (startAngle - endAngle)) * nowAbsolute,
 				targetAngleSunrise = (360 - (startAngle - endAngle)) * sunriseAbsolute,

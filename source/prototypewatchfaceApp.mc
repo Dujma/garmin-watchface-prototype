@@ -76,8 +76,8 @@ class prototypewatchfaceApp extends App.AppBase {
 
 	        if(location != null) {
 	        	app.setProperty("locationUpdated", data["updated"]);
-		        app.setProperty("lon", location[0]);
-	    		app.setProperty("lat", location[1]);
+		        app.setProperty("lat", location[0]);
+	    		app.setProperty("lon", location[1]);
 
 	    		Sys.println("Location in cache is updated to: " + location[0] + ", " + location[1]);
 	        }
