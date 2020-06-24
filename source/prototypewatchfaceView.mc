@@ -1155,17 +1155,92 @@ module UiElements {
 	}
 	
 	class TopLine {
-		private var fntGobold13Rotated3,
+		private var line,		
+					lineFill,
+					dotNow,
+					dotSunrise,
+					dotSunset,
+					dotSunriseBg,
+					dotSunsetBg,
+					rectangleLocX = 32,
+					rectangleLocY = 53,
+					rectangleHeight = 51,
+					maxRectangleWidth = 196,
+					startAngle = 299,
+					endAngle = 61,
+					radius = 109,
+					fntGobold13Rotated3,
 					fntGobold13Rotated4,
 					fntGobold13RotatedBase;
 
 		function initialize(fntGobold13Rotated3, fntGobold13Rotated4, fntGobold13RotatedBase) {
+			line = new Textures.Bitmap("012345");
+        	lineFill = new Textures.Bitmap("012345");
+        	
+        	dotNow = new Textures.Icon('g');
+        	dotSunrise = new Textures.Icon('g');
+        	dotSunset = new Textures.Icon('g');
+        	
+        	dotSunriseBg = new Textures.Icon('h');
+        	dotSunsetBg = new Textures.Icon('h');
+        	
+        	dotSunrise.setColor(Gfx.COLOR_BLACK);
+        	dotSunset.setColor(Gfx.COLOR_BLACK);
+        	
+        	lineFill.setColor(Gfx.COLOR_TRANSPARENT);
+        	lineFill.setBackgroundColor(Gfx.COLOR_BLACK);
+        	
+        	line.setColor(Gfx.COLOR_DK_GRAY);
+			
+			line.setPosition(130, 53);
+        	lineFill.setPosition(130, 53);
+        	
         	self.fntGobold13Rotated3 = fntGobold13Rotated3;
         	self.fntGobold13Rotated4 = fntGobold13Rotated4;
         	self.fntGobold13RotatedBase = fntGobold13RotatedBase;
 		}
 
 		function draw() {
+			var sunriseAbsolute = Utils.getTimeOfTheDayInAbsoluteValue(App.getApp().getProperty("sunrise").toNumber() + Gregorian.SECONDS_PER_DAY),
+				sunsetAbsolute = Utils.getTimeOfTheDayInAbsoluteValue(App.getApp().getProperty("sunset").toNumber() + Gregorian.SECONDS_PER_DAY),
+				nowAbsolute = Utils.getTimeOfTheDayInAbsoluteValue(new Time.Moment(Time.now().value()).value()),
+				targetAngleNow = (360 - (startAngle - endAngle)) * nowAbsolute,
+				targetAngleSunrise = (360 - (startAngle - endAngle)) * sunriseAbsolute,
+				targetAngleSunset = (360 - (startAngle - endAngle)) * sunsetAbsolute,
+				pointOnCircleNow = Utils.getPointOnCircle(MainController.width / 2, MainController.height / 2, radius, startAngle + targetAngleNow),
+				pointOnCircleSunrise = Utils.getPointOnCircle(MainController.width / 2, MainController.height / 2, radius, startAngle + targetAngleSunrise),
+				pointOnCircleSunset = Utils.getPointOnCircle(MainController.width / 2, MainController.height / 2, radius, startAngle + targetAngleSunset);
+
+			line.draw();
+			
+			Utils.drawArc(MainController.width / 2, MainController.height / 2, radius, startAngle + targetAngleSunrise, startAngle + targetAngleSunset, 20, Gfx.COLOR_RED, true);
+
+			lineFill.draw();
+			
+			if(pointOnCircleNow[0] >= 89 && pointOnCircleNow[0] <= 170) {
+				pointOnCircleNow[1] = 28;
+			}
+			if(pointOnCircleSunrise[0] >= 89 && pointOnCircleSunrise[0] <= 170) {
+				pointOnCircleSunrise[1] = 28;
+			}
+			if(pointOnCircleSunset[0] >= 89 && pointOnCircleSunset[0] <= 170) {
+				pointOnCircleSunset[1] = 28;
+			}
+			dotSunriseBg.setPosition(pointOnCircleSunrise[0], pointOnCircleSunrise[1]);
+			dotSunriseBg.draw();
+
+			dotSunsetBg.setPosition(pointOnCircleSunset[0], pointOnCircleSunset[1]);
+			dotSunsetBg.draw();
+
+			dotSunrise.setPosition(pointOnCircleSunrise[0], pointOnCircleSunrise[1]);
+			dotSunrise.draw();
+			
+			dotSunset.setPosition(pointOnCircleSunset[0], pointOnCircleSunset[1]);
+			dotSunset.draw();
+			
+			dotNow.setPosition(pointOnCircleNow[0], pointOnCircleNow[1]);
+			dotNow.draw();
+			
 			Utils.drawTextOnCircle(301, 116, fntGobold13Rotated3, fntGobold13RotatedBase, Utils.formatEpochToHumanReadable(App.getApp().getProperty("sunrise"), false), true, Gfx.COLOR_WHITE, Gfx.TEXT_JUSTIFY_RIGHT);
 			Utils.drawTextOnCircle(44, 116, fntGobold13Rotated4, fntGobold13RotatedBase, Utils.formatEpochToHumanReadable(App.getApp().getProperty("sunset"), false), true, Gfx.COLOR_WHITE, Gfx.TEXT_JUSTIFY_LEFT);
 		}
@@ -1177,7 +1252,7 @@ module Textures {
 	    bitmapsFont;
 	
 /*
-	Icons (new):
+	Icons:
 		"Battery"        => 'B'
 		"Notification"   => 'C'
 		"Alarm"          => 'D'
@@ -1221,51 +1296,6 @@ module Textures {
 		"Sleep-L"        => 'f'
 		"Dot"            => 'g'
 		"Dot-L"          => 'h'
-		
-	Icons:
-		"Battery-0"      => '0'
-		"Notification"   => 'C'
-		"Alarm"          => 'D'
-		"Move-1"         => 'E'
-		"Move-5"         => 'F'
-		"Dnd"            => 'G'
-		"Bluetooth"      => 'H'
-		"Arrow-Up"       => 'I'
-		"MoveBar-1"      => 'J'
-		"MoveBar-2"      => 'K'
-		"Move-0"         => 'L'
-		"Sleep"          => 'M'
-		"Heart-1"        => 'N'
-		"Heart-2"        => 'O'
-		"Steps-Side"     => 'P'
-		"Distance"       => 'Q'
-		"Calories"       => 'R'
-		"Stopwatch"      => 'S'
-		"Stairs-Up"      => 'T'
-		"Trophy"         => 'U'
-		"Arrow-Left"     => 'V'
-		"Arrow-Right"    => 'X'
-		"Battery-0-L"    => 'Y'
-		"Elevation"      => 'k'
-		"Calendar"       => 'l'
-		"Moon-0"         => 'm' // New Moon
-		"Moon-1"         => 'n' // Waxing Crescent
-		"Moon-2"         => 'o' // First Quarter
-		"Moon-3"         => 'p' // Waxing Gibbous
-		"Moon-4"         => 'q' // Full Moon
-		"Moon-5"         => 'r' // Waning Gibbous
-		"Moon-6"         => 's' // Third Quarter
-		"Moon-7"         => 't' // Waning Crescent
-		"Alarm-L"        => 'u'
-		"Notification-L" => '#'
-		"Dnd-L"          => '$'
-		"Bluetooth-L"    => '%'
-		"Move-1-L"       => '('
-		"Move-5-L"       => '&'
-		"Move-0-L"       => ')'
-		"Sleep-L"        => '*'
-		"Dot"            => '+'
-		"Dot-L"          => ','
 
 	Bitmaps:
 		"Line-Top"    => "012345"
@@ -1823,5 +1853,11 @@ module Utils {
 			return Lang.format("$1$:$2$", [ info.hour.format("%02d"), info.min.format("%02d") ]);
 		}
 		return null;
+	}
+	
+	function getTimeOfTheDayInAbsoluteValue(value) {
+		var today = new Time.Moment(Time.today().value());
+
+		return (value - today.value()) / Gregorian.SECONDS_PER_DAY.toFloat();
 	}
 }
