@@ -1118,9 +1118,6 @@ module UiElements {
 				pointOnCircle = Utils.getPointOnCircle(MainController.width / 2, MainController.height / 2, radius, startAngle + targetAngle);
 			
 			line.draw();
-			
-			// Previous way using rectangle
-			// Utils.drawRectangleStartingFromLeft(rectangleLocX, rectangleLocY, pointOnCircle[0] - rectangleLocX, rectangleHeight, Gfx.COLOR_RED);
 
 			var arcStartAngle = 360 - startAngle - 2, // -2 offset because of the arc curvature (so that the line is at the beginning is filled)
 				arcTargetAngle = arcStartAngle - targetAngle + 2; // +2 offset because of the arc curvature (so that the line is at the end is filled)
@@ -1202,6 +1199,7 @@ module UiElements {
 
 			line.draw();
 			
+			//! TODO: Sunset could be after midnight. There it should be two instances of line draw...
 			if(sunrise != null && sunrise != null) {
 				Utils.drawArc(MainController.width / 2, MainController.height / 2, radius, startAngle + targetAngleSunrise, startAngle + targetAngleSunset, 20, Gfx.COLOR_RED, true);
 	
