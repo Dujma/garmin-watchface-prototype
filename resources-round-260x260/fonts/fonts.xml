@@ -11,8 +11,8 @@
 	<font id="Gobold13RotatedBase" antialias="true" filename="/fonts/gobold-13-rotated-base/gobold-13-rotated-base.fnt" filter="0123456789k.:" />
 	<font id="Gobold13Rotated1" antialias="true" filename="/fonts/gobold-13-rotated-1/gobold-13-rotated-1.fnt" filter="0123456789k." />
 	<font id="Gobold13Rotated2" antialias="true" filename="/fonts/gobold-13-rotated-2/gobold-13-rotated-2.fnt" filter="0123456789k." />
-	<font id="Gobold13Rotated3" antialias="true" filename="/fonts/gobold-13-rotated-3/gobold-13-rotated-3.fnt" filter="0123456789:" />
-	<font id="Gobold13Rotated4" antialias="true" filename="/fonts/gobold-13-rotated-4/gobold-13-rotated-4.fnt" filter="0123456789:" />
+	<font id="Gobold13Rotated3" antialias="true" filename="/fonts/gobold-13-rotated-3/gobold-13-rotated-3.fnt" filter="0123456789:-" />
+	<font id="Gobold13Rotated4" antialias="true" filename="/fonts/gobold-13-rotated-4/gobold-13-rotated-4.fnt" filter="0123456789:-" />
 
 	<font id="Icons" antialias="true" filename="/icons/icons.fnt" filter="0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefgh" />
 	<font id="Bitmaps" antialias="true" filename="/bitmaps/bitmaps.fnt" filter="0123456789ABCG" />

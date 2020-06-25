@@ -1227,7 +1227,8 @@ module UiElements {
 				Utils.drawTextOnCircle(301, 116, fntGobold13Rotated3, fntGobold13RotatedBase, Utils.formatEpochToHumanReadable(sunrise, false, true), true, Gfx.COLOR_WHITE, Gfx.TEXT_JUSTIFY_RIGHT);
 				Utils.drawTextOnCircle(44, 116, fntGobold13Rotated4, fntGobold13RotatedBase, Utils.formatEpochToHumanReadable(sunset, false, true), true, Gfx.COLOR_WHITE, Gfx.TEXT_JUSTIFY_LEFT);
 			} else {
-				//! TODO: Add "-" symbol to fonts...
+				Utils.drawTextOnCircle(301, 116, fntGobold13Rotated3, fntGobold13RotatedBase, "--:--", true, Gfx.COLOR_WHITE, Gfx.TEXT_JUSTIFY_RIGHT);
+				Utils.drawTextOnCircle(44, 116, fntGobold13Rotated4, fntGobold13RotatedBase, "--:--", true, Gfx.COLOR_WHITE, Gfx.TEXT_JUSTIFY_LEFT);
 			}
 			dotNow.setPosition(pointOnCircleNow[0], pointOnCircleNow[1]);
 			dotNow.draw();
