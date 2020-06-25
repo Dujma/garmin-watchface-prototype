@@ -19,7 +19,7 @@ class prototypewatchfaceApp extends App.AppBase {
 
     function getInitialView() {
     	if(Toybox.System has :ServiceDelegate) {
-    		if(App.getApp().getProperty("weatherUpdated") == null) {
+    		if(App.getApp().getProperty("WeatherUpdated") == null) {
     			var lastRunTime = Background.getLastTemporalEventTime();
     			
 				if(new Time.Moment(Time.now().value()).subtract(lastRunTime).value() < new Time.Duration(5 * 60).value()) {
@@ -51,7 +51,7 @@ class prototypewatchfaceApp extends App.AppBase {
     }
     
     function onBackgroundData(data) {
-    	if(App.getApp().getProperty("weatherUpdated") == null) {
+    	if(App.getApp().getProperty("WeatherUpdated") == null) {
 			Background.registerForTemporalEvent(new Time.Duration(App.getApp().getProperty("WeatherRefreshInterval") * 60));
     	}
     	updateWeather(data);
@@ -62,23 +62,23 @@ class prototypewatchfaceApp extends App.AppBase {
     		var app = App.getApp();
     		var today = Time.today().value();
     	
-	    	app.setProperty("weatherUpdated", data["updated"]);
-	        app.setProperty("sunrise", data["sunrise"].toNumber() - today);
-	        app.setProperty("sunset", data["sunset"].toNumber() - today);
-	        app.setProperty("windSpeed", data["windSpeed"]);
-	        app.setProperty("windDeg", data["windDeg"]);
-	        app.setProperty("city", data["city"]);
-	        app.setProperty("weatherId", data["weatherId"]);
-	        app.setProperty("temp", data["temp"]);
-	        app.setProperty("pressure", data["pressure"]);
-	        app.setProperty("humidity", data["humidity"]);
+	    	app.setProperty("WeatherUpdated", data["updated"]);
+	        app.setProperty("Sunrise", data["sunrise"].toNumber() - today);
+	        app.setProperty("Sunset", data["sunset"].toNumber() - today);
+	        app.setProperty("WindSpeed", data["windSpeed"]);
+	        app.setProperty("WindDeg", data["windDeg"]);
+	        app.setProperty("City", data["city"]);
+	        app.setProperty("WeatherId", data["weatherId"]);
+	        app.setProperty("Temp", data["temp"]);
+	        app.setProperty("Pressure", data["pressure"]);
+	        app.setProperty("Humidity", data["humidity"]);
 	        
 	        var location = Utils.getCurrentLocation();
 
 	        if(location != null) {
-	        	app.setProperty("locationUpdated", data["updated"]);
-		        app.setProperty("lat", location[0]);
-	    		app.setProperty("lon", location[1]);
+	        	app.setProperty("LocationUpdated", data["updated"]);
+		        app.setProperty("Lat", location[0]);
+	    		app.setProperty("Lon", location[1]);
 
 	    		Sys.println("Location in cache is updated to: " + location[0] + ", " + location[1]);
 	        }

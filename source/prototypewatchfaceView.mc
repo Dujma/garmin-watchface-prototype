@@ -206,9 +206,7 @@ module MainController {
     }
     
     function powerSavingModeElementsInit() {
-    	var fntGobold13 = Ui.loadResource(Rez.Fonts.Gobold13);
-    
-     	topIconsPowerSaving = new UiElements.TopIconsLarge(fntGobold13);
+     	topIconsPowerSaving = new UiElements.TopIconsLarge(Ui.loadResource(Rez.Fonts.Gobold13));
         bottomIconsPowerSaving = new UiElements.BottomIconsLarge();
         
         topIcons = null;
@@ -1185,8 +1183,8 @@ module UiElements {
 		}
 
 		function draw() {
-			var sunrise = App.getApp().getProperty("sunrise"),
-				sunset = App.getApp().getProperty("sunset"),
+			var sunrise = App.getApp().getProperty("Sunrise"),
+				sunset = App.getApp().getProperty("Sunset"),
 			    sunriseAbsolute = sunrise != null ? sunrise / Gregorian.SECONDS_PER_DAY.toFloat() : 0,
 				sunsetAbsolute =  sunset != null ? sunset / Gregorian.SECONDS_PER_DAY.toFloat() : 0,
 				nowAbsolute = Utils.getTimeOfTheDayInAbsoluteValue(new Time.Moment(Time.now().value()).value()),
@@ -1698,43 +1696,18 @@ module Utils {
 		
 		return calories > restCalories ? calories - restCalories : 0;
 	}
-	
-	function drawSplitText(x, y, font, text, justification, color) {
-		if(text.length() > 0) {
-			x += MainController.dc.getTextWidthInPixels(text.substring(0, 1), font) / 2;
-			
-			if(justification != Gfx.TEXT_JUSTIFY_LEFT) {
-				var textWidth = MainController.dc.getTextWidthInPixels(text, font) / 2;
-				
-				if(justification == Gfx.TEXT_JUSTIFY_CENTER) {
-					x -= textWidth;
-				}
-				else if(justification == Gfx.TEXT_JUSTIFY_RIGHT) {
-					x -= textWidth * 2;
-				}
-			}
-			for (var i = 0; i < text.length(); ++i) {
-				var char = text.substring(i, i + 1);
-				
-				MainController.dc.setColor(color, Gfx.COLOR_TRANSPARENT);
-				MainController.dc.drawText(x, y, font, char, Gfx.TEXT_JUSTIFY_CENTER | Gfx.TEXT_JUSTIFY_VCENTER);
-				
-				x += MainController.dc.getTextWidthInPixels(char, font);
-			}
-		}
-	}
-	
+
 	function drawTextOnCircle(startAngle, radius, font, baseFont, text, clockwise, color, justification) {
 		if(!clockwise) {
 			startAngle *= -1;
 		}
-    	var circumference = Utils.getCircleCircumference(radius),
-    		charBaseWidths = Utils.getWidthsOfEachChar(baseFont, text),
+    	var circumference = getCircleCircumference(radius),
+    		charBaseWidths = getWidthsOfEachChar(baseFont, text),
     		offset = 0;
  
     	for(var i = 0; i < charBaseWidths.size(); ++i) {
-    		var angle = Utils.getAngleForChar(charBaseWidths[i], circumference, offset, clockwise) + startAngle;
-    		var pointOnCircle = Utils.getPointOnCircle(MainController.width / 2, MainController.height / 2, radius, angle);
+    		var angle = getAngleForChar(charBaseWidths[i], circumference, offset, clockwise) + startAngle;
+    		var pointOnCircle = getPointOnCircle(MainController.width / 2, MainController.height / 2, radius, angle);
     		
     		MainController.dc.setColor(color, Gfx.COLOR_TRANSPARENT);
     		MainController.dc.drawText(pointOnCircle[0], pointOnCircle[1], font, text.substring(i, i + 1), justification | Gfx.TEXT_JUSTIFY_VCENTER);
@@ -1780,7 +1753,7 @@ module Utils {
    	 	return [ x, y ];
 	}
 
-	function getPixelPointsOnCircle(cx, cy, radius, numPoints) {
+	function getPointsOnCircle(cx, cy, radius, numPoints) {
 		var points = { };
 		
 		for(var i = 0; i < numPoints; ++i) {
