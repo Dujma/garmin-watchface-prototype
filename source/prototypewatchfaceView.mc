@@ -1197,15 +1197,16 @@ module UiElements {
 
 			line.draw();
 			
+			if(pointOnCircleNow[0] >= 89 && pointOnCircleNow[0] <= 170) {
+					pointOnCircleNow[1] = 28;
+			}
+			
 			//! TODO: Sunset could be after midnight. There it should be two instances of line draw...
 			if(sunrise != null && sunrise != null) {
 				Utils.drawArc(MainController.width / 2, MainController.height / 2, radius, startAngle + targetAngleSunrise, startAngle + targetAngleSunset, 20, Gfx.COLOR_RED, true);
 	
 				lineFill.draw();
-				
-				if(pointOnCircleNow[0] >= 89 && pointOnCircleNow[0] <= 170) {
-					pointOnCircleNow[1] = 28;
-				}
+
 				if(pointOnCircleSunrise[0] >= 89 && pointOnCircleSunrise[0] <= 170) {
 					pointOnCircleSunrise[1] = 28;
 				}

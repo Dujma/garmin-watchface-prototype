@@ -57,10 +57,10 @@ class prototypewatchfaceServiceDelegate extends Sys.ServiceDelegate {
 	      		"appid" => "02dc664d36e7cf1693b2ea91c42db7ef"
 	   		};
 	   		Sys.println("Location for weather request is taken from the watch (" + params["lat"] + ", " + params["lon"] + ")");
-		} else if(App.getApp().getProperty("locationUpdated") != null) {
+		} else if(App.getApp().getProperty("LocationUpdated") != null) {
 			params = {
-	      		"lat" => App.getApp().getProperty("lat").toString(),
-	      		"lon" => App.getApp().getProperty("lon").toString(),
+	      		"lat" => App.getApp().getProperty("Lat").toString(),
+	      		"lon" => App.getApp().getProperty("Lon").toString(),
 	      		"appid" => "02dc664d36e7cf1693b2ea91c42db7ef"
 	   		};
 	   		Sys.println("Location for weather request is taken from the cache (" + params["lat"] + ", " + params["lon"] + ")");
