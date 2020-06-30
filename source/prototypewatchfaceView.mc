@@ -1708,8 +1708,8 @@ module Utils {
     		offset = 0;
  
     	for(var i = 0; i < charBaseWidths.size(); ++i) {
-    		var angle = getAngleForChar(charBaseWidths[i], circumference, offset, clockwise) + startAngle;
-    		var pointOnCircle = getPointOnCircle(MainController.width / 2, MainController.height / 2, radius, angle);
+    		var angle = getAngleForChar(charBaseWidths[i], circumference, offset, clockwise) + startAngle,
+    			pointOnCircle = getPointOnCircle(MainController.width / 2, MainController.height / 2, radius, angle);
     		
     		MainController.dc.setColor(color, Gfx.COLOR_TRANSPARENT);
     		MainController.dc.drawText(pointOnCircle[0], pointOnCircle[1], font, text.substring(i, i + 1), justification | Gfx.TEXT_JUSTIFY_VCENTER);
