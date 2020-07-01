@@ -1131,8 +1131,8 @@ module UiElements {
 			dot.setPosition(pointOnCircle[0], pointOnCircle[1]);
 			dot.draw();
 			
-			Utils.drawTextOnCircle(143, 122, fntGobold13Rotated1, fntGobold13RotatedBase, Utils.kFormatter(leftValue, 1), false, Gfx.COLOR_WHITE, Gfx.TEXT_JUSTIFY_LEFT);
-			Utils.drawTextOnCircle(229, 124, fntGobold13Rotated2, fntGobold13RotatedBase, Utils.kFormatter(rightValue, 1), false, Gfx.COLOR_WHITE, Gfx.TEXT_JUSTIFY_RIGHT);
+			Utils.drawTextOnCircle(147, 120, fntGobold13Rotated1, fntGobold13RotatedBase, "10.5k", false, Gfx.COLOR_WHITE);
+			Utils.drawTextOnCircle(229, 120, fntGobold13Rotated2, fntGobold13RotatedBase, "10.5k", false, Gfx.COLOR_WHITE);
 		}
 		
 		function onSettingUpdate() {
@@ -1225,11 +1225,11 @@ module UiElements {
 				dotSunset.setPosition(pointOnCircleSunset[0], pointOnCircleSunset[1]);
 				dotSunset.draw();
 
-				Utils.drawTextOnCircle(301, 116, fntGobold13Rotated3, fntGobold13RotatedBase, Utils.formatEpochToHumanReadable(sunrise, false, true), true, Gfx.COLOR_WHITE, Gfx.TEXT_JUSTIFY_RIGHT);
-				Utils.drawTextOnCircle(44, 116, fntGobold13Rotated4, fntGobold13RotatedBase, Utils.formatEpochToHumanReadable(sunset, false, true), true, Gfx.COLOR_WHITE, Gfx.TEXT_JUSTIFY_LEFT);
+				Utils.drawTextOnCircle(301, 120, fntGobold13Rotated3, fntGobold13RotatedBase, Utils.formatEpochToHumanReadable(sunrise, false, true), true, Gfx.COLOR_WHITE);
+				Utils.drawTextOnCircle(47, 120, fntGobold13Rotated4, fntGobold13RotatedBase, Utils.formatEpochToHumanReadable(sunset, false, true), true, Gfx.COLOR_WHITE);
 			} else {
-				Utils.drawTextOnCircle(301, 116, fntGobold13Rotated3, fntGobold13RotatedBase, "--:--", true, Gfx.COLOR_WHITE, Gfx.TEXT_JUSTIFY_RIGHT);
-				Utils.drawTextOnCircle(44, 116, fntGobold13Rotated4, fntGobold13RotatedBase, "--:--", true, Gfx.COLOR_WHITE, Gfx.TEXT_JUSTIFY_LEFT);
+				Utils.drawTextOnCircle(301, 120, fntGobold13Rotated3, fntGobold13RotatedBase, "05:12", true, Gfx.COLOR_WHITE);
+				Utils.drawTextOnCircle(47, 120, fntGobold13Rotated4, fntGobold13RotatedBase, "20:32", true, Gfx.COLOR_WHITE);
 			}
 			dotNow.setPosition(pointOnCircleNow[0], pointOnCircleNow[1]);
 			dotNow.draw();
@@ -1699,7 +1699,7 @@ module Utils {
 		return calories > restCalories ? calories - restCalories : 0;
 	}
 
-	function drawTextOnCircle(startAngle, radius, font, baseFont, text, clockwise, color, justification) {
+	function drawTextOnCircle(startAngle, radius, font, baseFont, text, clockwise, color) {
 		if(!clockwise) {
 			startAngle *= -1;
 		}
@@ -1708,11 +1708,11 @@ module Utils {
     		offset = 0;
  
     	for(var i = 0; i < charBaseWidths.size(); ++i) {
-    		var angle = getAngleForChar(charBaseWidths[i], circumference, offset, clockwise) + startAngle,
+    		var angle = getAngleForChar(circumference, offset, clockwise) + startAngle,
     			pointOnCircle = getPointOnCircle(MainController.width / 2, MainController.height / 2, radius, angle);
-    		
-    		MainController.dc.setColor(color, Gfx.COLOR_TRANSPARENT);
-    		MainController.dc.drawText(pointOnCircle[0], pointOnCircle[1], font, text.substring(i, i + 1), justification | Gfx.TEXT_JUSTIFY_VCENTER);
+
+			MainController.dc.setColor(color, Gfx.COLOR_TRANSPARENT);
+    		MainController.dc.drawText(pointOnCircle[0], pointOnCircle[1], font, text.substring(i, i + 1), Gfx.TEXT_JUSTIFY_CENTER | Gfx.TEXT_JUSTIFY_VCENTER);
 
     		offset += charBaseWidths[i];
     	}
@@ -1794,8 +1794,8 @@ module Utils {
 		return null;
 	}
 	
-	function getAngleForChar(charWidth, circumference, offset, clockwise) {
-		return Math.toDegrees((charWidth / 2.0 + offset) / circumference * 2 * Math.PI) * (clockwise ? 1 : -1);
+	function getAngleForChar(circumference, offset, clockwise) {
+		return Math.toDegrees(offset / circumference * 2 * Math.PI) * (clockwise ? 1 : -1);
 	}
 
   	(:background)
