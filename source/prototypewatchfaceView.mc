@@ -1795,7 +1795,7 @@ module Utils {
 	}
 	
 	function getAngleForChar(circumference, offset, clockwise) {
-		return Math.toDegrees(offset / circumference * 2 * Math.PI) * (clockwise ? 1 : -1);
+		return Math.toDegrees(offset / circumference.toFloat() * 2 * Math.PI) * (clockwise ? 1 : -1);
 	}
 
   	(:background)
