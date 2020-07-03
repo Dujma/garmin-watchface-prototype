@@ -1749,8 +1749,8 @@ module Utils {
 	
 	// 0 = 12 o'clock, 90 = 3 o'clock, 180 = 6 o'clock, 270 = 9 o'clock
 	function getPointOnCircle(cx, cy, radius, angle) {
-		var x = cx + radius * Math.cos(Math.toRadians(angle - 90)); // -90 so that it starts at 12 o'clock
-   	 	var y = cy + radius * Math.sin(Math.toRadians(angle - 90));
+		var x = cx + radius * Math.cos(Math.toRadians(angle - 90)).toFloat(); // -90 so that it starts at 12 o'clock
+   	 	var y = cy + radius * Math.sin(Math.toRadians(angle - 90)).toFloat();
    	 	
    	 	return [ x, y ];
 	}
@@ -1795,7 +1795,7 @@ module Utils {
 	}
 	
 	function getAngleForChar(circumference, offset, clockwise) {
-		return Math.toDegrees(offset / circumference.toFloat() * 2 * Math.PI) * (clockwise ? 1 : -1);
+		return Math.toDegrees(offset.toFloat() / circumference * 2.0 * Math.PI) * (clockwise ? 1 : -1);
 	}
 
   	(:background)
