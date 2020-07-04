@@ -1184,8 +1184,8 @@ module UiElements {
 			
 			line.setPosition(130, 53);
         	lineFill.setPosition(130, 53);
-        	sunriseTxt.setPosition(65, 30);
-        	sunsetTxt.setPosition(199, 32);
+        	sunriseTxt.setPosition(65, 29);
+        	sunsetTxt.setPosition(199, 31);
         	
         	self.fntGobold13Rotated3 = fntGobold13Rotated3;
         	self.fntGobold13Rotated4 = fntGobold13Rotated4;
@@ -1235,11 +1235,11 @@ module UiElements {
 				dotSunset.setPosition(pointOnCircleSunset[0], pointOnCircleSunset[1]);
 				dotSunset.draw();
 
-				Utils.drawTextOnCircle(301, 120, fntGobold13Rotated3, fntGobold13RotatedBase, Utils.formatEpochToHumanReadable(sunrise, false, true), true, Gfx.COLOR_WHITE);
-				Utils.drawTextOnCircle(47, 120, fntGobold13Rotated4, fntGobold13RotatedBase, Utils.formatEpochToHumanReadable(sunset, false, true), true, Gfx.COLOR_WHITE);
+				Utils.drawTextOnCircle(302, 121, fntGobold13Rotated3, fntGobold13RotatedBase, Utils.formatEpochToHumanReadable(sunrise, false, true), true, Gfx.COLOR_WHITE);
+				Utils.drawTextOnCircle(47, 121, fntGobold13Rotated4, fntGobold13RotatedBase, Utils.formatEpochToHumanReadable(sunset, false, true), true, Gfx.COLOR_WHITE);
 			} else {
-				Utils.drawTextOnCircle(302, 120, fntGobold13Rotated3, fntGobold13RotatedBase, "--:--", true, Gfx.COLOR_WHITE);
-				Utils.drawTextOnCircle(46.5, 120, fntGobold13Rotated4, fntGobold13RotatedBase, "--:--", true, Gfx.COLOR_WHITE);
+				Utils.drawTextOnCircle(302, 121, fntGobold13Rotated3, fntGobold13RotatedBase, "05:13", true, Gfx.COLOR_WHITE);
+				Utils.drawTextOnCircle(47, 121, fntGobold13Rotated4, fntGobold13RotatedBase, "20:32", true, Gfx.COLOR_WHITE);
 			}
 			dotNow.setPosition(pointOnCircleNow[0], pointOnCircleNow[1]);
 			dotNow.draw();
