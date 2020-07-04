@@ -49,8 +49,6 @@ module MainController {
 	// Device Context
 	var dc;
 	
-	var mockBackground;
-	
 	// UiElements
 	var clockArea,
 		topIcons,
@@ -83,11 +81,6 @@ module MainController {
 		
         Textures.init();
         
-        mockBackground = new Ui.Bitmap({
-        	:rezId => Rez.Drawables.MockBackground,
-        	:locX  => 0,
-        	:locY  => 0
-    	});
     	powerSavingMode = App.getApp().getProperty("PowerSavingMode");
     	displayIconsOnPowerSavingMode = App.getApp().getProperty("DisplayIconsOnPowerSavingMode");
 
@@ -113,7 +106,6 @@ module MainController {
    	 	if(!isPowerSavingModeActive) {
    	 		bottomLine.draw();
    	 		topLine.draw();
-   	 		mockBackground.draw(dc);
    	 	}
 		clockArea.draw();
 
@@ -1086,20 +1078,28 @@ module UiElements {
 					radius = 107.5,
 					fntGobold13Rotated1,
 					fntGobold13Rotated2,
-					fntGobold13RotatedBase;
+					fntGobold13RotatedBase,
+					leftTxt,
+					rightTxt;
 
 		function initialize(fntGobold13Rotated1, fntGobold13Rotated2, fntGobold13RotatedBase) {
 			line = new Textures.Bitmap("6789AB");
         	lineFill = new Textures.Bitmap("6789AB");
+        	leftTxt = new Textures.Bitmap("YX");
+        	rightTxt = new Textures.Bitmap("VU");
         	dot = new Textures.Icon('g');
 
         	lineFill.setColor(Gfx.COLOR_TRANSPARENT);
         	lineFill.setBackgroundColor(Gfx.COLOR_BLACK);
+        	leftTxt.setColor(Gfx.COLOR_LT_GRAY);
+        	rightTxt.setColor(Gfx.COLOR_LT_GRAY);
         	
         	line.setColor(Gfx.COLOR_DK_GRAY);
 			
 			line.setPosition(130, 206);
         	lineFill.setPosition(130, 206);
+        	leftTxt.setPosition(39, 208);
+        	rightTxt.setPosition(201, 226);
         	
         	caloriesGoal = App.getApp().getProperty("ActiveCaloriesGoal");
         	
@@ -1121,7 +1121,7 @@ module UiElements {
 				arcTargetAngle = arcStartAngle - targetAngle + 2; // +2 offset because of the arc curvature (so that the line is at the end is filled)
 
 			if(arcTargetAngle > arcStartAngle) {
-				Utils.drawArc(MainController.width / 2, MainController.height / 2, radius, arcStartAngle, arcTargetAngle, 20, Gfx.COLOR_RED, false);
+				Utils.drawArc(MainController.width / 2, MainController.height / 2, radius - 5, arcStartAngle, arcTargetAngle, 20, Gfx.COLOR_RED, false);
 			}
 			lineFill.draw();
 
@@ -1133,6 +1133,8 @@ module UiElements {
 			
 			Utils.drawTextOnCircle(147, 120, fntGobold13Rotated1, fntGobold13RotatedBase, Utils.kFormatter(leftValue, 1), false, Gfx.COLOR_WHITE);
 			Utils.drawTextOnCircle(229.5, 120, fntGobold13Rotated2, fntGobold13RotatedBase, Utils.kFormatter(rightValue, 1), false, Gfx.COLOR_WHITE);
+			leftTxt.draw();
+			rightTxt.draw();
 		}
 		
 		function onSettingUpdate() {
@@ -1153,11 +1155,15 @@ module UiElements {
 					radius = 109,
 					fntGobold13Rotated3,
 					fntGobold13Rotated4,
-					fntGobold13RotatedBase;
+					fntGobold13RotatedBase,
+					sunriseTxt,
+					sunsetTxt;
 
 		function initialize(fntGobold13Rotated3, fntGobold13Rotated4, fntGobold13RotatedBase) {
 			line = new Textures.Bitmap("012345");
         	lineFill = new Textures.Bitmap("012345");
+        	sunriseTxt = new Textures.Bitmap("DE");
+        	sunsetTxt = new Textures.Bitmap("£Z");
         	
         	dotNow = new Textures.Icon('g');
         	dotSunrise = new Textures.Icon('g');
@@ -1171,11 +1177,15 @@ module UiElements {
         	
         	lineFill.setColor(Gfx.COLOR_TRANSPARENT);
         	lineFill.setBackgroundColor(Gfx.COLOR_BLACK);
+        	sunriseTxt.setColor(Gfx.COLOR_LT_GRAY);
+        	sunsetTxt.setColor(Gfx.COLOR_LT_GRAY);
         	
         	line.setColor(Gfx.COLOR_DK_GRAY);
 			
 			line.setPosition(130, 53);
         	lineFill.setPosition(130, 53);
+        	sunriseTxt.setPosition(65, 30);
+        	sunsetTxt.setPosition(199, 32);
         	
         	self.fntGobold13Rotated3 = fntGobold13Rotated3;
         	self.fntGobold13Rotated4 = fntGobold13Rotated4;
@@ -1203,7 +1213,7 @@ module UiElements {
 			
 			//! TODO: Sunset could be after midnight. There it should be two instances of line draw...
 			if(sunrise != null && sunrise != null) {
-				Utils.drawArc(MainController.width / 2, MainController.height / 2, radius, startAngle + targetAngleSunrise, startAngle + targetAngleSunset, 20, Gfx.COLOR_RED, true);
+				Utils.drawArc(MainController.width / 2, MainController.height / 2, radius - 5, startAngle + targetAngleSunrise, startAngle + targetAngleSunset, 20, Gfx.COLOR_RED, true);
 	
 				lineFill.draw();
 
@@ -1233,6 +1243,8 @@ module UiElements {
 			}
 			dotNow.setPosition(pointOnCircleNow[0], pointOnCircleNow[1]);
 			dotNow.draw();
+			sunriseTxt.draw();
+			sunsetTxt.draw();
 		}
 	}
 }
@@ -1291,7 +1303,11 @@ module Textures {
 		"Line-Top"    => "012345"
 		"Line-Bottom" => "6789AB"
 		"Line-Right"  => 'C'
-		"Line-Left"   => 'G'
+		"Line-Left"   => 'G',
+		"Sunset"      => "DE",
+		"Sunrise"     => "£Z",
+		"Active-Cal"  => "YX",
+		"Cal-Goal"    => "VU",
 */
 	
 	function init() {
