@@ -1315,7 +1315,6 @@ module Textures {
 		bitmapsFont = Ui.loadResource(Rez.Fonts.Bitmaps);
 	}
 	
-	//! TODO: If you need dimensions of the icons than the .fnt file needs to be updated with the correct values
 	class Texture {
 		var text;
 
