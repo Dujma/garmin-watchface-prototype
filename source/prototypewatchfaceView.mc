@@ -1132,7 +1132,7 @@ module UiElements {
 			dot.draw();
 			
 			Utils.drawTextOnCircle(147, 120, fntGobold13Rotated1, fntGobold13RotatedBase, Utils.kFormatter(leftValue, 1), false, Gfx.COLOR_WHITE);
-			Utils.drawTextOnCircle(229, 120, fntGobold13Rotated2, fntGobold13RotatedBase, Utils.kFormatter(rightValue, 1), false, Gfx.COLOR_WHITE);
+			Utils.drawTextOnCircle(229.5, 120, fntGobold13Rotated2, fntGobold13RotatedBase, Utils.kFormatter(rightValue, 1), false, Gfx.COLOR_WHITE);
 		}
 		
 		function onSettingUpdate() {
@@ -1228,8 +1228,8 @@ module UiElements {
 				Utils.drawTextOnCircle(301, 120, fntGobold13Rotated3, fntGobold13RotatedBase, Utils.formatEpochToHumanReadable(sunrise, false, true), true, Gfx.COLOR_WHITE);
 				Utils.drawTextOnCircle(47, 120, fntGobold13Rotated4, fntGobold13RotatedBase, Utils.formatEpochToHumanReadable(sunset, false, true), true, Gfx.COLOR_WHITE);
 			} else {
-				Utils.drawTextOnCircle(301, 120, fntGobold13Rotated3, fntGobold13RotatedBase, "--:--", true, Gfx.COLOR_WHITE);
-				Utils.drawTextOnCircle(47, 120, fntGobold13Rotated4, fntGobold13RotatedBase, "--:--", true, Gfx.COLOR_WHITE);
+				Utils.drawTextOnCircle(302, 120, fntGobold13Rotated3, fntGobold13RotatedBase, "--:--", true, Gfx.COLOR_WHITE);
+				Utils.drawTextOnCircle(46.5, 120, fntGobold13Rotated4, fntGobold13RotatedBase, "--:--", true, Gfx.COLOR_WHITE);
 			}
 			dotNow.setPosition(pointOnCircleNow[0], pointOnCircleNow[1]);
 			dotNow.draw();
