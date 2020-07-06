@@ -614,7 +614,11 @@ module UiElements {
 			arrowIcon.setColor(Gfx.COLOR_RED);
 			arrowIcon.setPosition(56, 93);
 			
-			iconLeft = new Textures.Icon('X');
+			var weatherId = App.getApp().getProperty("WeatherId");
+			
+			if(weatherId != null) {
+				iconLeft = new Textures.Icon(Utils.getWeatherIconByWeatherId(weatherId));
+			}
 			iconLeft.setColor(Gfx.COLOR_WHITE);
 			iconLeft.setPosition(94, 66);
 			
@@ -701,7 +705,11 @@ module UiElements {
 			//! TODO: Store this and update it only once a day
 			var currentMoonPhase = Utils.getCurrentMoonPhase();
 			
-			iconTxtLeft.setText(Utils.getCurrentWeekNumber().toString());
+			var currentTemperatureF = App.getApp().getProperty("Temp");
+			
+			if(currentTemperatureF != null) {
+				iconTxtLeft.setText(Utils.fToC(currentTemperatureF).toString());
+			}
 			iconTxtMiddle.setText(currentMoonPhase['a'] + "°");
 			iconTxtRight.setText(Utils.kFormatter(Utils.getCurrentElevation(), 1));
 			
@@ -1255,49 +1263,65 @@ module Textures {
 	
 /*
 	Icons:
-		"Battery"        => 'B'
-		"Notification"   => 'C'
-		"Alarm"          => 'D'
-		"Move-1"         => 'E'
-		"Move-5"         => 'F'
-		"Dnd"            => 'G'
-		"Bluetooth"      => 'H'
-		"Arrow-Up"       => 'I'
-		"MoveBar-1"      => 'J'
-		"MoveBar-2"      => 'K'
-		"Move-0"         => 'L'
-		"Sleep"          => 'M'
-		"Heart-1"        => 'N'
-		"Heart-2"        => '0'
-		"Steps-Side"     => '1'
-		"Distance"       => '2'
-		"Calories"       => '3'
-		"Stopwatch"      => '4'
-		"Stairs-Up"      => '5'
-		"Trophy"         => '6'
-		"Arrow-Left"     => '7'
-		"Arrow-Right"    => '8'
-		"Battery-L"      => 'A'
-		"Elevation"      => '9'
-		"Calendar"       => 'X'
-		"Moon-0"         => 'O' // New Moon
-		"Moon-1"         => 'P' // Waxing Crescent
-		"Moon-2"         => 'Q' // First Quarter
-		"Moon-3"         => 'R' // Waxing Gibbous
-		"Moon-4"         => 'S' // Full Moon
-		"Moon-5"         => 'T' // Waning Gibbous
-		"Moon-6"         => 'U' // Third Quarter
-		"Moon-7"         => 'V' // Waning Crescent
-		"Alarm-L"        => 'Y'
-		"Notification-L" => 'Z'
-		"Dnd-L"          => 'a'
-		"Bluetooth-L"    => 'b'
-		"Move-1-L"       => 'd'
-		"Move-5-L"       => 'c'
-		"Move-0-L"       => 'e'
-		"Sleep-L"        => 'f'
-		"Dot"            => 'g'
-		"Dot-L"          => 'h'
+		"Battery"              => 'B'
+		"Notification"         => 'C'
+		"Alarm"                => 'D'
+		"Move-1"               => 'E'
+		"Move-5"               => 'F'
+		"Dnd"                  => 'G'
+		"Bluetooth"            => 'H'
+		"Arrow-Up"             => 'I'
+		"MoveBar-1"            => 'J'
+		"MoveBar-2"            => 'K'
+		"Move-0"               => 'L'
+		"Sleep"                => 'M'
+		"Heart-1"              => 'N'
+		"Heart-2"              => '0'
+		"Steps-Side"           => '1'
+		"Distance"             => '2'
+		"Calories"             => '3'
+		"Stopwatch"            => '4'
+		"Stairs-Up"            => '5'
+		"Trophy"               => '6'
+		"Arrow-Left"           => '7'
+		"Arrow-Right"          => '8'
+		"Battery-L"            => 'A'
+		"Elevation"            => '9'
+		"Calendar"             => 'X'
+		"Moon-0"               => 'O' // New Moon
+		"Moon-1"               => 'P' // Waxing Crescent
+		"Moon-2"               => 'Q' // First Quarter
+		"Moon-3"               => 'R' // Waxing Gibbous
+		"Moon-4"               => 'S' // Full Moon
+		"Moon-5"               => 'T' // Waning Gibbous
+		"Moon-6"               => 'U' // Third Quarter
+		"Moon-7"               => 'V' // Waning Crescent
+		"Alarm-L"              => 'Y'
+		"Notification-L"       => 'Z'
+		"Dnd-L"                => 'a'
+		"Bluetooth-L"          => 'b'
+		"Move-1-L"             => 'd'
+		"Move-5-L"             => 'c'
+		"Move-0-L"             => 'e'
+		"Sleep-L"              => 'f'
+		"Dot"                  => 'g'
+		"Dot-L"                => 'h'
+		"wi-day-storm-showers" => 'm'
+		"wi-day-thunderstorm"  => 'k'
+		"wi-day-lightning"     => 'q'
+		"wi-sprinkle"          => 'w'
+		"wi-day-showers"       => 'o'
+		"wi-day-rain"          => 'p'
+		"wi-day-sprinkle"      => 'n'
+		"wi-snowflake-cold"    => 'v'
+		"wi-fog"               => 'i'
+		"wi-sandstorm"         => 'u'
+		"wi-dust"              => 'j'
+		"wi-tornado"           => 'x'
+		"wi-cloudy"            => 's'
+		"wi-day-sunny"         => 'l'
+		"wi-day-cloudy"        => 'r'
+		"wi-cloud"             => 't'
 
 	Bitmaps:
 		"Line-Top"    => "012345"
@@ -1585,6 +1609,33 @@ module Utils {
 		6  => { 'n' => "Third Quarter Moon",   'a' => 270, 'i' => 'U' },
 		7  => { 'n' => "Waning Crescent Moon", 'a' => 315, 'i' => 'V' }
 	};
+
+	var weatherIcons = { 
+		2   => 'm',
+		201 => 'k',
+		202 => 'k',
+		210 => 'q',
+		211 => 'q',
+		212 => 'q',
+		221 => 'q',
+		3   => 'w',
+		5   => 'o',
+		502 => 'p',
+		503 => 'p',
+		504 => 'p',
+		521 => 'n',
+		522 => 'n',
+		531 => 'n',
+		6   => 'v',
+		7   => 'i',
+		751 => 'u',
+		761 => 'j',
+		781 => 'x',
+		8   => 's',
+		800 => 'l',
+		801 => 'r',
+		802 => 't'
+	};
 	
 	function getDayWithMondayStarting(daySundayStarting) {
     	if(daySundayStarting != 1) {
@@ -1837,5 +1888,18 @@ module Utils {
 	
 	function getTimeOfTheDayInAbsoluteValue(value) {
 		return (value - Time.today().value()) / Gregorian.SECONDS_PER_DAY.toFloat();
+	}
+	
+	function getWeatherIconByWeatherId(id) {
+		var icon = weatherIcons[id];
+		
+		if(icon != null) {
+			return icon[id];
+		}
+		return weatherIcons[(id / 100).toNumber()];
+	}
+	
+	function fToC(fahrenheit)  {
+	  return (fahrenheit - 32) * 5 / 9;
 	}
 }
