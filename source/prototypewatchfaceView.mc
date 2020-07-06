@@ -614,11 +614,8 @@ module UiElements {
 			arrowIcon.setColor(Gfx.COLOR_RED);
 			arrowIcon.setPosition(56, 93);
 			
-			var weatherId = App.getApp().getProperty("WeatherId");
-			
-			if(weatherId != null) {
-				iconLeft = new Textures.Icon(Utils.getWeatherIconByWeatherId(weatherId));
-			}
+
+			iconLeft = new Textures.Icon(Utils.getWeatherIconByWeatherId(App.getApp().getProperty("WeatherId")));
 			iconLeft.setColor(Gfx.COLOR_WHITE);
 			iconLeft.setPosition(94, 66);
 			
@@ -696,19 +693,21 @@ module UiElements {
 				daysTxt[i].draw();
 				arrowIcon.draw();
 			}
-			// infoTxt.setText("Week " + Utils.getCurrentWeekNumber());
+			infoTxt.setText("Week " + Utils.getCurrentWeekNumber());
 			
-			infoTxt.setText(Utils.getTimeByOffset());
+			// infoTxt.setText(Utils.getTimeByOffset());
 
 			infoTxt.draw();
 			
 			//! TODO: Store this and update it only once a day
 			var currentMoonPhase = Utils.getCurrentMoonPhase();
 			
-			var currentTemperatureF = App.getApp().getProperty("Temp");
+			var currentTempKelvin = App.getApp().getProperty("Temp");
 			
-			if(currentTemperatureF != null) {
-				iconTxtLeft.setText(Utils.fToC(currentTemperatureF).toString());
+			if(currentTempKelvin != null) {
+				iconTxtLeft.setText(Utils.kelvinToCelsius(currentTempKelvin).toString() + "°");
+			} else {
+				iconTxtLeft.setText("GPS");
 			}
 			iconTxtMiddle.setText(currentMoonPhase['a'] + "°");
 			iconTxtRight.setText(Utils.kFormatter(Utils.getCurrentElevation(), 1));
@@ -1246,8 +1245,8 @@ module UiElements {
 				Utils.drawTextOnCircle(302, 121, fntGobold13Rotated3, fntGobold13RotatedBase, Utils.formatEpochToHumanReadable(sunrise, false, true), true, Gfx.COLOR_WHITE);
 				Utils.drawTextOnCircle(47, 121, fntGobold13Rotated4, fntGobold13RotatedBase, Utils.formatEpochToHumanReadable(sunset, false, true), true, Gfx.COLOR_WHITE);
 			} else {
-				Utils.drawTextOnCircle(302, 121, fntGobold13Rotated3, fntGobold13RotatedBase, "05:13", true, Gfx.COLOR_WHITE);
-				Utils.drawTextOnCircle(47, 121, fntGobold13Rotated4, fntGobold13RotatedBase, "20:32", true, Gfx.COLOR_WHITE);
+				Utils.drawTextOnCircle(302, 121, fntGobold13Rotated3, fntGobold13RotatedBase, "--:--", true, Gfx.COLOR_WHITE);
+				Utils.drawTextOnCircle(47, 121, fntGobold13Rotated4, fntGobold13RotatedBase, "--:--", true, Gfx.COLOR_WHITE);
 			}
 			dotNow.setPosition(pointOnCircleNow[0], pointOnCircleNow[1]);
 			dotNow.draw();
@@ -1309,19 +1308,20 @@ module Textures {
 		"wi-day-storm-showers" => 'm'
 		"wi-day-thunderstorm"  => 'k'
 		"wi-day-lightning"     => 'q'
-		"wi-sprinkle"          => 'w'
+		"wi-sprinkle"          => 'þ'
 		"wi-day-showers"       => 'o'
 		"wi-day-rain"          => 'p'
 		"wi-day-sprinkle"      => 'n'
-		"wi-snowflake-cold"    => 'v'
+		"wi-snowflake-cold"    => 'ý'
 		"wi-fog"               => 'i'
 		"wi-sandstorm"         => 'u'
 		"wi-dust"              => 'j'
-		"wi-tornado"           => 'x'
+		"wi-tornado"           => 'ÿ'
 		"wi-cloudy"            => 's'
 		"wi-day-sunny"         => 'l'
 		"wi-day-cloudy"        => 'r'
 		"wi-cloud"             => 't'
+		"wi-unknown"           => 'ü'
 
 	Bitmaps:
 		"Line-Top"    => "012345"
@@ -1618,7 +1618,7 @@ module Utils {
 		211 => 'q',
 		212 => 'q',
 		221 => 'q',
-		3   => 'w',
+		3   => 'þ',
 		5   => 'o',
 		502 => 'p',
 		503 => 'p',
@@ -1626,15 +1626,16 @@ module Utils {
 		521 => 'n',
 		522 => 'n',
 		531 => 'n',
-		6   => 'v',
+		6   => 'ý',
 		7   => 'i',
 		751 => 'u',
 		761 => 'j',
-		781 => 'x',
+		781 => 'ÿ',
 		8   => 's',
 		800 => 'l',
 		801 => 'r',
-		802 => 't'
+		802 => 't',
+		999 => 'ü'
 	};
 	
 	function getDayWithMondayStarting(daySundayStarting) {
@@ -1891,15 +1892,18 @@ module Utils {
 	}
 	
 	function getWeatherIconByWeatherId(id) {
-		var icon = weatherIcons[id];
-		
-		if(icon != null) {
-			return icon[id];
+		if(id != null) {
+			var icon = weatherIcons[id.toNumber()];
+			
+			if(icon != null) {
+				return icon;
+			}
+			return weatherIcons[(id.toNumber() / 100).toNumber()];
 		}
-		return weatherIcons[(id / 100).toNumber()];
+		return weatherIcons[999];
 	}
 	
-	function fToC(fahrenheit)  {
-	  return (fahrenheit - 32) * 5 / 9;
+	function kelvinToCelsius(kelvin)  {
+	  return Math.round(kelvin - 273.15).toNumber();
 	}
 }

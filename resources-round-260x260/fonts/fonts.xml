@@ -3,7 +3,7 @@
 	<font id="GoboldBold55" antialias="true" filename="/fonts/gobold-bold-55/gobold-bold-55.fnt" filter="0123456789:" />
 	<font id="Gobold18" antialias="true" filename="/fonts/gobold-18/gobold-18.fnt" filter="0123456789AJNEUMRPOCFBYLGSTVD " />
 	<font id="Gobold14" antialias="true" filename="/fonts/gobold-14/gobold-14.fnt" filter="0123456789AP" />
-	<font id="Gobold13" antialias="true" filename="/fonts/gobold-13/gobold-13.fnt" filter="01213456789k.°%-" />
+	<font id="Gobold13" antialias="true" filename="/fonts/gobold-13/gobold-13.fnt" filter="01213456789k.°%-GPS" />
 	<font id="Gobold13Shrinked" antialias="true" filename="/fonts/gobold-13-shrinked/gobold-13-shrinked.fnt" filter="0123456789k.%" />
 	<font id="RobotoBold12" antialias="true" filename="/fonts/roboto-bold-12/roboto-bold-12.fnt" filter="0123456789ABCDEFGHIJKLMNOPQRSTUVWYZabcdefghijklmnopqrstuvwyz'():+- " />
 	<font id="RobotoCondensedBold12" antialias="true" filename="/fonts/roboto-condensed-bold-12/roboto-condensed-bold-12.fnt" filter="0123456789" />
@@ -14,6 +14,6 @@
 	<font id="Gobold13Rotated3" antialias="true" filename="/fonts/gobold-13-rotated-3/gobold-13-rotated-3.fnt" filter="0123456789:-" />
 	<font id="Gobold13Rotated4" antialias="true" filename="/fonts/gobold-13-rotated-4/gobold-13-rotated-4.fnt" filter="0123456789:-" />
 
-	<font id="Icons" antialias="true" filename="/icons/icons.fnt" filter="0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefgh" />
+	<font id="Icons" antialias="true" filename="/icons/icons.fnt" filter="0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuzyxwvÿþýü" />
 	<font id="Bitmaps" antialias="true" filename="/bitmaps/bitmaps.fnt" filter="0123456789ABCDEG£ZYXVU" />
 </fonts>
