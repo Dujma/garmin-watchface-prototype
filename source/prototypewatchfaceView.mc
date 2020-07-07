@@ -712,6 +712,7 @@ module UiElements {
 			iconTxtMiddle.setText(currentMoonPhase['a'] + "°");
 			iconTxtRight.setText(Utils.kFormatter(Utils.getCurrentElevation(), 1));
 			
+			iconLeft.setIcon(Utils.getWeatherIconByWeatherId(App.getApp().getProperty("WeatherId")));
 			iconMiddle.setIcon(currentMoonPhase['i']);
 			
 			iconLeft.draw();
