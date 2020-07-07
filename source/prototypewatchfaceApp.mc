@@ -65,7 +65,6 @@ class prototypewatchfaceApp extends App.AppBase {
 	    	app.setProperty("WeatherUpdated", data["updated"]);
 	        app.setProperty("Sunrise", data["sunrise"].toNumber() - today);
 	        app.setProperty("Sunset", data["sunset"].toNumber() - today);
-	        app.setProperty("WindSpeed", data["windSpeed"]);
 	        app.setProperty("WindDeg", data["windDeg"]);
 	        app.setProperty("City", data["city"]);
 	        app.setProperty("WeatherId", data["weatherId"]);
