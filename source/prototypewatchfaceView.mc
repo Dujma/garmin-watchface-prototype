@@ -312,7 +312,8 @@ module UiElements {
 	    function draw() {
 	    	var now = Gregorian.info(Time.now(), Time.FORMAT_MEDIUM),
 	    		hours = now.hour;
-
+			
+			//! TODO: Add option to enable and disable this
 		    partOfDayTxt.setText(hours > 12 ? "P" : "A");
 		    
 		    if(!MainController.envInfo.is24Hour) {
