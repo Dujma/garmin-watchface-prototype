@@ -1323,9 +1323,16 @@ module Textures {
 		"wi-day-cloudy"        => 'r'
 		"wi-cloud"             => 't'
 		"wi-unknown"           => 'ü'
-		"wi-wind-deg"          => 'û'
-		"wi-humidity"          => 'ú'
-		"wi-barometer"         => 'ù'
+		"wi-humidity"          => 'û'
+		"wi-barometer"         => 'ú'
+		"wi-wind-deg-0"        => 'ù'
+		"wi-wind-deg-45"       => 'ø'
+		"wi-wind-deg-90"       => '÷'
+		"wi-wind-deg-135"      => 'ö'
+		"wi-wind-deg-180"      => 'õ'
+		"wi-wind-deg-225"      => 'ô'
+		"wi-wind-deg-270"      => 'ó'
+		"wi-wind-deg-315"      => 'ò'
 
 	Bitmaps:
 		"Line-Top"    => "012345"
