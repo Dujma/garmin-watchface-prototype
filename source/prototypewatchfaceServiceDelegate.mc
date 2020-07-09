@@ -28,6 +28,9 @@ class prototypewatchfaceServiceDelegate extends Sys.ServiceDelegate {
    				"temp" => data["main"]["temp"],
    				"pressure" => data["main"]["pressure"],
    				"humidity" => data["main"]["humidity"],
+   				"tempMin" = > data["main"]["temp_min"],
+   				"tempMax" = > data["main"]["temp_max"],
+   				"weatherDesc" = > data["weather"][0]["description"]
    			};
        	} else {
        		var currentLocation = Utils.getCurrentLocation();

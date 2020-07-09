@@ -70,6 +70,9 @@ class prototypewatchfaceApp extends App.AppBase {
 	        app.setProperty("City", data["city"]);
 	        app.setProperty("WeatherId", data["weatherId"]);
 	        app.setProperty("Temp", data["temp"]);
+	        app.setProperty("TempMin", data["tempMin"]);
+	        app.setProperty("TempMax", data["tempMax"]);
+	        app.setProperty("WeatherDesc", data["weatherDesc"]);
 	        app.setProperty("Pressure", data["pressure"]);
 	        app.setProperty("Humidity", data["humidity"]);
 	        
