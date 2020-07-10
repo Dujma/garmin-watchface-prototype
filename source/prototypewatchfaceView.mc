@@ -602,33 +602,32 @@ module UiElements {
 					daysInitialY = 88,
 					daysYOffset = 3,
 					dayNames = [ "SU", "MO", "TU", "WE", "TH", "FR", "SA" ],
-					infoTxt,
-					iconLeft,
-					iconMiddle,
-					iconRight,
-					iconTxtLeft,
-					iconTxtMiddle,
-					iconTxtRight;
+					df2Icon, // Left
+					df3Icon, // Middle
+					df4Icon, // Right
+					df1Txt, // Top
+					df2Txt, // Left
+					df3Txt, // Middle
+					df4Txt; // Right
 
 		function initialize(fntRobotoBold12, fntGobold13) {
 			arrowIcon = new Textures.Icon('I');
 			arrowIcon.setColor(Gfx.COLOR_RED);
 			arrowIcon.setPosition(56, 93);
-			
 
-			iconLeft = new Textures.Icon(Utils.getWeatherIconByWeatherId(App.getApp().getProperty("WeatherId")));
-			iconLeft.setColor(Gfx.COLOR_WHITE);
-			iconLeft.setPosition(94, 66);
+			df2Icon = new Textures.Icon(Utils.getWeatherIconByWeatherId(App.getApp().getProperty("WeatherId")));
+			df2Icon.setColor(Gfx.COLOR_WHITE);
+			df2Icon.setPosition(94, 66);
 			
-			iconMiddle = new Textures.Icon('O');
-			iconMiddle.setColor(Gfx.COLOR_WHITE);
-			iconMiddle.setPosition(143, 66);
+			df3Icon = new Textures.Icon('O');
+			df3Icon.setColor(Gfx.COLOR_WHITE);
+			df3Icon.setPosition(143, 66);
 			
-			iconRight = new Textures.Icon('9');
-			iconRight.setColor(Gfx.COLOR_WHITE);
-			iconRight.setPosition(193, 66);
+			df4Icon = new Textures.Icon('9');
+			df4Icon.setColor(Gfx.COLOR_WHITE);
+			df4Icon.setPosition(193, 66);
 			
-			iconTxtLeft = new Extensions.Text({
+			df2Txt = new Extensions.Text({
 	            :color         => Gfx.COLOR_WHITE,
 	            :typeface      => fntGobold13,
 	            :locX          => 83,
@@ -636,7 +635,7 @@ module UiElements {
 	            :justification => Gfx.TEXT_JUSTIFY_VCENTER | Gfx.TEXT_JUSTIFY_RIGHT
         	}, false);
         	
-        	iconTxtMiddle = new Extensions.Text({
+        	df3Txt = new Extensions.Text({
 	            :color         => Gfx.COLOR_WHITE,
 	            :typeface      => fntGobold13,
 	            :locX          => 136,
@@ -644,7 +643,7 @@ module UiElements {
 	            :justification => Gfx.TEXT_JUSTIFY_VCENTER | Gfx.TEXT_JUSTIFY_RIGHT
         	}, false);
         	
-        	iconTxtRight = new Extensions.Text({
+        	df4Txt = new Extensions.Text({
 	            :color         => Gfx.COLOR_WHITE,
 	            :typeface      => fntGobold13,
 	            :locX          => 182,
@@ -664,7 +663,7 @@ module UiElements {
 			}
 			orderDaysOfWeek(App.getApp().getProperty("FirstDayOfWeek"));
 			
-			infoTxt = new Extensions.Text({
+			df1Txt = new Extensions.Text({
 	            :color    => Gfx.COLOR_WHITE,
 	            :typeface => fntRobotoBold12,
 	            :locX     => 130,
@@ -694,35 +693,34 @@ module UiElements {
 				daysTxt[i].draw();
 				arrowIcon.draw();
 			}
-			infoTxt.setText("Week " + Utils.getCurrentWeekNumber());
+			df1Txt.setText("Week " + Utils.getCurrentWeekNumber());
 			
 			// infoTxt.setText(Utils.getTimeByOffset());
 
-			infoTxt.draw();
-			
-			//! TODO: Store this and update it only once a day
-			var currentMoonPhase = Utils.getCurrentMoonPhase();
-			
 			var currentTempKelvin = App.getApp().getProperty("Temp");
 			
 			if(currentTempKelvin != null) {
-				iconTxtLeft.setText(Utils.kelvinToCelsius(currentTempKelvin).toString() + "°");
+				df2Txt.setText(Utils.kelvinToCelsius(currentTempKelvin).toString() + "°");
 			} else {
-				iconTxtLeft.setText("GPS");
+				df2Txt.setText("GPS");
 			}
-			iconTxtMiddle.setText(currentMoonPhase['a'] + "°");
-			iconTxtRight.setText(Utils.kFormatter(Utils.getCurrentElevation(), 1));
+			//! TODO: Store this and update it only once a day
+			var currentMoonPhase = Utils.getCurrentMoonPhase();
 			
-			iconLeft.setIcon(Utils.getWeatherIconByWeatherId(App.getApp().getProperty("WeatherId")));
-			iconMiddle.setIcon(currentMoonPhase['i']);
+			df3Txt.setText(currentMoonPhase['a'] + "°");
+			df4Txt.setText(Utils.kFormatter(Utils.getCurrentElevation(), 1));
 			
-			iconLeft.draw();
-			iconMiddle.draw();
-			iconRight.draw();
+			df2Icon.setIcon(Utils.getWeatherIconByWeatherId(App.getApp().getProperty("WeatherId")));
+			df3Icon.setIcon(currentMoonPhase['i']);
 			
-			iconTxtLeft.draw();
-			iconTxtMiddle.draw();
-			iconTxtRight.draw();
+			df2Icon.draw();
+			df3Icon.draw();
+			df4Icon.draw();
+			
+			df1Txt.draw();
+			df2Txt.draw();
+			df3Txt.draw();
+			df4Txt.draw();
 		}
 		
 		function getXLocationsBasedOnFirstDayOfWeek(firstDayOfWeek) {
@@ -752,14 +750,14 @@ module UiElements {
 	class Bottom {
 		private var moveBarLvl1,
 					moveBarOtherLvls,
-					icon1,
-					icon2,
-					icon3,
-					icon4,
-					txtIcon1,
-					txtIcon2, 
-					txtIcon3,
-					txtIcon4;
+					df5Icon,
+					df6Icon,
+					df7Icon,
+					df8Icon,
+					df5Txt,
+					df6Txt, 
+					df7Txt,
+					df8Txt;
 
 		function initialize(fntGobold13) {
     		moveBarLvl1 = new Textures.Icon('J');
@@ -771,40 +769,40 @@ module UiElements {
     			moveBarOtherLvls[i] = new Textures.Icon('K');
     			moveBarOtherLvls[i].setPosition(120 + (i * 14), 219);
     		}
-    		icon1 = new Textures.Icon('2');
-    		icon2 = new Textures.Icon('3');
-    		icon3 = new Textures.Icon('4');
-    		icon4 = new Textures.Icon('5');
+    		df5Icon = new Textures.Icon('2');
+    		df6Icon = new Textures.Icon('3');
+    		df7Icon = new Textures.Icon('4');
+    		df8Icon = new Textures.Icon('5');
     		
-    		icon1.setColor(Gfx.COLOR_RED);
-    		icon2.setColor(Gfx.COLOR_RED);
-    		icon3.setColor(Gfx.COLOR_RED);
-    		icon4.setColor(Gfx.COLOR_RED);
+    		df5Icon.setColor(Gfx.COLOR_RED);
+    		df6Icon.setColor(Gfx.COLOR_RED);
+    		df7Icon.setColor(Gfx.COLOR_RED);
+    		df8Icon.setColor(Gfx.COLOR_RED);
     		
-    		icon1.setPosition(72, 174);
-    		icon2.setPosition(110, 183);
-    		icon3.setPosition(150, 183);
-    		icon4.setPosition(188, 175);
+    		df5Icon.setPosition(72, 174);
+    		df6Icon.setPosition(110, 183);
+    		df7Icon.setPosition(150, 183);
+    		df8Icon.setPosition(188, 175);
     		
-    		txtIcon1 = new Extensions.Text({
+    		df5Txt = new Extensions.Text({
 	            :color    => Gfx.COLOR_WHITE,
 	            :typeface => fntGobold13,
 	            :locX     => 71,
 	            :locY     => 190
         	}, true);
-        	txtIcon2 = new Extensions.Text({
+        	df6Txt = new Extensions.Text({
 	            :color    => Gfx.COLOR_WHITE,
 	            :typeface => fntGobold13,
 	            :locX     => 109,
 	            :locY     => 199
         	}, true);
-        	txtIcon3 = new Extensions.Text({
+        	df7Txt = new Extensions.Text({
 	            :color    => Gfx.COLOR_WHITE,
 	            :typeface => fntGobold13,
 	            :locX     => 149,
 	            :locY     => 199
         	}, true);
-        	txtIcon4 = new Extensions.Text({
+        	df8Txt = new Extensions.Text({
 	            :color    => Gfx.COLOR_WHITE,
 	            :typeface => fntGobold13,
 	            :locX     => 187,
@@ -841,20 +839,20 @@ module UiElements {
 				activeMinutesWeek = MainController.envInfo.activeMinutesWeek != null ? MainController.envInfo.activeMinutesWeek : 0,
 				floorsClimbed = MainController.envInfo.floorsClimbed != null ? MainController.envInfo.floorsClimbed : 0;
 			
-			icon1.draw();
-			icon2.draw();
-			icon3.draw();
-			icon4.draw();
+			df5Icon.draw();
+			df6Icon.draw();
+			df7Icon.draw();
+			df8Icon.draw();
 			
-			txtIcon1.setText(Utils.kFormatter(distance * 0.01, 1));
-			txtIcon2.setText(Utils.kFormatter(calories, 1));
-			txtIcon3.setText(Utils.kFormatter(activeMinutesWeek, 1));
-			txtIcon4.setText(Utils.kFormatter(floorsClimbed, 1));
+			df5Txt.setText(Utils.kFormatter(distance * 0.01, 1));
+			df6Txt.setText(Utils.kFormatter(calories, 1));
+			df7Txt.setText(Utils.kFormatter(activeMinutesWeek, 1));
+			df8Txt.setText(Utils.kFormatter(floorsClimbed, 1));
 			
-			txtIcon1.draw();
-			txtIcon2.draw();
-			txtIcon3.draw();
-			txtIcon4.draw();
+			df5Txt.draw();
+			df6Txt.draw();
+			df7Txt.draw();
+			df8Txt.draw();
 		}
 	}
 	
