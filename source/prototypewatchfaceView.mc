@@ -1332,6 +1332,7 @@ module Textures {
 		"wi-wind-deg-225"      => 'ô'
 		"wi-wind-deg-270"      => 'ó'
 		"wi-wind-deg-315"      => 'ò'
+		"wi-thermometer"       => 'ñ'
 
 	Bitmaps:
 		"Line-Top"    => "012345"
